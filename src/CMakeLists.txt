@@ -8,6 +8,7 @@ include(FetchContent)
 
 # cpr is a wrapper around libcurl
 option(CURL_ZLIB OFF)
+option(CPR_BUILD_TESTS OFF)
 FetchContent_Declare(cpr
         GIT_REPOSITORY https://github.com/libcpr/cpr.git
         GIT_SHALLOW ON)

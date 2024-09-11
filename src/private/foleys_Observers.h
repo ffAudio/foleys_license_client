@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <mutex>
+#include <functional>
 
 namespace foleys
 {

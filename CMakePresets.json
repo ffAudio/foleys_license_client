@@ -1,0 +1,69 @@
+{
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "base",
+      "binaryDir": "${sourceDir}/cmake-build"
+    },
+    {
+      "name": "clang",
+      "inherits": "base",
+      "displayName": "Ninja Clang",
+      "generator": "Ninja Multi-Config",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": {
+          "type": "STRING",
+          "value": "clang++"
+        },
+        "CMAKE_C_COMPILER": {
+          "type": "STRING",
+          "value": "clang"
+        }
+      }
+    },
+    {
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows",
+        "type": "equals"
+      },
+      "displayName": "Visual Studio w/ Clang",
+      "generator": "Visual Studio 17 2022",
+      "toolset": "ClangCl",
+      "inherits": "base",
+      "name": "vs-clang"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "builder",
+      "configurePreset": "base"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "builder",
+      "configurePreset": "base",
+      "execution": {
+        "jobs": 4,
+        "noTestsAction": "error"
+      },
+      "filter": {
+        "include": {
+          "name": "^foleys_license_client.+"
+        }
+      },
+      "output": {
+        "outputLogFile": "${sourceDir}/logs/test_log.log",
+        "outputOnFailure": true,
+        "shortProgress": true,
+        "verbosity": "verbose"
+      }
+    }
+  ]
+}
