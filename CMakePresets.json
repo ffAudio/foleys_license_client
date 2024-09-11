@@ -37,6 +37,17 @@
       "toolset": "ClangCl",
       "inherits": "base",
       "name": "vs-clang"
+    },
+    {
+      "condition": {
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows",
+        "type": "equals"
+      },
+      "displayName": "Visual Studio w/ MSVC",
+      "generator": "Visual Studio 17 2022",
+      "inherits": "base",
+      "name": "msvc"
     }
   ],
   "buildPresets": [

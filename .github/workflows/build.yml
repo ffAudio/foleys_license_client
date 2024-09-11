@@ -20,7 +20,7 @@ jobs:
         build_type: [ Debug, Release ]
         include:
           - os: windows-latest
-            CMAKE_PRESET: vs-clang
+            CMAKE_PRESET: msvc
           - os: macos-latest
             CMAKE_PRESET: clang
 
