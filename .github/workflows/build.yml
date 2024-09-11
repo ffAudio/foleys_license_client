@@ -33,6 +33,10 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install ninja
 
+      - name: Add msbuild to PATH
+        if: runner.os == 'windows'
+        uses: microsoft/setup-msbuild@v2
+
       - name: Configure CMake
         run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE
 
