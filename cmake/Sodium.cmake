@@ -14,6 +14,9 @@ set(SODIUM_ROOT ${CMAKE_BINARY_DIR}/_deps/libsodium-src)
 set(SODIUM_PATH ${SODIUM_ROOT}/src/libsodium)
 
 if(APPLE)
+
+    message(STATUS "Downloading libsodium mac sources")
+
     set(SODIUM_LIBRARY_FILE ${SODIUM_PATH}/libsodium-osx/lib/libsodium.a)
 
     ExternalProject_Add(libsodium
@@ -31,6 +34,8 @@ if(APPLE)
     target_include_directories(sodium INTERFACE "${SODIUM_PATH}/libsodium-osx/include")
 
 else()
+
+    message(STATUS "Downloading libsodium windows prebuilt")
 
     FetchContent_Declare(download_sodium
             URL https://download.libsodium.org/libsodium/releases/libsodium-1.0.20-stable-msvc.zip)
