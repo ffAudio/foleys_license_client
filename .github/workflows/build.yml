@@ -38,7 +38,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Configure CMake
-        run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE
+        run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
       - name: Build
         run: cmake --build --preset builder --config ${{ matrix.build_type }}

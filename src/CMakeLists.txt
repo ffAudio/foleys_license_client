@@ -15,6 +15,7 @@ option(CURL_DISABLE_INSTALL ON)
 option(ENABLE_CURL_MANUAL OFF)
 option(BUILD_LIBCURL_DOCS OFF)
 option(CURL_USE_LIBPSL OFF)
+option(USE_LIBIDN2 OFF)
 
 option(CPR_BUILD_TESTS OFF)
 FetchContent_Declare(cpr
