@@ -1,0 +1,4 @@
+17c17
+< export CFLAGS="-mmacosx-version-min=${MACOS_VERSION_MIN} -O3"
+---
+> export CFLAGS="-mmacosx-version-min=${MACOS_VERSION_MIN} -arch arm64 -arch x86_64 -O3"

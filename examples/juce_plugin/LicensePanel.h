@@ -20,7 +20,6 @@ For details refer to the LICENSE.md
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <foleys_License.h>
 
-class LicensePanelHolder;
 
 class LicensePanel : public foleys::Popup
 {

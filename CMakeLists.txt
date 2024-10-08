@@ -16,6 +16,8 @@ For details refer to the LICENSE.md
 *******************************************************************************
 ]]
 
+set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures" FORCE)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 project(foleys_licensing_client
@@ -28,6 +30,14 @@ endif ()
 
 # src contains the actual library
 add_subdirectory(src)
+
+# unit tests
+option(FOLEYS_LICENSING_BUILD_EXAMPLES "Build and run the tests." OFF)
+
+if (FOLEYS_LICENSING_BUILD_EXAMPLES)
+    enable_testing()
+    add_subdirectory(tests)
+endif ()
 
 # various examples
 option(FOLEYS_LICENSING_BUILD_EXAMPLES "Build the examples." ON)
