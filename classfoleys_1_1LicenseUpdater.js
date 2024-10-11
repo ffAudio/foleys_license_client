@@ -7,7 +7,7 @@ var classfoleys_1_1LicenseUpdater =
     [ "getLastError", "classfoleys_1_1LicenseUpdater.html#a26a6a9a99244a560b1710b2d19b791de", null ],
     [ "getLastErrorString", "classfoleys_1_1LicenseUpdater.html#a2039b04d0ae6e23f98b577d546621685", null ],
     [ "fetchIfNecessary", "classfoleys_1_1LicenseUpdater.html#af23061f8255e5ff1412415b8f7a84cf1", null ],
-    [ "fetchLicenseData", "classfoleys_1_1LicenseUpdater.html#a4d595017ec94e99b6a0e2ab3498e8724", null ],
+    [ "fetchLicenseData", "classfoleys_1_1LicenseUpdater.html#ae900db9214cee5e2e35c80a8c1a4c6b0", null ],
     [ "addObserver", "classfoleys_1_1LicenseUpdater.html#a20adffdeb27b0fe5f93f2b4f97b8d520", null ],
     [ "removeObserver", "classfoleys_1_1LicenseUpdater.html#a6d1927540a1a8f48d688c7b1d01742c4", null ],
     [ "setupLicenseData", "classfoleys_1_1LicenseUpdater.html#afe93a737fcb9f31effa84644c39ac8b1", null ],
