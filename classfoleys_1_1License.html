@@ -158,6 +158,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1c0cfe69fd4b66a1c7ba9d568b2a3598" id="r_a1c0cfe69fd4b66a1c7ba9d568b2a3598"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c0cfe69fd4b66a1c7ba9d568b2a3598">activate</a> (std::initializer_list&lt; std::pair&lt; std::string, std::string &gt; &gt; data)</td></tr>
 <tr class="memdesc:a1c0cfe69fd4b66a1c7ba9d568b2a3598"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request the server to activate this computer.  <br /></td></tr>
 <tr class="separator:a1c0cfe69fd4b66a1c7ba9d568b2a3598"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7c0c25b0cc31fdaf7f773f221d26388" id="r_af7c0c25b0cc31fdaf7f773f221d26388"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structfoleys_1_1Licensing_1_1Activation.html">Licensing::Activation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7c0c25b0cc31fdaf7f773f221d26388">getActivations</a> ()</td></tr>
+<tr class="memdesc:af7c0c25b0cc31fdaf7f773f221d26388"><td class="mdescLeft">&#160;</td><td class="mdescRight">In case of a failed activation, this contains existing activations for deactivation.  <br /></td></tr>
+<tr class="separator:af7c0c25b0cc31fdaf7f773f221d26388"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30989a9cf3da77dbd14fef56cdba0606" id="r_a30989a9cf3da77dbd14fef56cdba0606"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30989a9cf3da77dbd14fef56cdba0606">canDemo</a> () const</td></tr>
 <tr class="memdesc:a30989a9cf3da77dbd14fef56cdba0606"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the user is allowed to start a demo.  <br /></td></tr>
 <tr class="separator:a30989a9cf3da77dbd14fef56cdba0606"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -505,6 +508,28 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="af7c0c25b0cc31fdaf7f773f221d26388" name="af7c0c25b0cc31fdaf7f773f221d26388"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7c0c25b0cc31fdaf7f773f221d26388">&#9670;&#160;</a></span>getActivations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="structfoleys_1_1Licensing_1_1Activation.html">Licensing::Activation</a> &gt; getActivations </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>In case of a failed activation, this contains existing activations for deactivation. </p>
+<dl class="section return"><dt>Returns</dt><dd>a list of activated machines </dd></dl>
+
+<p class="reference">References <a class="el" href="classfoleys_1_1LicenseUpdater.html#af7c0c25b0cc31fdaf7f773f221d26388">LicenseUpdater::getActivations()</a>.</p>
+
+</div>
+</div>
 <a id="a30989a9cf3da77dbd14fef56cdba0606" name="a30989a9cf3da77dbd14fef56cdba0606"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a30989a9cf3da77dbd14fef56cdba0606">&#9670;&#160;</a></span>canDemo()</h2>
 
@@ -732,7 +757,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacefoleys.html">foleys</a></li><li class="navelem"><a class="el" href="classfoleys_1_1License.html">License</a></li>
-    <li class="footer">Generated on Tue Oct 8 2024 21:08:42 for foleys_licensing_client by
+    <li class="footer">Generated on Fri Oct 11 2024 11:08:16 for foleys_licensing_client by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.12.0 </li>
   </ul>

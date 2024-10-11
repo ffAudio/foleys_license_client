@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['serveranswerinvalid_0',['ServerAnswerInvalid',['../namespacefoleys_1_1Licensing.html#a2c3e4bb40f36b262a5214e2da2bca9c5a87334bac02209a3d203701809a4a7b52',1,'foleys::Licensing']]],
-  ['servernotavailable_1',['ServerNotAvailable',['../namespacefoleys_1_1Licensing.html#a2c3e4bb40f36b262a5214e2da2bca9c5adb14b4e1d54726472228aefe90d2877e',1,'foleys::Licensing']]]
+  ['expired_0',['Expired',['../namespacefoleys_1_1Licensing.html#a67a0db04d321a74b7e7fcfd3f1a3f70ba24fe48030f7d3097d5882535b04c3fa8',1,'foleys::Licensing']]]
 ];

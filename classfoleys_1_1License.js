@@ -12,6 +12,7 @@ var classfoleys_1_1License =
     [ "getLicenseeEmail", "classfoleys_1_1License.html#a5dda5c72ab43f5868320b1bdc9ceac03", null ],
     [ "login", "classfoleys_1_1License.html#a0348e0258db439d2bbc2df0a7db28053", null ],
     [ "activate", "classfoleys_1_1License.html#a1c0cfe69fd4b66a1c7ba9d568b2a3598", null ],
+    [ "getActivations", "classfoleys_1_1License.html#af7c0c25b0cc31fdaf7f773f221d26388", null ],
     [ "canDemo", "classfoleys_1_1License.html#a30989a9cf3da77dbd14fef56cdba0606", null ],
     [ "isDemo", "classfoleys_1_1License.html#ac7fffe1bb37c6ebec2e36f8aa0a9816c", null ],
     [ "demoDaysLeft", "classfoleys_1_1License.html#ad27b7aa0d0c88b1849ad1ba1ab9a181e", null ],

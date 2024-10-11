@@ -12,6 +12,7 @@ var classfoleys_1_1LicenseUpdater =
     [ "removeObserver", "classfoleys_1_1LicenseUpdater.html#a6d1927540a1a8f48d688c7b1d01742c4", null ],
     [ "setupLicenseData", "classfoleys_1_1LicenseUpdater.html#afe93a737fcb9f31effa84644c39ac8b1", null ],
     [ "getContents", "classfoleys_1_1LicenseUpdater.html#ad544dd9a348c1204140ffd60b84795cf", null ],
+    [ "getActivations", "classfoleys_1_1LicenseUpdater.html#af7c0c25b0cc31fdaf7f773f221d26388", null ],
     [ "wasPopupShown", "classfoleys_1_1LicenseUpdater.html#a40ad9a276b1e6da8d3f0f92f0c84512d", null ],
     [ "setPopupWasShown", "classfoleys_1_1LicenseUpdater.html#a710d753aea35fc7b7a60326d41f6e399", null ]
 ];

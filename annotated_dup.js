@@ -1,6 +1,9 @@
 var annotated_dup =
 [
     [ "foleys", "namespacefoleys.html", [
+      [ "Licensing", "namespacefoleys_1_1Licensing.html", [
+        [ "Activation", "structfoleys_1_1Licensing_1_1Activation.html", "structfoleys_1_1Licensing_1_1Activation" ]
+      ] ],
       [ "Crypto", "structfoleys_1_1Crypto.html", null ],
       [ "License", "classfoleys_1_1License.html", "classfoleys_1_1License" ],
       [ "LicenseUpdater", "classfoleys_1_1LicenseUpdater.html", "classfoleys_1_1LicenseUpdater" ],

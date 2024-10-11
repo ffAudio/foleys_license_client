@@ -4,5 +4,6 @@ var searchData=
   ['encodetostring_1',['encodeToString',['../namespacechoc_1_1base64.html#a838accca42c4ccb544c71aa88f4ebf2d',1,'choc::base64::encodeToString(const void *inputBinaryData, size_t numInputBytes)'],['../namespacechoc_1_1base64.html#ae82cba4e953687bf5820482127266ab6',1,'choc::base64::encodeToString(const Container &amp;)']]],
   ['encrypt_2',['encrypt',['../structfoleys_1_1Crypto.html#a82d56dd1eab689ec1ddc6dc323b515bc',1,'foleys::Crypto']]],
   ['error_3',['Error',['../namespacefoleys_1_1Licensing.html#a2c3e4bb40f36b262a5214e2da2bca9c5',1,'foleys::Licensing']]],
-  ['expires_4',['expires',['../classfoleys_1_1License.html#aa4209e4ee4cf7845b19a19a001d543b2',1,'foleys::License']]]
+  ['expired_4',['Expired',['../namespacefoleys_1_1Licensing.html#a67a0db04d321a74b7e7fcfd3f1a3f70ba24fe48030f7d3097d5882535b04c3fa8',1,'foleys::Licensing']]],
+  ['expires_5',['expires',['../classfoleys_1_1License.html#aa4209e4ee4cf7845b19a19a001d543b2',1,'foleys::License']]]
 ];

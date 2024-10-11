@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "Activation", "structfoleys_1_1Licensing_1_1Activation.html", null ],
     [ "Component", null, [
       [ "Popup", "classfoleys_1_1Popup.html", null ]
     ] ],
