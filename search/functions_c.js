@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['waspopupshown_0',['wasPopupShown',['../classfoleys_1_1LicenseUpdater.html#a40ad9a276b1e6da8d3f0f92f0c84512d',1,'foleys::LicenseUpdater']]]
+  ['refreshcomponentforrow_0',['refreshComponentForRow',['../classLicenseDeactivate.html#a069b3537746c4e115f3dbcc662ccac48',1,'LicenseDeactivate']]],
+  ['releaseresources_1',['releaseResources',['../classLicensingDemoProcessor.html#ae2ec82cb5acbefbac9cb8e0530b9b803',1,'LicensingDemoProcessor']]],
+  ['removeobserver_2',['removeObserver',['../classfoleys_1_1LicenseUpdater.html#a6d1927540a1a8f48d688c7b1d01742c4',1,'foleys::LicenseUpdater::removeObserver()'],['../classfoleys_1_1ObserverList.html#a2b4435975a3b9c15f45354d0da23a545',1,'foleys::ObserverList::removeObserver()']]],
+  ['resized_3',['resized',['../classDeactivateItem.html#a31cc081b3c77bc8855de79094fc1da42',1,'DeactivateItem::resized()'],['../classLicenseDeactivate.html#a31cc081b3c77bc8855de79094fc1da42',1,'LicenseDeactivate::resized()'],['../classLicensePanel.html#a31cc081b3c77bc8855de79094fc1da42',1,'LicensePanel::resized()'],['../classLicensingDemoEditor.html#a31cc081b3c77bc8855de79094fc1da42',1,'LicensingDemoEditor::resized()']]]
 ];

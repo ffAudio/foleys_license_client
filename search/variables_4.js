@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['manualurl_0',['manualUrl',['../namespaceLicenseData.html#ab3fbe3405061c1c88b48e40b85dcd4de',1,'LicenseData']]]
+  ['index_0',['index',['../structfoleys_1_1Licensing_1_1Activation.html#a3f42f10d93f6edb91d7d3f6edad25921',1,'foleys::Licensing::Activation']]]
 ];

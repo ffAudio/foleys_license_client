@@ -11,5 +11,10 @@ var annotated_dup =
       [ "Popup", "classfoleys_1_1Popup.html", "classfoleys_1_1Popup" ],
       [ "PopupHolder", "classfoleys_1_1PopupHolder.html", "classfoleys_1_1PopupHolder" ],
       [ "SharedObject", "classfoleys_1_1SharedObject.html", "classfoleys_1_1SharedObject" ]
-    ] ]
+    ] ],
+    [ "DeactivateItem", "classDeactivateItem.html", "classDeactivateItem" ],
+    [ "LicenseDeactivate", "classLicenseDeactivate.html", "classLicenseDeactivate" ],
+    [ "LicensePanel", "classLicensePanel.html", "classLicensePanel" ],
+    [ "LicensingDemoEditor", "classLicensingDemoEditor.html", "classLicensingDemoEditor" ],
+    [ "LicensingDemoProcessor", "classLicensingDemoProcessor.html", "classLicensingDemoProcessor" ]
 ];

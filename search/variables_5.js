@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['oncloserequest_0',['onCloseRequest',['../classfoleys_1_1Popup.html#a574ca98e4e2b10b18de43b9c6651beb4',1,'foleys::Popup']]],
-  ['onlicensereceived_1',['onLicenseReceived',['../classfoleys_1_1License.html#a4313443442dbebb1f121f75d5effe8f7',1,'foleys::License']]]
+  ['license_0',['license',['../classLicenseDeactivate.html#a0e41a977a3b7893918e792034f07c3a5',1,'LicenseDeactivate']]],
+  ['localstorage_1',['localStorage',['../namespacefoleys_1_1Licensing.html#a5f8599b5b2aa621042d1e5452b181246',1,'foleys::Licensing']]]
 ];

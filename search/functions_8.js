@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['observerlist_0',['ObserverList',['../classfoleys_1_1ObserverList.html#a6a3767ae62fbff01c100c36121298327',1,'foleys::ObserverList::ObserverList()=default'],['../classfoleys_1_1ObserverList.html#a875a641891d7dc204bc084584e93a4c5',1,'foleys::ObserverList::ObserverList(const ObserverList &amp;)=delete']]],
-  ['operator_2a_1',['operator*',['../classfoleys_1_1SharedObject.html#a553a276955466bc3757b30b9977e695b',1,'foleys::SharedObject']]],
-  ['operator_2d_3e_2',['operator-&gt;',['../classfoleys_1_1SharedObject.html#a85cda0e5a4a56a744599c3529d71e55b',1,'foleys::SharedObject']]],
-  ['operator_3d_3',['operator=',['../classfoleys_1_1ObserverList.html#a136564028677531eb1a0c0f1e4d8024f',1,'foleys::ObserverList']]]
+  ['license_0',['License',['../classfoleys_1_1License.html#afbefd8e68b559c521cf4372f2f3442dd',1,'foleys::License']]],
+  ['licensedeactivate_1',['LicenseDeactivate',['../classLicenseDeactivate.html#a019bebe1858eb7b29e1db8044efb4c1b',1,'LicenseDeactivate']]],
+  ['licensepanel_2',['LicensePanel',['../classLicensePanel.html#a843d21d8c377720b9857bf7c38bdaa4a',1,'LicensePanel']]],
+  ['licenseupdated_3',['licenseUpdated',['../structfoleys_1_1LicenseUpdater_1_1Observer.html#a98ffc25ddc456753fc8d760e2ae062fd',1,'foleys::LicenseUpdater::Observer']]],
+  ['licenseupdater_4',['LicenseUpdater',['../classfoleys_1_1LicenseUpdater.html#a215eac15b29a8e2ffc7832522491e12d',1,'foleys::LicenseUpdater::LicenseUpdater()'],['../classfoleys_1_1LicenseUpdater.html#a02ce79fee1fd52122446702e1d59610f',1,'foleys::LicenseUpdater::LicenseUpdater(const LicenseUpdater &amp;)=delete']]],
+  ['licensingdemoeditor_5',['LicensingDemoEditor',['../classLicensingDemoEditor.html#aa17413b2e714d4ae3670277cb20f3a89',1,'LicensingDemoEditor']]],
+  ['licensingdemoprocessor_6',['LicensingDemoProcessor',['../classLicensingDemoProcessor.html#affbc6507e41ea338ca5f92bf79aeb004',1,'LicensingDemoProcessor']]],
+  ['login_7',['login',['../classfoleys_1_1License.html#a0348e0258db439d2bbc2df0a7db28053',1,'foleys::License']]]
 ];

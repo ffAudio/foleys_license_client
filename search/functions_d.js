@@ -1,7 +1,14 @@
 var searchData=
 [
-  ['_7elicense_0',['~License',['../classfoleys_1_1License.html#aedc7f1617b64a1e3bb84e979d6bac115',1,'foleys::License']]],
-  ['_7eobserver_1',['~Observer',['../structfoleys_1_1LicenseUpdater_1_1Observer.html#a254f32cc04fa2d409f910f77d1b5a06d',1,'foleys::LicenseUpdater::Observer']]],
-  ['_7epopupholder_2',['~PopupHolder',['../classfoleys_1_1PopupHolder.html#a75f6a2b745a8392d3c4dfd557def83e2',1,'foleys::PopupHolder']]],
-  ['_7esharedobject_3',['~SharedObject',['../classfoleys_1_1SharedObject.html#a8e1e3a6d692c8cc6389ae976f426915b',1,'foleys::SharedObject']]]
+  ['setactivation_0',['setActivation',['../classDeactivateItem.html#aac69d55bdd99b5b7a701ff213db6744d',1,'DeactivateItem']]],
+  ['setclosefunction_1',['setCloseFunction',['../classLicenseDeactivate.html#a5f8b2926add1643df82c6abc19392e51',1,'LicenseDeactivate']]],
+  ['setcurrentprogram_2',['setCurrentProgram',['../classLicensingDemoProcessor.html#a7faca5e5d97a0b47fd2ec6b7fb8b1dce',1,'LicensingDemoProcessor']]],
+  ['setpopupwasshown_3',['setPopupWasShown',['../classfoleys_1_1License.html#a710d753aea35fc7b7a60326d41f6e399',1,'foleys::License::setPopupWasShown()'],['../classfoleys_1_1LicenseUpdater.html#a710d753aea35fc7b7a60326d41f6e399',1,'foleys::LicenseUpdater::setPopupWasShown()']]],
+  ['setstateinformation_4',['setStateInformation',['../classLicensingDemoProcessor.html#a2809260e0d5579f0831d8a50ee9c82ec',1,'LicensingDemoProcessor']]],
+  ['setuplicensedata_5',['setupLicenseData',['../classfoleys_1_1License.html#a6b6a1543b933f12a3669a1964d8ab07e',1,'foleys::License::setupLicenseData()'],['../classfoleys_1_1LicenseUpdater.html#afe93a737fcb9f31effa84644c39ac8b1',1,'foleys::LicenseUpdater::setupLicenseData()']]],
+  ['sharedobject_6',['SharedObject',['../classfoleys_1_1SharedObject.html#ad4171ce6ba05590a7f51544b2da9965c',1,'foleys::SharedObject']]],
+  ['shouldshowpopup_7',['shouldShowPopup',['../classfoleys_1_1License.html#a274223b34a27531d10d48e4d8e65a504',1,'foleys::License']]],
+  ['showpopup_8',['showPopup',['../classfoleys_1_1PopupHolder.html#a406794f99917a954b4005c275272ca98',1,'foleys::PopupHolder']]],
+  ['startdemo_9',['startDemo',['../classfoleys_1_1License.html#aa06ce3029f069415dfd6cb7bed24f9df',1,'foleys::License']]],
+  ['synclicense_10',['syncLicense',['../classfoleys_1_1License.html#aa5f4d6533ed7873b825a3788fa041668',1,'foleys::License']]]
 ];
