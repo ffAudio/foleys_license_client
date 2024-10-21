@@ -106,6 +106,9 @@ $(function(){initNavTree('classfoleys_1_1ObserverList.html',''); initResizable(t
 </div><!--header-->
 <div class="contents">
 
+<p>A list of observers to be notified of events.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;foleys_Observers.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -113,17 +116,32 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6a3767ae62fbff01c100c36121298327" id="r_a6a3767ae62fbff01c100c36121298327"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a3767ae62fbff01c100c36121298327">ObserverList</a> ()=default</td></tr>
 <tr class="separator:a6a3767ae62fbff01c100c36121298327"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f0612f8fc695091401a9ad3b0939709" id="r_a0f0612f8fc695091401a9ad3b0939709"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f0612f8fc695091401a9ad3b0939709">addObserver</a> (ObserverType *observer)</td></tr>
+<tr class="memdesc:a0f0612f8fc695091401a9ad3b0939709"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add an observer to the list of observers.  <br /></td></tr>
 <tr class="separator:a0f0612f8fc695091401a9ad3b0939709"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b4435975a3b9c15f45354d0da23a545" id="r_a2b4435975a3b9c15f45354d0da23a545"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b4435975a3b9c15f45354d0da23a545">removeObserver</a> (ObserverType *observer)</td></tr>
+<tr class="memdesc:a2b4435975a3b9c15f45354d0da23a545"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove all occurrences of the observer from the list of observers.  <br /></td></tr>
 <tr class="separator:a2b4435975a3b9c15f45354d0da23a545"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b9af23f86866cf4eb62dbb9f77873d2" id="r_a6b9af23f86866cf4eb62dbb9f77873d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b9af23f86866cf4eb62dbb9f77873d2">callUnChecked</a> (std::function&lt; void(ObserverType &amp;)&gt; func)</td></tr>
+<tr class="memdesc:a6b9af23f86866cf4eb62dbb9f77873d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call the function on every observer.  <br /></td></tr>
+<tr class="separator:a6b9af23f86866cf4eb62dbb9f77873d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5176c6f4aba14d593f87dac9f378d081" id="r_a5176c6f4aba14d593f87dac9f378d081"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5176c6f4aba14d593f87dac9f378d081">call</a> (std::function&lt; void(ObserverType &amp;)&gt; func)</td></tr>
+<tr class="memdesc:a5176c6f4aba14d593f87dac9f378d081"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call the function on all observers.  <br /></td></tr>
 <tr class="separator:a5176c6f4aba14d593f87dac9f378d081"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a875a641891d7dc204bc084584e93a4c5" id="r_a875a641891d7dc204bc084584e93a4c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a875a641891d7dc204bc084584e93a4c5">ObserverList</a> (const <a class="el" href="classfoleys_1_1ObserverList.html">ObserverList</a> &amp;)=delete</td></tr>
 <tr class="separator:a875a641891d7dc204bc084584e93a4c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a136564028677531eb1a0c0f1e4d8024f" id="r_a136564028677531eb1a0c0f1e4d8024f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classfoleys_1_1ObserverList.html">ObserverList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a136564028677531eb1a0c0f1e4d8024f">operator=</a> (const <a class="el" href="classfoleys_1_1ObserverList.html">ObserverList</a> &amp;)=delete</td></tr>
 <tr class="separator:a136564028677531eb1a0c0f1e4d8024f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename ObserverType&gt;<br />
+class foleys::ObserverList&lt; ObserverType &gt;</div><p>A list of observers to be notified of events. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">ObserverType</td><td>the observer interface that can be called through the list. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6a3767ae62fbff01c100c36121298327" name="a6a3767ae62fbff01c100c36121298327"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6a3767ae62fbff01c100c36121298327">&#9670;&#160;</a></span>ObserverList() <span class="overload">[1/2]</span></h2>
 
@@ -196,6 +214,14 @@ template&lt;typename ObserverType &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p>Add an observer to the list of observers. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">observer</td><td>the observer to add </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a2b4435975a3b9c15f45354d0da23a545" name="a2b4435975a3b9c15f45354d0da23a545"></a>
@@ -215,6 +241,41 @@ template&lt;typename ObserverType &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p>Remove all occurrences of the observer from the list of observers. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">observer</td><td>the observer to remove </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6b9af23f86866cf4eb62dbb9f77873d2" name="a6b9af23f86866cf4eb62dbb9f77873d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b9af23f86866cf4eb62dbb9f77873d2">&#9670;&#160;</a></span>callUnChecked()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ObserverType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void callUnChecked </td>
+          <td>(</td>
+          <td class="paramtype">std::function&lt; void(ObserverType &amp;)&gt;</td>          <td class="paramname"><span class="paramname"><em>func</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Call the function on every observer. </p>
+<p>It will crash, if an observer got deleted in the meantime. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">func</td><td>the std::function to call </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a5176c6f4aba14d593f87dac9f378d081" name="a5176c6f4aba14d593f87dac9f378d081"></a>
@@ -233,6 +294,14 @@ template&lt;typename ObserverType &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Call the function on all observers. </p>
+<p>It uses safe pointers to avoid dangling objects. It doesn't protect against concurrent destruction though. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">func</td><td>The std::function to call </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -273,7 +342,7 @@ template&lt;typename ObserverType &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacefoleys.html">foleys</a></li><li class="navelem"><a class="el" href="classfoleys_1_1ObserverList.html">ObserverList</a></li>
-    <li class="footer">Generated on Tue Oct 15 2024 12:54:22 for foleys_licensing_client by
+    <li class="footer">Generated on Mon Oct 21 2024 13:29:14 for foleys_licensing_client by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
