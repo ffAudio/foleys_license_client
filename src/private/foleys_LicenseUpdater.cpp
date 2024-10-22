@@ -30,7 +30,7 @@ LicenseUpdater::LicenseUpdater()
     fetchIfNecessary();
 }
 
-void LicenseUpdater::setupLicenseData (const std::filesystem::path& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+void LicenseUpdater::setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
 {
     localStorage = licenseFile;
     hardwareUid  = hwUID;
@@ -111,9 +111,6 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
 
     auto answer = Crypto::decrypt (r.text);
 
-    lastError       = Licensing::Error::NoError;
-    lastErrorString = "";
-
     if (answer.empty())
     {
         lastError       = Licensing::Error::ServerAnswerInvalid;
@@ -121,6 +118,9 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
         sendUpdateSignal();
         return;
     }
+
+    lastError       = Licensing::Error::NoError;
+    lastErrorString = "";
 
     auto json = nlohmann::json::parse (answer, nullptr, false);
     if (json.is_discarded())
@@ -150,7 +150,7 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
             return;
         }
 
-        std::filesystem::create_directories (localStorage.parent_path());
+//        std::filesystem::create_directories (localStorage.parent_path());
         std::ofstream output (localStorage);
         if (output.is_open())
         {
