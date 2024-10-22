@@ -6,30 +6,8 @@ cmake_minimum_required(VERSION 3.24.1 FATAL_ERROR)
 
 include(FetchContent)
 
-# cpr is a wrapper around libcurl
-option(CURL_ZLIB OFF)
-option(BUILD_CURL_EXE OFF)
-option(BUILD_SHARED_LIBS OFF)
-option(BUILD_STATIC_LIBS ON)
-option(CURL_DISABLE_INSTALL ON)
-option(ENABLE_CURL_MANUAL OFF)
-option(BUILD_LIBCURL_DOCS OFF)
-option(CURL_USE_LIBPSL OFF)
-option(USE_LIBIDN2 OFF)
-option(USE_NGHTTP2 OFF)
-option(CURL_USE_LIBSSH2 OFF)
-
-option(CPR_BUILD_TESTS OFF)
-FetchContent_Declare(cpr
-        GIT_REPOSITORY https://github.com/libcpr/cpr.git
-        GIT_SHALLOW ON)
-FetchContent_MakeAvailable(cpr)
-
-FetchContent_Declare(nlohmann
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_SHALLOW ON)
-FetchContent_MakeAvailable(nlohmann)
-
+include(CPR)
+include(nlohmann)
 include(Sodium)
 
 add_library(licensing
@@ -39,6 +17,7 @@ target_sources(licensing
         INTERFACE
         foleys_License.cpp
         foleys_License.h
+        private/foleys_Licensing.h
         private/foleys_LicenseUpdater.cpp
         private/foleys_LicenseUpdater.h
         private/foleys_Crypto.cpp

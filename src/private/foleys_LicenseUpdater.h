@@ -67,7 +67,7 @@ public:
     {
         virtual void licenseUpdated() = 0;
 
-        FOLEYS_DECLARE_SAFEPOINTER(Observer)
+        FOLEYS_DECLARE_SAFEPOINTER (Observer)
     };
 
     /**
@@ -82,7 +82,7 @@ public:
      */
     void removeObserver (Observer* observer);
 
-    void setupLicenseData (const std::filesystem::path& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
+    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
 
     [[nodiscard]] std::string getContents();
 
@@ -106,9 +106,9 @@ public:
 private:
     void sendUpdateSignal();
 
-    std::mutex            storageMutex;
-    std::filesystem::path localStorage;
-    std::string           hardwareUid;
+    std::mutex  storageMutex;
+    std::string hardwareUid;
+    std::string localStorage;
 
     std::vector<std::pair<std::string, std::string>> defaultData;
     Licensing::Error                                 lastError = Licensing::Error::NoError;
