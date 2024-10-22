@@ -23,8 +23,6 @@
 #include <atomic>
 #include <optional>
 #include <ctime>
-#include <filesystem>
-
 
 #ifndef FOLEYS_LICENSE_ENCRYPT_REQUEST
     #define FOLEYS_LICENSE_ENCRYPT_REQUEST 0
@@ -151,11 +149,11 @@ public:
 
     /**
      * Set the path for the license file. This needs to be called only once
-     * @param licenseFile the filename to store the license to
+     * @param licenseFile the filename to store the license to (no std::filesystem before 10.15)
      * @param hwUID the hardware UID of the running system
      * @param data a string pair vector of data to send with every payload
      */
-    void setupLicenseData (const std::filesystem::path& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data = {});
+    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data = {});
 
     [[nodiscard]] static time_t decodeDateTime (const std::string& timeString, const char* formatString);
 
