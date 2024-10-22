@@ -11,31 +11,35 @@
 
 *******************************************************************************/
 
+#if (WIN32)
 
-#include "foleys_SystemInfo.h"
+    #include "foleys_NetworkRequest.h"
 
-#include <platform_folders.h>
-#include <ghc/filesystem.hpp>
+// #include <wininet.h>
 
 namespace foleys
 {
 
-std::string SystemInfo::getAppData()
+NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess) { }
+
+NetworkRequest::~NetworkRequest()
 {
-    return sago::getDataHome();
+    cancel();
 }
 
-std::string SystemInfo::getLocalAppData()
+void NetworkRequest::fetch (std::string_view payload)
 {
-    return sago::getStateDir();
+    cancel();
+
+    // TODO
 }
 
-std::string SystemInfo::createLicensePath (const char* manufacturer, const char* productName, const char* suffix)
+void NetworkRequest::cancel()
 {
-    ghc::filesystem::path appFolder (getLocalAppData());
-    std::string           filename (productName);
-    filename += suffix;
-    return (appFolder / manufacturer / filename).string();
+    // at least avoid entering the callback
+    callback = nullptr;
 }
+
 
 }  // namespace foleys
+#endif

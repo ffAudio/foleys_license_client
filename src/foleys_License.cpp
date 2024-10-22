@@ -36,7 +36,7 @@ License::~License()
     updater->removeObserver (this);
 }
 
-void License::setupLicenseData (const std::filesystem::path& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+void License::setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
 {
     updater->setupLicenseData (licenseFile, hwUID, data);
 }

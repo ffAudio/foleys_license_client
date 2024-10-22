@@ -17,6 +17,7 @@ For details refer to the LICENSE.md
 ]]
 
 set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures" FORCE)
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -27,6 +28,9 @@ if (NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
 endif ()
 
+if (APPLE)
+    enable_language(OBJCXX)
+endif()
 
 # src contains the actual library
 add_subdirectory(src)
