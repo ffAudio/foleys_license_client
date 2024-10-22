@@ -4,9 +4,10 @@ cmake_minimum_required(VERSION 3.24.1 FATAL_ERROR)
 # foleys_license_client juce plugin example
 # ================================================================================
 
-include(juce)
 
 option(FOLEYS_LICENSING_HAS_JUCE "Enable juce GUI for the license client" ON)
+
+include(juce)
 
 juce_add_plugin(FoleysJuceLicenseExample
         PRODUCT_NAME LicenseExample
@@ -48,6 +49,7 @@ juce_add_binary_data(
         FoleysJuceLicenseExample_data
         SOURCES
         Resources/close-icon.svg
+        Resources/refresh-icon.svg
         Resources/pdf-icon.svg
         Resources/key-icon.svg
         Resources/www-icon.svg)
