@@ -35,6 +35,7 @@ LicensePanel::LicensePanel()
     addAndMakeVisible (homeButton);
     addAndMakeVisible (websiteButton);
     addAndMakeVisible (copyright);
+    addAndMakeVisible (deactivate);
 
     title.setJustificationType (juce::Justification::centred);
     title.setColour (juce::Label::textColourId, juce::Colours::silver);
@@ -49,6 +50,8 @@ LicensePanel::LicensePanel()
     submit.setColour (juce::TextButton::textColourOffId, juce::Colours::silver);
     demo.setColour (juce::TextButton::buttonColourId, buttonColour);
     demo.setColour (juce::TextButton::textColourOffId, juce::Colours::silver);
+    deactivate.setColour (juce::TextButton::buttonColourId, buttonColour);
+    deactivate.setColour (juce::TextButton::textColourOffId, juce::Colours::silver);
 
     enterSerial.setJustificationType (juce::Justification::centred);
     enterSerial.setColour (juce::Label::textColourId, juce::Colours::silver);
@@ -106,6 +109,12 @@ LicensePanel::LicensePanel()
         }
     };
 
+    deactivate.onClick = [this]
+    {
+        if (license.isActivated())
+            license.deactivate();
+    };
+
     submit.onClick = [this]
     {
         if (!code.isEmpty())
@@ -121,6 +130,7 @@ void LicensePanel::update()
 {
     closeButton.setVisible (license.isAllowed());
     demo.setEnabled (license.canDemo() || license.isAllowed());
+    deactivate.setVisible (license.isActivated());
 
     if (license.isActivated())
     {
@@ -175,14 +185,14 @@ void LicensePanel::update()
     }
 }
 
-void LicensePanel::activate (const juce::String& serial, size_t deactivate)
+void LicensePanel::activate (const juce::String& serial, size_t deactivateID)
 {
     std::vector<std::pair<std::string, std::string>> data = { { LicenseID::computer, juce::SystemStats::getComputerName().toRawUTF8() },
                                                               { LicenseID::user, juce::SystemStats::getFullUserName().toRawUTF8() },
                                                               { LicenseID::serial, serial.toRawUTF8() } };
 
-    if (deactivate > 0)
-        data.emplace_back (LicenseID::deactivate, std::to_string (deactivate));
+    if (deactivateID > 0)
+        data.emplace_back (LicenseID::deactivate, std::to_string (deactivateID));
 
     license.activate (data);
 }
@@ -218,6 +228,7 @@ void LicensePanel::resized()
     homeButton.setBounds (buttonArea.reduced (10, 0));
 
     demo.setBounds (area.removeFromBottom (60).withSizeKeepingCentre (std::min (area.getWidth(), 250), buttonHeight));
+    deactivate.setBounds (demo.getBounds().withX (demo.getRight() + 5).withWidth (40));
 
     auto third = area.getHeight() / 3;
     enterSerial.setBounds (area.removeFromTop (third));

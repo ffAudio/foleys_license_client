@@ -42,6 +42,7 @@ private:
     juce::TextButton     submit { TRANS ("ENTER"), TRANS ("Submit code") };
     juce::Label          status;
     juce::TextButton     demo { TRANS ("Start Demo"), TRANS ("Start your 14 days free trial period") };
+    juce::TextButton     deactivate { TRANS ("Deactivate"), TRANS ("Deactivate this machine") };
     juce::DrawableButton closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
     juce::DrawableButton manualButton { "Manual Guide", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
     juce::DrawableButton homeButton { "My Licenses", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };

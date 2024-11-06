@@ -64,6 +64,11 @@ bool License::isAllowed() const
     return (isActivated() && !isExpired()) || isDemo();
 }
 
+Licensing::Error License::getLastError() const
+{
+    return updater->getLastError();
+}
+
 std::string License::getLastErrorString() const
 {
     return updater->getLastErrorString();
@@ -88,6 +93,11 @@ void License::login (const std::string& login_email)
 void License::activate (const std::vector<std::pair<std::string, std::string>>& data)
 {
     updater->fetchLicenseData ("activate", data);
+}
+
+void License::deactivate(const std::vector<std::pair<std::string, std::string>>& data)
+{
+    updater->fetchLicenseData ("deactivate", data);
 }
 
 std::vector<Licensing::Activation> License::getActivations()
