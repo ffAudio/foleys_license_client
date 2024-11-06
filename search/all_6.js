@@ -3,7 +3,7 @@ var searchData=
   ['getactivations_0',['getActivations',['../classfoleys_1_1License.html#af7c0c25b0cc31fdaf7f773f221d26388',1,'foleys::License::getActivations()'],['../classfoleys_1_1LicenseUpdater.html#af7c0c25b0cc31fdaf7f773f221d26388',1,'foleys::LicenseUpdater::getActivations()']]],
   ['getcontents_1',['getContents',['../classfoleys_1_1LicenseUpdater.html#ad544dd9a348c1204140ffd60b84795cf',1,'foleys::LicenseUpdater']]],
   ['getcurrentprogram_2',['getCurrentProgram',['../classLicensingDemoProcessor.html#a75dfefac91048c2c46e1a20ab17370a0',1,'LicensingDemoProcessor']]],
-  ['getlasterror_3',['getLastError',['../classfoleys_1_1LicenseUpdater.html#a26a6a9a99244a560b1710b2d19b791de',1,'foleys::LicenseUpdater']]],
+  ['getlasterror_3',['getLastError',['../classfoleys_1_1License.html#a26a6a9a99244a560b1710b2d19b791de',1,'foleys::License::getLastError()'],['../classfoleys_1_1LicenseUpdater.html#a26a6a9a99244a560b1710b2d19b791de',1,'foleys::LicenseUpdater::getLastError()']]],
   ['getlasterrorstring_4',['getLastErrorString',['../classfoleys_1_1License.html#a2039b04d0ae6e23f98b577d546621685',1,'foleys::License::getLastErrorString()'],['../classfoleys_1_1LicenseUpdater.html#a2039b04d0ae6e23f98b577d546621685',1,'foleys::LicenseUpdater::getLastErrorString()']]],
   ['getlicenseeemail_5',['getLicenseeEmail',['../classfoleys_1_1License.html#a5dda5c72ab43f5868320b1bdc9ceac03',1,'foleys::License']]],
   ['getname_6',['getName',['../classLicensingDemoProcessor.html#adbf13066cb3cd337c00c2f018762619c',1,'LicensingDemoProcessor']]],

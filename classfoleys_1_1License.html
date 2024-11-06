@@ -134,6 +134,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa5f4d6533ed7873b825a3788fa041668" id="r_aa5f4d6533ed7873b825a3788fa041668"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5f4d6533ed7873b825a3788fa041668">syncLicense</a> ()</td></tr>
 <tr class="memdesc:aa5f4d6533ed7873b825a3788fa041668"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the server for a new state.  <br /></td></tr>
 <tr class="separator:aa5f4d6533ed7873b825a3788fa041668"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26a6a9a99244a560b1710b2d19b791de" id="r_a26a6a9a99244a560b1710b2d19b791de"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacefoleys_1_1Licensing.html#a2c3e4bb40f36b262a5214e2da2bca9c5">Licensing::Error</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26a6a9a99244a560b1710b2d19b791de">getLastError</a> () const</td></tr>
+<tr class="separator:a26a6a9a99244a560b1710b2d19b791de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2039b04d0ae6e23f98b577d546621685" id="r_a2039b04d0ae6e23f98b577d546621685"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2039b04d0ae6e23f98b577d546621685">getLastErrorString</a> () const</td></tr>
 <tr class="memdesc:a2039b04d0ae6e23f98b577d546621685"><td class="mdescLeft">&#160;</td><td class="mdescRight">If the last action resulted in an error, this will return it.  <br /></td></tr>
 <tr class="separator:a2039b04d0ae6e23f98b577d546621685"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,6 +160,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3b7dc84d24e006b42f4b113b3f7c581b" id="r_a3b7dc84d24e006b42f4b113b3f7c581b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b7dc84d24e006b42f4b113b3f7c581b">activate</a> (const std::vector&lt; std::pair&lt; std::string, std::string &gt; &gt; &amp;data)</td></tr>
 <tr class="memdesc:a3b7dc84d24e006b42f4b113b3f7c581b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request the server to activate this computer.  <br /></td></tr>
 <tr class="separator:a3b7dc84d24e006b42f4b113b3f7c581b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62219314c40c1a05fddb2f42649db170" id="r_a62219314c40c1a05fddb2f42649db170"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62219314c40c1a05fddb2f42649db170">deactivate</a> (const std::vector&lt; std::pair&lt; std::string, std::string &gt; &gt; &amp;data={})</td></tr>
+<tr class="memdesc:a62219314c40c1a05fddb2f42649db170"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deactivate this machine using the hardware UID.  <br /></td></tr>
+<tr class="separator:a62219314c40c1a05fddb2f42649db170"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7c0c25b0cc31fdaf7f773f221d26388" id="r_af7c0c25b0cc31fdaf7f773f221d26388"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structfoleys_1_1Licensing_1_1Activation.html">Licensing::Activation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7c0c25b0cc31fdaf7f773f221d26388">getActivations</a> ()</td></tr>
 <tr class="memdesc:af7c0c25b0cc31fdaf7f773f221d26388"><td class="mdescLeft">&#160;</td><td class="mdescRight">In case of a failed activation, this contains existing activations for deactivation.  <br /></td></tr>
 <tr class="separator:af7c0c25b0cc31fdaf7f773f221d26388"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -287,6 +292,33 @@ Public Attributes</h2></td></tr>
 <p>Access the server for a new state. </p>
 
 <p class="reference">References <a class="el" href="classfoleys_1_1LicenseUpdater.html#ae900db9214cee5e2e35c80a8c1a4c6b0">LicenseUpdater::fetchLicenseData()</a>.</p>
+
+</div>
+</div>
+<a id="a26a6a9a99244a560b1710b2d19b791de" name="a26a6a9a99244a560b1710b2d19b791de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26a6a9a99244a560b1710b2d19b791de">&#9670;&#160;</a></span>getLastError()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacefoleys_1_1Licensing.html#a2c3e4bb40f36b262a5214e2da2bca9c5">Licensing::Error</a> getLastError </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classfoleys_1_1LicenseUpdater.html#a26a6a9a99244a560b1710b2d19b791de">LicenseUpdater::getLastError()</a>.</p>
 
 </div>
 </div>
@@ -513,6 +545,35 @@ Public Attributes</h2></td></tr>
 <p class="reference">References <a class="el" href="classfoleys_1_1LicenseUpdater.html#ae900db9214cee5e2e35c80a8c1a4c6b0">LicenseUpdater::fetchLicenseData()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classLicensePanel.html#ad59f66d3ab9ef948edaa7a2f50e3b287">LicensePanel::activate()</a>.</p>
+
+</div>
+</div>
+<a id="a62219314c40c1a05fddb2f42649db170" name="a62219314c40c1a05fddb2f42649db170"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62219314c40c1a05fddb2f42649db170">&#9670;&#160;</a></span>deactivate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deactivate </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::pair&lt; std::string, std::string &gt; &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Deactivate this machine using the hardware UID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>is a name/value set to add to the request payload. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classfoleys_1_1LicenseUpdater.html#ae900db9214cee5e2e35c80a8c1a4c6b0">LicenseUpdater::fetchLicenseData()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classLicensePanel.html#a843d21d8c377720b9857bf7c38bdaa4a">LicensePanel::LicensePanel()</a>.</p>
 
 </div>
 </div>
@@ -779,7 +840,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacefoleys.html">foleys</a></li><li class="navelem"><a class="el" href="classfoleys_1_1License.html">License</a></li>
-    <li class="footer">Generated on Mon Oct 21 2024 13:29:14 for foleys_licensing_client by
+    <li class="footer">Generated on Wed Nov 6 2024 21:53:56 for foleys_licensing_client by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
