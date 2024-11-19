@@ -17,7 +17,6 @@ For details refer to the LICENSE.md
 #include "private/foleys_LicenseData.h"
 
 #include <juce_core/juce_core.h>
-#include <filesystem>
 
 namespace foleys
 {

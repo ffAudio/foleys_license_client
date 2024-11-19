@@ -4,11 +4,13 @@ cmake_minimum_required(VERSION 3.24.1 FATAL_ERROR)
 # foleys_license_client implementation
 # ================================================================================
 
+option(FOLEYS_LICENSING_HAS_JUCE "Set this ON if you build a juce project. juce needs be present in the including target." ON)
+
 include(FetchContent)
 
-include(CPR)
 include(nlohmann)
 include(Sodium)
+include(GHC-filesystem)
 
 add_library(licensing
         INTERFACE)
@@ -27,7 +29,6 @@ target_sources(licensing
         private/foleys_SystemInfo.h
         private/choc_Base64.h)
 
-option(FOLEYS_LICENSING_HAS_JUCE "Set this ON if you build a juce project. juce needs be present in the including target." OFF)
 
 if (FOLEYS_LICENSING_HAS_JUCE)
     target_sources(licensing
@@ -38,18 +39,24 @@ endif ()
 
 
 if (APPLE)
-    target_sources(licensing INTERFACE private/foleys_SystemInfo.mm)
+    target_sources(licensing
+            INTERFACE
+            private/foleys_NetworkRequest.mm
+            private/foleys_SystemInfo.mm)
+
+    target_link_libraries(licensing INTERFACE
+            "-framework Foundation")
 else ()
-    target_sources(licensing INTERFACE private/foleys_SystemInfo.cpp)
+    target_sources(licensing
+            INTERFACE
+            private/foleys_NetworkRequest.cpp
+            private/foleys_SystemInfo.cpp)
 endif ()
 
-
-target_link_libraries(licensing
-        INTERFACE
-        cpr::cpr
-        sodium)
+target_link_libraries(licensing INTERFACE sodium)
 
 target_include_directories(licensing
         INTERFACE
         ${nlohmann_SOURCE_DIR}/include
+        ${filesystem_SOURCE_DIR}/include
         ${CMAKE_CURRENT_LIST_DIR})

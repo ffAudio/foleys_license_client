@@ -17,6 +17,7 @@ For details refer to the LICENSE.md
 
 #include "foleys_Observers.h"
 #include "foleys_SharedObject.h"
+#include "foleys_NetworkRequest.h"
 
 #include "foleys_Licensing.h"
 
@@ -50,6 +51,7 @@ public:
      * Otherwise it will fetch a new license
      */
     void fetchIfNecessary (int hours = 24);
+
 
     /**
      * Tries to get new license data from the server.
@@ -109,6 +111,8 @@ private:
     std::mutex  storageMutex;
     std::string hardwareUid;
     std::string localStorage;
+
+    std::unique_ptr<NetworkRequest> request;
 
     std::vector<std::pair<std::string, std::string>> defaultData;
     Licensing::Error                                 lastError = Licensing::Error::NoError;

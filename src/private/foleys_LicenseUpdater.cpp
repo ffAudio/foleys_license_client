@@ -15,11 +15,13 @@ For details refer to the LICENSE.md
 #include "foleys_LicenseUpdater.h"
 #include "foleys_LicenseData.h"
 #include "foleys_License.h"
+#include "foleys_NetworkRequest.h"
 #include "foleys_Crypto.h"
 #include "foleys_Checks.h"
 
 #include <nlohmann/json.hpp>
-#include <cpr/cpr.h>
+#include <ghc/filesystem.hpp>
+#include <fstream>
 
 
 namespace foleys
@@ -71,105 +73,113 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
     if (hardwareUid.empty())
         return;
 
-    nlohmann::json request;
+    nlohmann::json requestData;
     if (!action.empty())
-        request[LicenseID::action] = action;
+        requestData[LicenseID::action] = action;
 
-    request[LicenseID::product]  = LicenseData::productUid;
-    request[LicenseID::hardware] = hardwareUid;
+    requestData[LicenseID::product]  = LicenseData::productUid;
+    requestData[LicenseID::hardware] = hardwareUid;
 
     for (const auto& pair: defaultData)
-        request[pair.first] = pair.second;
+        requestData[pair.first] = pair.second;
 
     for (const auto& pair: data)
-        request[pair.first] = pair.second;
+        requestData[pair.first] = pair.second;
 
+
+    std::string url (LicenseData::authServerUrl);
 #if FOLEYS_LICENSE_ENCRYPT_REQUEST
-    auto payload = cpr::Body (Crypto::encrypt (request.dump()));
-    auto url     = cpr::Url (LicenseData::authServerUrl) + "auth/" + LicenseData::productUid + "/";
+    auto payload = Crypto::encrypt (requestData.dump());
+    url += "auth/" + LicenseData::productUid + "/";
 #else
-    auto payload = cpr::Body (request.dump());
-    auto url     = cpr::Url (LicenseData::authServerUrl) + "auth/";
+    auto payload = requestData.dump();
+    url += "auth/";
 #endif
 
-    using namespace std::chrono_literals;
-    cpr::Response r = cpr::Post (url, payload, cpr::Timeout { 10s });
+    auto newRequest = std::make_unique<NetworkRequest> (url);
 
-    if (r.error)
+    newRequest->callback = [this] (int status, std::string_view downloaded)
     {
-        lastError       = Licensing::Error::ServerNotAvailable;
-        lastErrorString = "Server not reachable or timed out";
-    }
-
-    if (r.status_code >= 400)
-    {
-        lastError       = Licensing::Error::ServerAnswerInvalid;
-        lastErrorString = "Server error (http status code: " + std::to_string (r.status_code) + ")";
-        sendUpdateSignal();
-        return;
-    }
-
-    auto answer = Crypto::decrypt (r.text);
-
-    if (answer.empty())
-    {
-        lastError       = Licensing::Error::ServerAnswerInvalid;
-        lastErrorString = "Server Error (could not decrypt)";
-        sendUpdateSignal();
-        return;
-    }
-
-    lastError       = Licensing::Error::NoError;
-    lastErrorString = "";
-
-    auto json = nlohmann::json::parse (answer, nullptr, false);
-    if (json.is_discarded())
-    {
-        lastError       = Licensing::Error::ServerAnswerInvalid;
-        lastErrorString = "Server Error (invalid json)";
-        sendUpdateSignal();
-        return;
-    }
-
-    if (Checks::getHardwareUID (json) != hardwareUid)
-    {
-        lastError       = Licensing::Error::ServerAnswerInvalid;
-        lastErrorString = "License not applicable";
-        sendUpdateSignal();
-        return;
-    }
-
-    {
-        const std::scoped_lock mutex (storageMutex);
-
-        if (localStorage.empty())
+        if (status > 399)
         {
-            lastError       = Licensing::Error::CouldNotSave;
-            lastErrorString = "Could not open license file for writing";
+            lastError       = Licensing::Error::ServerNotAvailable;
+            lastErrorString = "Server not reachable or timed out";
+        }
+
+        //                          if (r.status_code >= 400)
+        //                          {
+        //                              lastError       = Licensing::Error::ServerAnswerInvalid;
+        //                              lastErrorString = "Server error (http status code: " + std::to_string (r.status_code) + ")";
+        //                              sendUpdateSignal();
+        //                              return;
+        //                          }
+
+        auto answer = Crypto::decrypt (downloaded);
+
+        if (answer.empty())
+        {
+            lastError       = Licensing::Error::ServerAnswerInvalid;
+            lastErrorString = "Server Error (could not decrypt)";
             sendUpdateSignal();
             return;
         }
 
-//        std::filesystem::create_directories (localStorage.parent_path());
-        std::ofstream output (localStorage);
-        if (output.is_open())
-        {
-            output << r.text;
-        }
-        else
-        {
-            lastError       = Licensing::Error::CouldNotSave;
-            lastErrorString = "Could not open license file for writing";
-        }
-    }
+        lastError       = Licensing::Error::NoError;
+        lastErrorString = "";
 
-    if (json.contains (LicenseID::error))
-    {
-        lastError       = Licensing::Error::ServerError;
-        lastErrorString = json[LicenseID::error];
-    }
+        auto json = nlohmann::json::parse (answer, nullptr, false);
+        if (json.is_discarded())
+        {
+            lastError       = Licensing::Error::ServerAnswerInvalid;
+            lastErrorString = "Server Error (invalid json)";
+            sendUpdateSignal();
+            return;
+        }
 
-    sendUpdateSignal();
+        if (Checks::getHardwareUID (json) != hardwareUid)
+        {
+            lastError       = Licensing::Error::ServerAnswerInvalid;
+            lastErrorString = "License not applicable";
+            sendUpdateSignal();
+            return;
+        }
+
+        {
+            const std::scoped_lock mutex (storageMutex);
+
+            if (localStorage.empty())
+            {
+                lastError       = Licensing::Error::CouldNotSave;
+                lastErrorString = "Could not open license file for writing";
+                sendUpdateSignal();
+                return;
+            }
+
+            ghc::filesystem::path filepath (localStorage);
+            ghc::filesystem::create_directories (filepath.parent_path());
+            std::ofstream output (localStorage);
+            if (output.is_open())
+            {
+                output << downloaded;
+            }
+            else
+            {
+                lastError       = Licensing::Error::CouldNotSave;
+                lastErrorString = "Could not open license file for writing";
+            }
+        }
+
+        if (json.contains (LicenseID::error))
+        {
+            lastError       = Licensing::Error::ServerError;
+            lastErrorString = json[LicenseID::error];
+        }
+
+        sendUpdateSignal();
+    };
+
+    newRequest->fetch (payload);
+    request = std::move (newRequest);
 }
 
 std::vector<Licensing::Activation> LicenseUpdater::getActivations()

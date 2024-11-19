@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.24.1 FATAL_ERROR)
 # ================================================================================
 
 
-set(CMAKE_OSX_DEPLOYMENT_TARGET 10.15)
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
 option(FOLEYS_LICENSING_HAS_JUCE "Enable juce GUI for the license client" ON)
 
 include(juce)
@@ -50,6 +50,7 @@ juce_add_binary_data(
         FoleysJuceLicenseExample_data
         SOURCES
         Resources/close-icon.svg
+        Resources/refresh-icon.svg
         Resources/pdf-icon.svg
         Resources/key-icon.svg
         Resources/www-icon.svg)
@@ -58,7 +59,6 @@ target_link_libraries(FoleysJuceLicenseExample
         PRIVATE
         FoleysJuceLicenseExample_data
         licensing
-        sodium
         juce::juce_audio_processors
         juce::juce_audio_devices
         juce::juce_audio_utils

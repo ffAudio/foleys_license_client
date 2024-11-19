@@ -14,6 +14,13 @@
 #ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSING_H
 #define FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSING_H
 
+#define FOLEYS_DISABLE_COPY(className) \
+    className (const className&) = delete;\
+    className& operator= (const className&) = delete;
+
+
+#include <string>
+
 namespace foleys::Licensing
 {
 

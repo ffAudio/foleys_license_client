@@ -15,4 +15,12 @@ For details refer to the LICENSE.md
 #ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_SYSTEMINFO_H
 #define FOLEYS_LICENSING_CLIENT_FOLEYS_SYSTEMINFO_H
 
+namespace foleys::SystemInfo
+{
+
+
+
+}  // namespace foleys::SystemInfo
+
+
 #endif  // FOLEYS_LICENSING_CLIENT_FOLEYS_SYSTEMINFO_H

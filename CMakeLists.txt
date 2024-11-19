@@ -27,6 +27,9 @@ if (NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
 endif ()
 
+if (APPLE)
+    enable_language(OBJCXX)
+endif()
 
 # src contains the actual library
 add_subdirectory(src)
