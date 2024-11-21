@@ -25,17 +25,23 @@ struct SystemInfo
 {
 
     /**
- * @return the application settings folder e.g. Application Support
+     * @return the application settings folder e.g. Application Support
      */
     static std::string getAppData();
 
     /**
- *
- * @param manufacturer the manufacturer name as folder name under APP_DATA
- * @param productName the product name as license filename
- * @return a path name for the license file
+     * @return the application settings folder e.g. Application Support, on windows the local
      */
-    static std::string createLicensePath (const char* manufacturer, const char* productName);
+    static std::string getLocalAppData();
+
+    /**
+     *
+     * @param manufacturer the manufacturer name as folder name under APP_DATA
+     * @param productName the product name as license filename
+     * @param suffix the suffix for the license filename including the dot
+     * @return a path name for the license file
+     */
+    static std::string createLicensePath (const char* manufacturer, const char* productName, const char* suffix = ".lic");
 };
 
 }  // namespace foleys

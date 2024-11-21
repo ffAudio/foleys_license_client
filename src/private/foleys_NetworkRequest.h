@@ -34,7 +34,7 @@ public:
 private:
     std::string url;
 
-#if(__APPLE__)
+#if (__APPLE__)
     void* dataTask = nullptr;
 #endif
 

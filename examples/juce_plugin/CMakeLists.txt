@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 3.24.1 FATAL_ERROR)
 # ================================================================================
 
 
-set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
 option(FOLEYS_LICENSING_HAS_JUCE "Enable juce GUI for the license client" ON)
 
 include(juce)

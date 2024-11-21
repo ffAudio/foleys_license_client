@@ -25,11 +25,16 @@ std::string SystemInfo::getAppData()
     return sago::getDataHome();
 }
 
-std::string SystemInfo::createLicensePath (const char* manufacturer, const char* productName)
+std::string SystemInfo::getLocalAppData()
 {
-    ghc::filesystem::path appFolder (getAppData());
+    return sago::getStateDir();
+}
+
+std::string SystemInfo::createLicensePath (const char* manufacturer, const char* productName, const char* suffix)
+{
+    ghc::filesystem::path appFolder (getLocalAppData());
     std::string           filename (productName);
-    filename += ".lic";
+    filename += suffix;
     return (appFolder / manufacturer / filename).string();
 }
 

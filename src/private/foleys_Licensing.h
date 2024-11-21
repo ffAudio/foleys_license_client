@@ -14,10 +14,27 @@
 #ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSING_H
 #define FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSING_H
 
-#define FOLEYS_DISABLE_COPY(className) \
-    className (const className&) = delete;\
+#define FOLEYS_DISABLE_COPY(className)                \
+    className (const className&)            = delete; \
     className& operator= (const className&) = delete;
 
+/**
+ * Add this FOLEYS_DECLARE_SAFEPOINTER macro to your observer declaration. This allows to check if observers were
+ * deleted while iterating the list (dangling).
+ */
+#define FOLEYS_DECLARE_SAFEPOINTER(className)        \
+    using SafePointer = std::shared_ptr<className*>; \
+    virtual ~className()                             \
+    {                                                \
+        (*reference) = nullptr;                      \
+    }                                                \
+    SafePointer getSafePointer()                     \
+    {                                                \
+        return reference;                            \
+    }                                                \
+                                                     \
+private:                                             \
+    SafePointer reference { std::make_shared<className*> (this) };
 
 #include <string>
 
