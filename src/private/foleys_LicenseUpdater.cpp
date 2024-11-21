@@ -106,14 +106,6 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
             lastErrorString = "Server not reachable or timed out";
         }
 
-        //                          if (r.status_code >= 400)
-        //                          {
-        //                              lastError       = Licensing::Error::ServerAnswerInvalid;
-        //                              lastErrorString = "Server error (http status code: " + std::to_string (r.status_code) + ")";
-        //                              sendUpdateSignal();
-        //                              return;
-        //                          }
-
         auto answer = Crypto::decrypt (downloaded);
 
         if (answer.empty())

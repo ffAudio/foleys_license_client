@@ -1,4 +1,15 @@
+/********************************************************************************
+    Copyright 2024 - Daniel Walz
+    Foleys Finest Audio UG (haftungsbeschraenkt)
+    Lobith Audio UG (haftungsbeschraenkt)
+********************************************************************************
 
+    This code is provided under the ISC license
+
+    This code is provided as is. The authors disclaim all warranties.
+    For details refer to the LICENSE.md
+
+*******************************************************************************/
 
 #include "foleys_NetworkRequest.h"
 
@@ -8,11 +19,6 @@ namespace foleys
 {
 
 NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess) { }
-
-NetworkRequest::~NetworkRequest()
-{
-    cancel();
-}
 
 void NetworkRequest::fetch (std::string_view payload)
 {
@@ -25,6 +31,14 @@ void NetworkRequest::fetch (std::string_view payload)
 
     auto* task = [session dataTaskWithRequest:urlRequest
                             completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
+                                if (error)
+                                {
+                                    if (callback)
+                                        callback (500, {});
+
+                                    return;
+                                }
+
                                 auto* httpResponse = (NSHTTPURLResponse*) response;
 
                                 if (httpResponse.statusCode < 400 && callback)
@@ -40,12 +54,6 @@ void NetworkRequest::fetch (std::string_view payload)
     [task resume];
 
     dataTask = task;
-}
-
-void NetworkRequest::cancel()
-{
-    if (dataTask)
-        [(NSURLSessionDataTask*) dataTask cancel];
 }
 
 

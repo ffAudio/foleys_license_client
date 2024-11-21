@@ -19,6 +19,7 @@
 #include "private/foleys_Observers.h"
 #include "private/foleys_LicenseData.h"
 #include "private/foleys_LicenseUpdater.h"
+#include "private/foleys_SystemInfo.h"
 
 #include <atomic>
 #include <optional>

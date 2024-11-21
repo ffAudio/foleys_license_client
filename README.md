@@ -30,9 +30,12 @@ FetchContent_Declare(license
 FetchContent_MakeAvailable(license)
 ```
 
-The included CPR library requires
-- CMAKE_CXX_STANDARD_REQUIRED OFF
-- CMAKE_OSX_DEPLOYMENT_TARGET >= 10.15
+Since this project uses objective-C on mac, you need to enable OBJXX in your top level CMakeLists.txt:
+```cmake
+if (APPLE)
+    enable_language(OBJCXX)
+endif()
+```
 
 Once you created a product in the website you also create a Version there, which has it's own unique key pair to talk to the server.
 Also the version number will show up in the usage statistics.

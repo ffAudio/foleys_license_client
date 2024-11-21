@@ -5,7 +5,7 @@
 #include <foleys_License.h>
 
 
-constexpr auto localStorage = "~/Library/Application Support/Manufacturer/TestStandalone.lic";
+std::string localStorage = foleys::SystemInfo::createLicensePath("Manufacturer", "TestStandalone");
 constexpr auto hardwareUid  = "Hardware TODO";
 constexpr auto os           = "OS TODO";
 constexpr auto host         = "Host TODO";
