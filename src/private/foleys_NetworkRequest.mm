@@ -20,6 +20,12 @@ namespace foleys
 
 NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess) { }
 
+NetworkRequest::~NetworkRequest()
+{
+    // at least avoid entering the callback
+    callback = nullptr;
+}
+
 void NetworkRequest::fetch (std::string_view payload)
 {
     NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.c_str()]]];
@@ -41,7 +47,7 @@ void NetworkRequest::fetch (std::string_view payload)
 
                                 auto* httpResponse = (NSHTTPURLResponse*) response;
 
-                                if (httpResponse.statusCode < 400 && callback)
+                                if ((httpResponse.statusCode % 100 == 2) && callback)
                                 {
                                     auto        status       = static_cast<int> (httpResponse.statusCode);
                                     NSString*   resultString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];

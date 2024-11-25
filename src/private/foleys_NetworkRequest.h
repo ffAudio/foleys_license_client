@@ -22,10 +22,11 @@
 namespace foleys
 {
 
-class NetworkRequest
+class NetworkRequest final
 {
 public:
     explicit NetworkRequest (std::string_view url);
+    ~NetworkRequest();
 
     void fetch (std::string_view payload);
 

@@ -13,7 +13,7 @@
 
 #if (WIN32)
 
-#include "foleys_NetworkRequest.h"
+    #include "foleys_NetworkRequest.h"
 
 // #include <wininet.h>
 
@@ -22,10 +22,13 @@ namespace foleys
 
 NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess) { }
 
-void NetworkRequest::fetch (std::string_view payload)
+NetworkRequest::~NetworkRequest()
 {
-
+    // at least avoid entering the callback
+    callback = nullptr;
 }
+
+void NetworkRequest::fetch (std::string_view payload) { }
 
 }  // namespace foleys
 #endif
