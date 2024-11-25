@@ -112,13 +112,13 @@ private:
     std::string hardwareUid;
     std::string localStorage;
 
-    std::unique_ptr<NetworkRequest> request;
-
     std::vector<std::pair<std::string, std::string>> defaultData;
     Licensing::Error                                 lastError = Licensing::Error::NoError;
     std::string                                      lastErrorString;
     ObserverList<Observer>                           observerList;
     bool                                             popupShown = false;
+
+    std::unique_ptr<NetworkRequest> request;
 };
 
 

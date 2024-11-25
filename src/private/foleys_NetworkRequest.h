@@ -30,6 +30,8 @@ public:
 
     void fetch (std::string_view payload);
 
+    void cancel();
+
     std::function<void (int, std::string_view)> callback;
 
 private:

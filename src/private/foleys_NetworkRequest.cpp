@@ -24,11 +24,22 @@ NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess
 
 NetworkRequest::~NetworkRequest()
 {
+    cancel();
+}
+
+void NetworkRequest::fetch (std::string_view payload)
+{
+    cancel();
+
+    // TODO
+}
+
+void NetworkRequest::cancel()
+{
     // at least avoid entering the callback
     callback = nullptr;
 }
 
-void NetworkRequest::fetch (std::string_view payload) { }
 
 }  // namespace foleys
 #endif

@@ -22,12 +22,14 @@ NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess
 
 NetworkRequest::~NetworkRequest()
 {
-    // at least avoid entering the callback
     callback = nullptr;
+    cancel();
 }
 
 void NetworkRequest::fetch (std::string_view payload)
 {
+    cancel();
+
     NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.c_str()]]];
     [urlRequest setHTTPMethod:@"POST"];
 
@@ -38,12 +40,7 @@ void NetworkRequest::fetch (std::string_view payload)
     auto* task = [session dataTaskWithRequest:urlRequest
                             completionHandler:^(NSData* data, NSURLResponse* response, NSError* error) {
                                 if (error)
-                                {
-                                    if (callback)
-                                        callback (500, {});
-
                                     return;
-                                }
 
                                 auto* httpResponse = (NSHTTPURLResponse*) response;
 
@@ -57,9 +54,21 @@ void NetworkRequest::fetch (std::string_view payload)
                                     [resultString release];
                                 }
                             }];
+    [task retain];
     [task resume];
 
     dataTask = task;
+}
+
+void NetworkRequest::cancel()
+{
+    if (dataTask)
+    {
+        auto* task = (NSURLSessionDataTask*)dataTask;
+        [task cancel];
+        [task release];
+        dataTask = nullptr;
+    }
 }
 
 
