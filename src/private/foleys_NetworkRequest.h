@@ -16,7 +16,6 @@
 
 #include "foleys_Licensing.h"
 
-#include <string_view>
 #include <functional>
 
 namespace foleys
@@ -25,12 +24,12 @@ namespace foleys
 class NetworkRequest final
 {
 public:
-    static constexpr auto kUserAgent = L"foleys licensing/1.0";
+    static constexpr auto kUserAgent = L"foleys_license_win/1.0";
 
     explicit NetworkRequest (std::string_view url);
     ~NetworkRequest();
 
-    void fetch (std::string_view payload);
+    void fetch (std::string_view payload, bool async = true, bool post = true);
     void cancel();
 
     std::function<void (int, std::string_view)> callback;
@@ -38,12 +37,17 @@ public:
 private:
     std::string url;
 
+    //void* session = nullptr;
+   // void* connect = nullptr;
+   // void* request = nullptr;
+
 #if (__APPLE__)
     void* dataTask = nullptr;
 #endif
 
     [[nodiscard]] static std::wstring stringToWString (const std::string& str);
     static void                       splitUrl (const std::string& fullUrl, std::wstring& protocol, std::wstring& domain, std::wstring& path);
+
 
     FOLEYS_DISABLE_COPY (NetworkRequest)
 };
