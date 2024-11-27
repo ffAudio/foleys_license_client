@@ -63,8 +63,9 @@ void LicenseUpdater::fetchIfNecessary (int hours)
 
     if (seconds > 3600 * hours)
         fetchLicenseData();
+    else
+        sendUpdateSignal();
 }
-
 
 void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vector<std::pair<std::string, std::string>>& data)
 {
