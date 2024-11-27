@@ -100,6 +100,7 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
     {
         lastError       = Licensing::Error::ServerNotAvailable;
         lastErrorString = "Server not reachable or timed out";
+        return;
     }
 
     if (r.status_code >= 400)
