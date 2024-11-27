@@ -170,7 +170,9 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
 {
     std::vector<char> responseBuffer;
 
-    auto networkRequest = (NetworkRequest*) context;
+    const auto* networkRequest = dynamic_cast<NetworkRequest*> (context);
+    if (!networkRequest)
+        return;
 
     // switch (internetStatus)
     //{
@@ -317,7 +319,7 @@ void NetworkRequest::fetch (std::string_view payload, bool async /*= true*/, boo
                                         (LPVOID) data.c_str(),  // Send the data with the request.
                                         (DWORD) data.length(),  // Length of the data.
                                         0,                      // No extra data.
-                                        (DWORD_PTR) this)))     // No extra data context.
+                                        0)))                    // No extra data context.
         return;
 
     if (async)
