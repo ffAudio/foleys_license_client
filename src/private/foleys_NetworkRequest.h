@@ -17,6 +17,7 @@
 #include "foleys_Licensing.h"
 
 #include <functional>
+#include <memory>
 
 namespace foleys
 {
@@ -29,25 +30,29 @@ public:
     explicit NetworkRequest (std::string_view url);
     ~NetworkRequest();
 
-    void fetch (std::string_view payload, bool async = true, bool post = true);
-    void cancel();
+    void fetch (std::string_view payload);
+
+#if (WIN32)
+    void onResponseReceived (const std::string& response);
+#endif
+
+    void cancel() {}
 
     std::function<void (int, std::string_view)> callback;
 
 private:
     std::string url;
 
-    //void* session = nullptr;
-   // void* connect = nullptr;
-   // void* request = nullptr;
+    // void* session = nullptr;
+    // void* connect = nullptr;
+    // void* request = nullptr;
 
 #if (__APPLE__)
     void* dataTask = nullptr;
+#else
+    class Impl;                  
+    std::unique_ptr<Impl> impl; 
 #endif
-
-    [[nodiscard]] static std::wstring stringToWString (const std::string& str);
-    static void                       splitUrl (const std::string& fullUrl, std::wstring& protocol, std::wstring& domain, std::wstring& path);
-
 
     FOLEYS_DISABLE_COPY (NetworkRequest)
 };

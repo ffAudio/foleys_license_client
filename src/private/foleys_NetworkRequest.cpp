@@ -33,7 +33,6 @@ inline void debugLog (const std::string& message, bool toCerr = false)
 {
     if (toCerr)
     {
-
         std::cerr << message << std::endl;
     }
     else
@@ -120,258 +119,303 @@ namespace foleys
 {
 
 
-NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess) { }
+void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD internetStatus, LPVOID statusInformation, DWORD statusInfoLength)
+{
+    std::vector<char> responseBuffer;
+    auto*             requestOwner = reinterpret_cast<NetworkRequest*> (context);
+
+    switch (internetStatus)
+    {
+        case WINHTTP_CALLBACK_STATUS_RESOLVING_NAME:
+        {
+            DBUG ("Resolving name...");
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_NAME_RESOLVED:
+        {
+            DBUG ("Name resolved.");
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_CONNECTING_TO_SERVER:
+        {
+            DBUG ("Connecting to server...");
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_CONNECTED_TO_SERVER:
+        {
+            DBUG ("Connected to server.");
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_SENDING_REQUEST:
+        {
+            DBUG ("Sending request...");
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_REQUEST_SENT:
+        {
+            DBUG ("Request sent. Waiting for response...");
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_RECEIVING_RESPONSE:
+        {
+            DBUG ("Receiving response...");
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE:
+        {
+            DBUG ("Send request complete.");
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_REQUEST_ERROR:
+        {
+            // auto* error = reinterpret_cast<WINHTTP_ASYNC_RESULT*> (statusInformation);
+            // DBUG ("Request error: " << error->dwError);
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_READ_COMPLETE:
+        {
+            // When the read operation is complete, the data will be in lpvStatusInformation.
+            DWORD bytesRead = statusInfoLength;
+            if (bytesRead > 0)
+            {
+                responseBuffer.insert (responseBuffer.end(), static_cast<char*> (statusInformation), static_cast<char*> (statusInformation) + bytesRead);
+                DBUG ("Read " << bytesRead << " bytes.");
+            }
+
+            DWORD size = 0;
+            if (WinHttpQueryDataAvailable (internet, &size) && size > 0)
+            {
+                std::vector<char> buffer (size);
+                DWORD             bytesDownloaded = 0;
+
+                if (WinHttpReadData (internet, buffer.data(), size, &bytesDownloaded))
+                    responseBuffer.insert (responseBuffer.end(), buffer.begin(), buffer.begin() + bytesDownloaded);
+                else
+                    FAULT ("Failed to read data. Error: " << getErrorMessage (GetLastError()));
+            }
+            else
+            {
+                // End of response.
+                requestOwner->onResponseReceived (std::string (responseBuffer.begin(), responseBuffer.end()));
+                responseBuffer.clear();
+            }
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE:
+        {
+            DWORD statusCode     = 0;
+            DWORD statusCodeSize = sizeof (statusCode);
+            WinHttpQueryHeaders (internet, WINHTTP_QUERY_STATUS_CODE, WINHTTP_HEADER_NAME_BY_INDEX, &statusCode, &statusCodeSize, WINHTTP_NO_HEADER_INDEX);
+            DBUG ("HTTP Status Code: " << statusCode << ".");
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE:
+        {
+            auto* bytesAvailable = reinterpret_cast<DWORD*> (statusInformation);
+            DBUG ("Data available: " << *bytesAvailable << " bytes.");
+            if (*bytesAvailable > 0)
+            {
+                std::vector<char> buffer (*bytesAvailable);
+                DWORD             bytesRead = 0;
+                if (WinHttpReadData (internet, buffer.data(), *bytesAvailable, &bytesRead))
+                    DBUG ("Read " << bytesRead << " bytes: " << std::string (buffer.begin(), buffer.begin() + bytesRead) << "\r\n");
+                else
+                    FAULT ("Failed to read data: " << getErrorMessage (GetLastError()) << "\r\n");
+            }
+            break;
+        }
+        case WINHTTP_CALLBACK_STATUS_HANDLE_CLOSING: DBUG ("Closing handle."); break;
+        default: DBUG ("Unhandled internetStatus: " << internetStatus << "\r\n"); break;
+    }
+}
+
+class NetworkRequest::Impl
+{
+public:
+    Impl (std::string_view urlToAccess)
+      : url (urlToAccess),
+        session (WinHttpOpen (NetworkRequest::kUserAgent, WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, WINHTTP_FLAG_ASYNC))
+    {
+        if (!session)
+            throw std::runtime_error ("Failed to open WinHTTP session: " + getErrorMessage (GetLastError()));
+    }
+
+    ~Impl()
+    {
+        if (request)
+            WinHttpCloseHandle (request);
+        if (connect)
+            WinHttpCloseHandle (connect);
+        if (session)
+            WinHttpCloseHandle (session);
+    }
+
+    void fetch (std::string_view payload, NetworkRequest* requestOwner, bool async, bool post)
+    {
+        if (isFetching.load())
+            return;
+
+        isFetching.store (true);
+
+        // Preparing the url...
+        std::wstring protocol, domain, path;
+        NetworkRequest::Impl::splitUrl (url, protocol, domain, path);
+
+        const auto useHttps = protocol == L"https://";
+
+        connect = WinHttpConnect (session, domain.c_str(), useHttps ? INTERNET_DEFAULT_HTTPS_PORT : INTERNET_DEFAULT_HTTP_PORT, 0);
+        if (!connect)
+            throw std::runtime_error ("Failed to connect: " + getErrorMessage (GetLastError()));
+
+        // Opening the request...
+        request = WinHttpOpenRequest (connect, post ? L"POST" : L"GET",  // HTTP method.
+                                      path.c_str(),                      // Request URI.
+                                      nullptr,                           // No additional headers (optional).
+                                      WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, useHttps ? WINHTTP_FLAG_SECURE : 0);
+        if (!request)
+            throw std::runtime_error ("Failed to open request: " + getErrorMessage (GetLastError()));
+
+        // Setting callback for asynchronous events...
+        if (async)
+        {
+            if (WinHttpSetStatusCallback (request, httpCallback, WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS, 0) == WINHTTP_INVALID_STATUS_CALLBACK)
+                throw std::runtime_error ("Failed to set callback: " + getErrorMessage (GetLastError()));
+        }
+
+        // Creating headers...
+        const auto   data    = std::string (payload);
+        std::wstring headers = L"Content-Type: application/json\r\nContent-Length: " + std::to_wstring (data.size()) + L"\r\n";
+
+        // Sending the request...
+        BOOL results;
+        if (!(results = WinHttpSendRequest (request,
+                                            headers.c_str(),                                           // Set content type header.
+                                            (DWORD) -1L,                                               // Automatically calculate the header size.
+                                            (LPVOID) data.c_str(),                                     // Send the data with the request.
+                                            (DWORD) data.length(),                                     // Length of the data.
+                                            0,                                                         // No extra data. or `static_cast<DWORD> (data.size())`
+                                            async ? reinterpret_cast<DWORD_PTR> (requestOwner) : 0)))  // Pass requestOwner as context if using asynchronous communication.
+            throw std::runtime_error ("Failed to send request: " + getErrorMessage (GetLastError()));
+
+
+        if (async)
+            return;
+
+        // Writing the body data...
+        DWORD bytesWritten = 0;
+        if (!(WinHttpWriteData (request, data.data(), (DWORD) data.size(), &bytesWritten)))
+            return;
+
+        if (bytesWritten != data.size())
+        {
+            FAULT ("Incomplete body sent. Bytes written: " << std::to_string (bytesWritten) << "\r\n");
+            return;
+        }
+
+        // Waiting for the response...
+        results = WinHttpReceiveResponse (request, nullptr);
+        if (!results)
+            return;
+
+        // Query the status code
+        wchar_t statusCodeBuffer[16] = {};
+        DWORD   bufferLength         = sizeof (statusCodeBuffer);
+        if (!(WinHttpQueryHeaders (request, WINHTTP_QUERY_STATUS_CODE, WINHTTP_HEADER_NAME_BY_INDEX, statusCodeBuffer, &bufferLength, WINHTTP_NO_HEADER_INDEX)))
+            return;
+
+        int statusCode = std::wcstol (statusCodeBuffer, nullptr, 10);
+
+        // Reading the response from the server...
+        DWORD       size          = 0;
+        DWORD       numDownloaded = 0;
+        std::string response;
+        do
+        {
+            // Checking the size of the available data...
+            WinHttpQueryDataAvailable (request, &size);
+            if (size == 0)
+                break;
+
+            // Reading...
+            std::vector<char> buffer (size);
+            WinHttpReadData (request, buffer.data(), size, &numDownloaded);
+            response.append (buffer.data(), numDownloaded);
+
+        } while (size > 0);
+
+        setStoppedFetching();
+
+        // if (statusCode < 300 && callback)
+        //     callback (statusCode, response);
+    }
+
+    void setStoppedFetching() { isFetching.store (false); }
+
+private:
+    HINTERNET         session = nullptr;
+    HINTERNET         connect = nullptr;
+    HINTERNET         request = nullptr;
+    std::string       url     = "";
+    std::atomic<bool> isFetching { false };
+
+    static std::wstring stringToWString (const std::string& str)
+    {
+        // Convert UTF-8 string to wide string (UTF-16) using MultiByteToWideChar
+        int          size_needed = MultiByteToWideChar (CP_UTF8, 0, str.c_str(), static_cast<int> (str.size()), nullptr, 0);
+        std::wstring wstr (size_needed, 0);
+        MultiByteToWideChar (CP_UTF8, 0, str.c_str(), static_cast<int> (str.size()), &wstr[0], size_needed);
+        return wstr;
+    }
+
+    static void splitUrl (const std::string& fullUrl, std::wstring& protocol, std::wstring& domain, std::wstring& path)
+    {
+        // Splitting protocol...
+        const auto protocol_end = fullUrl.find ("://");
+
+        std::string narrowProtocol = "";
+        if (protocol_end != std::string::npos)
+            narrowProtocol = std::string_view (fullUrl.data(), protocol_end + 3);
+        protocol = NetworkRequest::Impl::stringToWString (narrowProtocol);
+
+        // Splitting domain and path...
+        std::string narrowPath   = "";
+        std::string narrowDomain = "";
+        const auto  domain_start = protocol_end == std::string::npos ? 0 : protocol_end + 3;
+        const auto  domain_end   = fullUrl.find ('/', domain_start);
+        if (domain_end != std::string::npos)
+        {
+            narrowDomain = std::string_view (fullUrl.data() + domain_start, domain_end - domain_start);
+            narrowPath   = std::string_view (fullUrl.data() + domain_end, fullUrl.size() - domain_end);
+        }
+        else
+        {
+            narrowDomain = std::string_view (fullUrl.data() + domain_start, fullUrl.size() - domain_start);
+        }
+
+        domain = NetworkRequest::Impl::stringToWString (narrowDomain);
+        path   = NetworkRequest::Impl::stringToWString (narrowPath);
+    }
+};
+
+
+NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess), impl (std::make_unique<Impl> (urlToAccess)) { }
 
 NetworkRequest::~NetworkRequest()
 {
     cancel();
 }
 
-std::wstring NetworkRequest::stringToWString (const std::string& str)
+void NetworkRequest::onResponseReceived (const std::string& response)
 {
-    // Convert UTF-8 string to wide string (UTF-16) using MultiByteToWideChar
-    int          size_needed = MultiByteToWideChar (CP_UTF8, 0, str.c_str(), static_cast<int> (str.size()), nullptr, 0);
-    std::wstring wstr (size_needed, 0);
-    MultiByteToWideChar (CP_UTF8, 0, str.c_str(), static_cast<int> (str.size()), &wstr[0], size_needed);
-    return wstr;
+    impl->setStoppedFetching();
+
+    std::cout << "Response received: " << response << std::endl;
 }
 
-
-void NetworkRequest::splitUrl (const std::string& fullUrl, std::wstring& protocol, std::wstring& domain, std::wstring& path)
+void NetworkRequest::fetch (std::string_view payload)
 {
-    // Splitting protocol...
-    const auto protocol_end = fullUrl.find ("://");
-
-    std::string narrowProtocol = "";
-    if (protocol_end != std::string::npos)
-        narrowProtocol = std::string_view (fullUrl.data(), protocol_end + 3);
-    protocol = NetworkRequest::stringToWString (narrowProtocol);
-
-    // Splitting domain and path...
-    std::string narrowPath   = "";
-    std::string narrowDomain = "";
-    const auto  domain_start = protocol_end == std::string::npos ? 0 : protocol_end + 3;
-    const auto  domain_end   = fullUrl.find ('/', domain_start);
-    if (domain_end != std::string::npos)
-    {
-        narrowDomain = std::string_view (fullUrl.data() + domain_start, domain_end - domain_start);
-        narrowPath   = std::string_view (fullUrl.data() + domain_end, fullUrl.size() - domain_end);
-    }
-    else
-    {
-        narrowDomain = std::string_view (fullUrl.data() + domain_start, fullUrl.size() - domain_start);
-    }
-
-    domain = NetworkRequest::stringToWString (narrowDomain);
-    path   = NetworkRequest::stringToWString (narrowPath);
+    impl->fetch (payload, this, true, true);
 }
-
-void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD internetStatus, LPVOID statusInformation, DWORD statusInfoLength)
-{
-    std::vector<char> responseBuffer;
-
-    const auto* networkRequest = dynamic_cast<NetworkRequest*> (context);
-    if (!networkRequest)
-        return;
-
-    // switch (internetStatus)
-    //{
-    //     case WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE:
-    //     {
-    //         DBUG ("Request sent. Now reading response..." << "\r\n");
-    //         break;
-    //     }
-    //     case WINHTTP_CALLBACK_STATUS_REQUEST_ERROR:
-    //     {
-    //         auto* error = reinterpret_cast<WINHTTP_ASYNC_RESULT*> (statusInformation);
-    //         FAULT ("Request error: " << getErrorMessage (error->dwError) << ".");
-    //         break;
-    //     }
-    //     case WINHTTP_CALLBACK_STATUS_READ_COMPLETE:
-    //     {
-    //         // When the read operation is complete, the data will be in lpvStatusInformation
-    //         DWORD bytesRead = statusInfoLength;
-    //         if (bytesRead > 0)
-    //         {
-    //             responseBuffer.insert (responseBuffer.end(), static_cast<char*> (statusInformation), static_cast<char*> (statusInformation) + bytesRead);
-    //             std::cout << "Read " << bytesRead << " bytes." << std::endl;
-    //         }
-
-    //        // If there is more data to read, continue reading
-    //        DWORD dwSize       = 0;
-    //        DWORD dwDownloaded = 0;
-    //        if (WinHttpQueryDataAvailable (request, &dwSize) && dwSize > 0)
-    //        {
-    //            char* buffer = new char[dwSize + 1];
-    //            ZeroMemory (buffer, dwSize + 1);
-
-    //            // Start the read operation again
-    //            if (WinHttpReadData (hRequest, (LPVOID) buffer, dwSize, &dwDownloaded))
-    //            {
-    //                // Pass the data to the callback function (this will happen when data is read)
-    //                MyCallback (internet, dwContext, WINHTTP_CALLBACK_STATUS_READ_COMPLETE, buffer, dwDownloaded);
-    //            }
-    //            else
-    //            {
-    //                std::cerr << "Failed to read data. Error: " << GetLastError() << std::endl;
-    //            }
-    //            delete[] buffer;
-    //        }
-    //        else
-    //        {
-    //            std::cout << "No more data available." << std::endl;
-    //            // End of the response data, process the full response
-    //            std::cout << "Complete response: " << std::string (responseBuffer.begin(), responseBuffer.end()) << std::endl;
-    //        }
-    //        break;
-    //    }
-    //    case WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE:
-    //    {
-    //        DBUG ("Headers received.");
-    //        break;
-    //    }
-    //    case WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE:
-    //    {
-    //        auto* bytesAvailable = reinterpret_cast<DWORD*> (statusInformation);
-    //        DBUG ("Data available: " << *bytesAvailable << " bytes.");
-    //        if (*bytesAvailable > 0)
-    //        {
-    //            std::vector<char> buffer (*bytesAvailable);
-    //            DWORD             bytesRead = 0;
-    //            if (WinHttpReadData (internet, buffer.data(), *bytesAvailable, &bytesRead))
-    //                DBUG ("Read " << bytesRead << " bytes: " << std::string (buffer.begin(), buffer.begin() + bytesRead) << "\r\n");
-    //            else
-    //                FAULT ("Failed to read data: " << getErrorMessage (GetLastError()) << "\r\n");
-    //        }
-    //        break;
-    //    }
-    //    case WINHTTP_CALLBACK_STATUS_READ_COMPLETE:
-    //    {
-    //        DBUG ("Read complete." << "\r\n");
-    //        break;
-    //    }
-    //    default: DBUG ("Unhandled internetStatus: " << internetStatus << "\r\n");
-    //}
-}
-
-
-void NetworkRequest::fetch (std::string_view payload, bool async /*= true*/, bool post /*= true*/)
-{
-    HINTERNET session = nullptr;
-    HINTERNET connect = nullptr;
-    HINTERNET request = nullptr;
-
-    const PerformOnExit exitGuard { [&]
-                                    {
-                                        const auto error = GetLastError();
-
-                                        if (session)
-                                            WinHttpCloseHandle (session);
-                                        if (connect)
-                                            WinHttpCloseHandle (connect);
-                                        if (request)
-                                            WinHttpCloseHandle (request);
-
-                                        if (error != 0)
-                                            FAULT ("Problem fetching license. Error: " << getErrorMessage (error) << "!");
-
-                                        return;
-                                    } };
-
-    // Initializing WinHTTP session...
-    if (!(session = WinHttpOpen (kUserAgent, WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, async ? WINHTTP_FLAG_ASYNC : 0)))
-        return;
-
-    // Preparing the url...
-    std::wstring protocol, domain, path;
-    NetworkRequest::splitUrl (url, protocol, domain, path);
-
-    // Connecting to the server...
-    if (!(connect = WinHttpConnect (session, domain.c_str(), INTERNET_DEFAULT_HTTPS_PORT, 0)))
-        return;
-
-    // Creating HTTP request....
-    if (!(request = WinHttpOpenRequest (connect, post ? L"POST" : L"GET",  // HTTP method
-                                        path.c_str(),                      // Request URI
-                                        nullptr,                           // No additional headers (optional)
-                                        WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE)))
-        return;
-
-    // Setting callback for asynchronous events...
-    if (async)
-    {
-        if (WinHttpSetStatusCallback (request, httpCallback, WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS, 0) == WINHTTP_INVALID_STATUS_CALLBACK)
-        {
-            FAULT ("Failed to set callback: " << getErrorMessage (GetLastError()) << "\r\n");
-            return;
-        }
-    }
-
-    // Creating headers...
-    const auto   data    = std::string (payload);
-    std::wstring headers = L"Content-Type: application/json\r\nContent-Length: " + std::to_wstring (data.size()) + L"\r\n";
-
-    // Sending the request...
-    BOOL results;
-    if (!(results = WinHttpSendRequest (request,
-                                        headers.c_str(),        // Set content type header.
-                                        (DWORD) -1L,            // Automatically calculate the header size.
-                                        (LPVOID) data.c_str(),  // Send the data with the request.
-                                        (DWORD) data.length(),  // Length of the data.
-                                        0,                      // No extra data.
-                                        0)))                    // No extra data context.
-        return;
-
-    if (async)
-        return;
-
-    // Writing the body data...
-    DWORD bytesWritten = 0;
-    if (!(WinHttpWriteData (request, data.data(), (DWORD) data.size(), &bytesWritten)))
-        return;
-
-    if (bytesWritten != data.size())
-    {
-        FAULT ("Incomplete body sent. Bytes written: " << std::to_string (bytesWritten) << "\r\n");
-        return;
-    }
-
-    // Waiting for the response...
-    results = WinHttpReceiveResponse (request, nullptr);
-    if (!results)
-        return;
-
-    // Query the status code
-    wchar_t statusCodeBuffer[16] = {};
-    DWORD   bufferLength         = sizeof (statusCodeBuffer);
-    if (!(WinHttpQueryHeaders (request, WINHTTP_QUERY_STATUS_CODE, WINHTTP_HEADER_NAME_BY_INDEX, statusCodeBuffer, &bufferLength, WINHTTP_NO_HEADER_INDEX)))
-        return;
-
-    int statusCode = std::wcstol (statusCodeBuffer, nullptr, 10);
-
-    // Reading the response from the server...
-    DWORD       size          = 0;
-    DWORD       numDownloaded = 0;
-    std::string response;
-    do
-    {
-        // Checking the size of the available data...
-        WinHttpQueryDataAvailable (request, &size);
-        if (size == 0)
-            break;
-
-        // Reading...
-        std::vector<char> buffer (size);
-        WinHttpReadData (request, buffer.data(), size, &numDownloaded);
-        response.append (buffer.data(), numDownloaded);
-
-    } while (size > 0);
-
-    if (statusCode < 300 && callback)
-        callback (statusCode, response);
-}
-
-void NetworkRequest::cancel() { }
 
 }  // namespace foleys
 
