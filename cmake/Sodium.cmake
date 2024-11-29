@@ -48,6 +48,6 @@ else ()
     target_compile_definitions(sodium INTERFACE SODIUM_STATIC)
     target_include_directories(sodium INTERFACE "${download_sodium_SOURCE_DIR}/include")
     set_property(TARGET sodium PROPERTY
-            IMPORTED_LOCATION "${download_sodium_SOURCE_DIR}/x64/Debug/v143/static/libsodium.lib")
+            IMPORTED_LOCATION "${download_sodium_SOURCE_DIR}/x64/${CMAKE_BUILD_TYPE}/v143/static/libsodium.lib")
 
 endif ()
