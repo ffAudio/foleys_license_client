@@ -458,6 +458,8 @@ void NetworkRequest::fetch (std::string_view newPayload)
     pimpl->fetch (newPayload, this, true, true);
 }
 
+void NetworkRequest::cancel() { }
+
 }  // namespace foleys
 
 #endif

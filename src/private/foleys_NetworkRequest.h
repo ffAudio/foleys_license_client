@@ -38,7 +38,7 @@ public:
     [[nodiscard]] bool               hasReceivedResponse() const noexcept { return receivedResponse; }
 #endif
 
-    void cancel() {}
+    void cancel();
 
     std::function<void (int, std::string_view)> callback;
     std::string                                 payload = "";
