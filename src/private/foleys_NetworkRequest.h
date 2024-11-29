@@ -33,7 +33,7 @@ public:
     void fetch (std::string_view payload);
 
 #if (WIN32)
-    void onResponseReceived (const std::string& response);
+    void onResponseReceived (int statusCode, const std::string& response);
 #endif
 
     void cancel() {}
@@ -43,15 +43,11 @@ public:
 private:
     std::string url;
 
-    // void* session = nullptr;
-    // void* connect = nullptr;
-    // void* request = nullptr;
-
 #if (__APPLE__)
     void* dataTask = nullptr;
 #else
     class Impl;                  
-    std::unique_ptr<Impl> impl; 
+    std::unique_ptr<Impl> pimpl; 
 #endif
 
     FOLEYS_DISABLE_COPY (NetworkRequest)

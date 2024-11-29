@@ -196,7 +196,7 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
             else
             {
                 // End of response.
-                requestOwner->onResponseReceived (std::string (responseBuffer.begin(), responseBuffer.end()));
+                requestOwner->onResponseReceived (200, std::string (responseBuffer.begin(), responseBuffer.end()));
                 responseBuffer.clear();
             }
             break;
@@ -291,8 +291,8 @@ public:
         if (!(results = WinHttpSendRequest (request,
                                             headers.c_str(),                                           // Set content type header.
                                             (DWORD) -1L,                                               // Automatically calculate the header size.
-                                            (LPVOID) data.c_str(),                                     // Send the data with the request.
-                                            (DWORD) data.length(),                                     // Length of the data.
+                                            async ? (LPVOID) data.c_str() : 0,                         // Send the data with the request.
+                                            async ? (DWORD) data.length() : 0,                         // Length of the data.
                                             0,                                                         // No extra data. or `static_cast<DWORD> (data.size())`
                                             async ? reinterpret_cast<DWORD_PTR> (requestOwner) : 0)))  // Pass requestOwner as context if using asynchronous communication.
             throw std::runtime_error ("Failed to send request: " + getErrorMessage (GetLastError()));
@@ -343,10 +343,8 @@ public:
 
         } while (size > 0);
 
-        setStoppedFetching();
-
-        // if (statusCode < 300 && callback)
-        //     callback (statusCode, response);
+        if (requestOwner)
+            requestOwner->onResponseReceived (statusCode, response);
     }
 
     void setStoppedFetching() { isFetching.store (false); }
@@ -398,23 +396,26 @@ private:
 };
 
 
-NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess), impl (std::make_unique<Impl> (urlToAccess)) { }
+NetworkRequest::NetworkRequest (std::string_view urlToAccess) : url (urlToAccess), pimpl (std::make_unique<Impl> (urlToAccess)) { }
 
 NetworkRequest::~NetworkRequest()
 {
     cancel();
 }
 
-void NetworkRequest::onResponseReceived (const std::string& response)
+void NetworkRequest::onResponseReceived (int statusCode, const std::string& response)
 {
-    impl->setStoppedFetching();
+    pimpl->setStoppedFetching();
 
     std::cout << "Response received: " << response << std::endl;
+
+    if (statusCode < 300 && callback)
+        callback (statusCode, response);
 }
 
 void NetworkRequest::fetch (std::string_view payload)
 {
-    impl->fetch (payload, this, true, true);
+    pimpl->fetch (payload, this, true, true);
 }
 
 }  // namespace foleys
