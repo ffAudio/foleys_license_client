@@ -89,8 +89,6 @@ std::string getErrorMessage (DWORD errorCode)
 }
 
 
-public:
-    PerformOnExit() = default;
 namespace foleys
 {
 
