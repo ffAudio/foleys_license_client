@@ -30,15 +30,18 @@ public:
     explicit NetworkRequest (std::string_view url);
     ~NetworkRequest();
 
-    void fetch (std::string_view payload);
+    void fetch (std::string_view newPayload);
 
 #if (WIN32)
     void onResponseReceived (int statusCode, const std::string& response);
+    [[nodiscard]] const std::string& getPayload() const noexcept { return payload; }
+    [[nodiscard]] bool               hasReceivedResponse() const noexcept { return receivedResponse; }
 #endif
 
     void cancel() {}
 
     std::function<void (int, std::string_view)> callback;
+    std::string                                 payload = "";
 
 private:
     std::string url;
@@ -48,6 +51,7 @@ private:
 #else
     class Impl;                  
     std::unique_ptr<Impl> pimpl; 
+    bool                  receivedResponse = false;
 #endif
 
     FOLEYS_DISABLE_COPY (NetworkRequest)
