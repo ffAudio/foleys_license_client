@@ -33,8 +33,18 @@ public:
     void fetch (std::string_view newPayload);
 
 #if (WIN32)
+
+    enum class FetchStateType
+    {
+        Idle,
+        Fetching,
+        DoneFetching,
+        CancelRequested,
+        Closed
+    };
+
     void                             onResponseReceived (int statusCode, const std::string& response);
-    void                             onDoneFetching();
+    void                             onFetchingDone();
     [[nodiscard]] const std::string& getPayload() const noexcept { return payload; }
     [[nodiscard]] bool               hasReceivedResponse() const noexcept { return receivedResponse; }
 #endif
