@@ -20,25 +20,6 @@ For details refer to the LICENSE.md
 #include <functional>
 
 
-/**
- * Add this FOLEYS_DECLARE_SAFEPOINTER macro to your observer declaration. This allows to check if observers were
- * deleted while iterating the list (dangling).
- */
-#define FOLEYS_DECLARE_SAFEPOINTER(name)        \
-    using SafePointer = std::shared_ptr<name*>; \
-    virtual ~name()                             \
-    {                                           \
-        (*reference) = nullptr;                 \
-    }                                           \
-    SafePointer getSafePointer()                \
-    {                                           \
-        return reference;                       \
-    }                                           \
-                                                \
-private:                                        \
-    SafePointer reference { std::make_shared<name*> (this) };
-
-
 namespace foleys
 {
 

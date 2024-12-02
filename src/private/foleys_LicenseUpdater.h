@@ -17,6 +17,7 @@ For details refer to the LICENSE.md
 
 #include "foleys_Observers.h"
 #include "foleys_SharedObject.h"
+#include "foleys_NetworkRequest.h"
 
 #include "foleys_Licensing.h"
 
@@ -51,6 +52,7 @@ public:
      */
     void fetchIfNecessary (int hours = 24);
 
+
     /**
      * Tries to get new license data from the server.
      * @param action an optional action. Allowed values: 'demo' or 'activate'. Anything else just gets the status
@@ -67,7 +69,7 @@ public:
     {
         virtual void licenseUpdated() = 0;
 
-        FOLEYS_DECLARE_SAFEPOINTER(Observer)
+        FOLEYS_DECLARE_SAFEPOINTER (Observer)
     };
 
     /**
@@ -82,7 +84,7 @@ public:
      */
     void removeObserver (Observer* observer);
 
-    void setupLicenseData (const std::filesystem::path& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
+    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
 
     [[nodiscard]] std::string getContents();
 
@@ -106,15 +108,17 @@ public:
 private:
     void sendUpdateSignal();
 
-    std::mutex            storageMutex;
-    std::filesystem::path localStorage;
-    std::string           hardwareUid;
+    std::mutex  storageMutex;
+    std::string hardwareUid;
+    std::string localStorage;
 
     std::vector<std::pair<std::string, std::string>> defaultData;
     Licensing::Error                                 lastError = Licensing::Error::NoError;
     std::string                                      lastErrorString;
     ObserverList<Observer>                           observerList;
     bool                                             popupShown = false;
+
+    std::unique_ptr<NetworkRequest> request;
 };
 
 

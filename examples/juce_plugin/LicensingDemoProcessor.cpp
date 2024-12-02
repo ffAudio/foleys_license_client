@@ -4,12 +4,11 @@
 
 #include "LicensingDemoProcessor.h"
 #include "LicensingDemoEditor.h"
-#include "juce/foleys_JuceUtilities.h"
 
 
 LicensingDemoProcessor::LicensingDemoProcessor()
 {
-    license.setupLicenseData (foleys::createLicensePath ("Manufacturer", LicenseData::productName), juce::SystemStats::getUniqueDeviceID().toRawUTF8(),
+    license.setupLicenseData (foleys::SystemInfo::createLicensePath ("Manufacturer", LicenseData::productName), juce::SystemStats::getUniqueDeviceID().toRawUTF8(),
                               { { LicenseID::version, LicenseData::version },
                                 { LicenseID::hardware, juce::SystemStats::getUniqueDeviceID().toRawUTF8() },
                                 { LicenseID::os, juce::SystemStats::getOperatingSystemName().toRawUTF8() },

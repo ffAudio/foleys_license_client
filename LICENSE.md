@@ -32,13 +32,13 @@ Dependencies
   The communication is secured using libsodium (ISC license):    
   https://github.com/jedisct1/libsodium
 
-- Communication:    
-  libCURL provided under permissive license    
-  https://curl.se/
+- File handling:  
+  Gulrak filesystem is a drop in replacement for std::filesystem  (MIT license)  
+  https://github.com/gulrak/filesystem
 
-- CPR    
-  libCPR is a wrapper around lubCURL (MIT license)    
-  https://github.com/libcpr/cpr
+- Folder lookup:  
+  sago007 platform_folders for finding the application data (MIT license)  
+  https://github.com/sago007/PlatformFolders
 
 - Optional JUCE:    
   This bundle provides examples for JUCE which is neither included nor required to use    
