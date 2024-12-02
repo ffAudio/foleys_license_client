@@ -33,7 +33,8 @@ public:
     void fetch (std::string_view newPayload);
 
 #if (WIN32)
-    void onResponseReceived (int statusCode, const std::string& response);
+    void                             onResponseReceived (int statusCode, const std::string& response);
+    void                             onDoneFetching();
     [[nodiscard]] const std::string& getPayload() const noexcept { return payload; }
     [[nodiscard]] bool               hasReceivedResponse() const noexcept { return receivedResponse; }
 #endif
@@ -49,8 +50,8 @@ private:
 #if (__APPLE__)
     void* dataTask = nullptr;
 #else
-    class Impl;                  
-    std::unique_ptr<Impl> pimpl; 
+    class Impl;
+    std::unique_ptr<Impl> pimpl;
     bool                  receivedResponse = false;
 #endif
 

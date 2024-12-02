@@ -97,6 +97,7 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
 {
     std::vector<char> responseBuffer;
     NetworkRequest*   requestOwner = reinterpret_cast<NetworkRequest*> (context);
+    assert (requestOwner);
 
     switch (internetStatus)
     {
@@ -148,7 +149,14 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
             DBUG ("10. Response headers received, starting to read response body...");
 
             DWORD size = 0;
-            if (WinHttpQueryDataAvailable (internet, &size) && size > 0)
+            WinHttpQueryDataAvailable (internet, &size);
+
+            if (size <= 0)
+            {
+                // Size == 0 means end of receiving the response.
+                requestOwner->onDoneFetching();
+            }
+            else
             {
                 // Trigger a read operation to fetch the response data.
                 auto*             bytesAvailable = reinterpret_cast<DWORD*> (statusInformation);
@@ -444,8 +452,10 @@ void NetworkRequest::onResponseReceived (int statusCode, const std::string& resp
 
     if (statusCode < 300 && callback)
         callback (statusCode, response);
+}
 
-    pimpl.reset();
+void NetworkRequest::onDoneFetching()
+{
 }
 
 void NetworkRequest::fetch (std::string_view newPayload)
