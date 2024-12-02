@@ -21,13 +21,16 @@
     #include <iostream>
     #include <cassert>
     #include <sstream>
+    #include <mutex>
 
     #pragma comment(lib, "winhttp.lib")
 
-    #define ASSERT_ON_FAULT 1
+    #define ENABLE_LOGGING 0
 
-inline void debugLog (const std::string& message, bool toCerr = false)
+
+inline void debugLog ([[maybe_unused]] const std::string& message, [[maybe_unused]] bool toCerr = false)
 {
+    #if ENABLE_LOGGING
     if (toCerr)
         std::cerr << message << std::endl;
     else
@@ -37,27 +40,11 @@ inline void debugLog (const std::string& message, bool toCerr = false)
     OutputDebugStringA (message.c_str());
     OutputDebugStringA ("\n");
 
-    #if ASSERT_ON_FAULT
+        #if ASSERT_ON_FAULT
     assert (!toCerr);
+        #endif
     #endif
 }
-
-
-    #define DBUG(...)                    \
-        do                               \
-        {                                \
-            std::ostringstream oss;      \
-            oss << __VA_ARGS__;          \
-            debugLog (oss.str(), false); \
-        } while (false)
-
-    #define FAULT(...)                  \
-        do                              \
-        {                               \
-            std::ostringstream oss;     \
-            oss << __VA_ARGS__;         \
-            debugLog (oss.str(), true); \
-        } while (false)
 
 
 /** @brief Helper function to convert error code to a string. */
@@ -102,21 +89,21 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
     switch (internetStatus)
     {
         // 1.
-        case WINHTTP_CALLBACK_STATUS_RESOLVING_NAME: DBUG ("1. Resolving name..."); break;
+        case WINHTTP_CALLBACK_STATUS_RESOLVING_NAME: debugLog ("1. Resolving name..."); break;
         // 2.
-        case WINHTTP_CALLBACK_STATUS_NAME_RESOLVED: DBUG ("2. Name resolved."); break;
+        case WINHTTP_CALLBACK_STATUS_NAME_RESOLVED: debugLog ("2. Name resolved."); break;
         // 3.
-        case WINHTTP_CALLBACK_STATUS_CONNECTING_TO_SERVER: DBUG ("3. Connecting to server..."); break;
+        case WINHTTP_CALLBACK_STATUS_CONNECTING_TO_SERVER: debugLog ("3. Connecting to server..."); break;
         // 4.
-        case WINHTTP_CALLBACK_STATUS_CONNECTED_TO_SERVER: DBUG ("4. Connected to server."); break;
+        case WINHTTP_CALLBACK_STATUS_CONNECTED_TO_SERVER: debugLog ("4. Connected to server."); break;
         // 5.
-        case WINHTTP_CALLBACK_STATUS_SENDING_REQUEST: DBUG ("5. Sending request..."); break;
+        case WINHTTP_CALLBACK_STATUS_SENDING_REQUEST: debugLog ("5. Sending request..."); break;
         // 6.
-        case WINHTTP_CALLBACK_STATUS_REQUEST_SENT: DBUG ("6. Request sent. Waiting for response..."); break;
+        case WINHTTP_CALLBACK_STATUS_REQUEST_SENT: debugLog ("6. Request sent. Waiting for response..."); break;
         // 7.
         case WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE:
         {
-            DBUG ("7. Send request complete. Sending payload...");
+            debugLog ("7. Send request complete. Sending payload...");
 
             // Sending the payload data when the request has been prepared...
             const auto& data = requestOwner->getPayload();
@@ -124,29 +111,29 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
             {
                 DWORD bytesWritten = 0;
                 if (!WinHttpWriteData (internet, data.c_str(), static_cast<DWORD> (data.length()), &bytesWritten))
-                    FAULT ("Failed to write data. Error: " << getErrorMessage (GetLastError()));
+                    debugLog ("Failed to write data. Error: " + getErrorMessage (GetLastError()), true);
             }
             break;
         }
         // 8.
         case WINHTTP_CALLBACK_STATUS_WRITE_COMPLETE:
         {
-            DBUG ("8. Writing payload completed.");
+            debugLog ("8. Writing payload completed.");
 
             // Data successfully written, start reading the response...
             if (!WinHttpReceiveResponse (internet, nullptr))
-                DBUG ("Failed to receive response. Error: " << getErrorMessage (GetLastError()));
+                debugLog ("Failed to receive response. Error: " + getErrorMessage (GetLastError()));
 
             break;
         }
         // 9.
-        case WINHTTP_CALLBACK_STATUS_RECEIVING_RESPONSE: DBUG ("9. Receiving response..."); break;
+        case WINHTTP_CALLBACK_STATUS_RECEIVING_RESPONSE: debugLog ("9. Receiving response..."); break;
         // 10.
         case WINHTTP_CALLBACK_STATUS_RESPONSE_RECEIVED:
         {
             // This indicates that headers and response data are available.
             // Start querying the headers or reading the response body.
-            DBUG ("10. Response headers received, starting to read response body...");
+            debugLog ("10. Response headers received, starting to read response body...");
 
             DWORD size = 0;
             WinHttpQueryDataAvailable (internet, &size);
@@ -154,7 +141,7 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
             if (size <= 0)
             {
                 // Size == 0 means end of receiving the response.
-                requestOwner->onDoneFetching();
+                requestOwner->onFetchingDone();
             }
             else
             {
@@ -163,14 +150,14 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
                 std::vector<char> buffer (*bytesAvailable);
                 DWORD             bytesRead = 0;
                 if (!WinHttpReadData (internet, buffer.data(), size, &bytesRead))
-                    FAULT ("Failed to read data. Error: " << getErrorMessage (GetLastError()));
+                    debugLog ("Failed to read data. Error: " + getErrorMessage (GetLastError()), true);
             }
             break;
         }
         // 11.
         case WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE:
         {
-            DBUG ("11. Headers available...");
+            debugLog ("11. Headers available...");
 
             DWORD size = 0;
             if (WinHttpQueryDataAvailable (internet, &size) && size > 0)
@@ -182,7 +169,7 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
                 std::vector<char> buffer (*bytesAvailable);
                 DWORD             bytesRead = 0;
                 if (!WinHttpReadData (internet, buffer.data(), size, &bytesRead))
-                    FAULT ("Failed to read data. Error: " << getErrorMessage (GetLastError()));
+                    debugLog ("Failed to read data. Error: " + getErrorMessage (GetLastError()), true);
             }
             break;
         }
@@ -190,15 +177,15 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
         case WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE:
         {
             auto* bytesAvailable = reinterpret_cast<DWORD*> (statusInformation);
-            DBUG ("12. Data available: " << *bytesAvailable << " bytes.");
+            debugLog ("12. Data available: " + std::to_string (*bytesAvailable) + " bytes.");
             if (*bytesAvailable > 0)
             {
                 std::vector<char> buffer (*bytesAvailable);
                 DWORD             bytesRead = 0;
                 if (WinHttpReadData (internet, buffer.data(), *bytesAvailable, &bytesRead))
-                    DBUG ("12. Read " << bytesRead << " bytes: " << std::string (buffer.begin(), buffer.begin() + bytesRead) << "\r\n");
+                    debugLog ("12a. Read " + std::to_string (bytesRead) + " bytes: " + std::string (buffer.begin(), buffer.begin() + bytesRead));
                 else
-                    FAULT ("12! Failed to read data: " << getErrorMessage (GetLastError()) << "\r\n");
+                    debugLog ("12a! Failed to read data: " + getErrorMessage (GetLastError()), true);
             }
             break;
         }
@@ -210,11 +197,11 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
             if (bytesRead > 0)
             {
                 responseBuffer.insert (responseBuffer.end(), static_cast<char*> (statusInformation), static_cast<char*> (statusInformation) + bytesRead);
-                DBUG ("13. Reading " << bytesRead << " bytes completed.");
+                debugLog ("13. Reading " + std::to_string (bytesRead) + " bytes completed.");
             }
             else
             {
-                DBUG ("13! No bytes read.");
+                debugLog ("13! No bytes read.");
             }
 
             DWORD size = 0;
@@ -226,7 +213,7 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
                 if (WinHttpReadData (internet, buffer.data(), size, &bytesDownloaded))
                     responseBuffer.insert (responseBuffer.end(), buffer.begin(), buffer.begin() + bytesDownloaded);
                 else
-                    FAULT ("13! Failed to read data. Error: " << getErrorMessage (GetLastError()));
+                    debugLog ("13a! Failed to read data. Error: " + getErrorMessage (GetLastError()));
             }
             else
             {
@@ -238,14 +225,14 @@ void CALLBACK httpCallback (HINTERNET internet, DWORD_PTR context, DWORD interne
         }
         case WINHTTP_CALLBACK_STATUS_REQUEST_ERROR:
         {
-            // auto* error = reinterpret_cast<WINHTTP_ASYNC_RESULT*> (statusInformation);
-            // DBUG ("Request error: " << error->dwError);
+            auto* error = reinterpret_cast<WINHTTP_ASYNC_RESULT*> (statusInformation);
+            debugLog ("Request error: " + getErrorMessage (error->dwError), true);
             break;
         }
 
 
-        case WINHTTP_CALLBACK_STATUS_HANDLE_CLOSING: DBUG ("14. Closing handle."); break;
-        default: DBUG ("Unhandled internetStatus: " << internetStatus); break;
+        case WINHTTP_CALLBACK_STATUS_HANDLE_CLOSING: debugLog ("14. Closing handle."); break;
+        default: debugLog ("Unhandled internetStatus: " + std::to_string (internetStatus)); break;
     }
 }
 
@@ -264,11 +251,13 @@ public:
 
     void closeHandles()
     {
+        std::lock_guard<std::mutex> lock (handleMutex);
+
         if (request)
         {
             // Removing callback...
             if (WinHttpSetStatusCallback (request, nullptr, WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS, 0) == WINHTTP_INVALID_STATUS_CALLBACK)
-                FAULT ("Failed to remove callback: " << getErrorMessage (GetLastError()));
+                debugLog ("Failed to remove callback: " + getErrorMessage (GetLastError()), true);
 
             WinHttpCloseHandle (request);
             request = nullptr;
@@ -286,15 +275,20 @@ public:
             session = nullptr;
         }
 
-        isFetching.store (false);
+        fetchState.store (NetworkRequest::FetchStateType::Closed);
     }
+
+    void cancel() { closeHandles(); }
+
 
     void fetch (std::string_view payload, NetworkRequest* requestOwner, bool async, bool post)
     {
-        if (isFetching.load())
+        const auto currentFetchState = fetchState.load();
+        if (currentFetchState != NetworkRequest::FetchStateType::Idle && currentFetchState != NetworkRequest::FetchStateType::Fetching)
             return;
 
-        isFetching.store (true);
+        if (currentFetchState == NetworkRequest::FetchStateType::Idle)
+            fetchState.store (NetworkRequest::FetchStateType::Fetching);
 
         // Preparing the url...
         std::wstring protocol, domain, path;
@@ -347,7 +341,7 @@ public:
 
         if (bytesWritten != data.size())
         {
-            FAULT ("Incomplete body sent. Bytes written: " << std::to_string (bytesWritten) << "\r\n");
+            debugLog ("Incomplete body sent. Bytes written: " + std::to_string (bytesWritten));
             return;
         }
 
@@ -386,14 +380,16 @@ public:
             requestOwner->onResponseReceived (statusCode, response);
     }
 
-    void setStoppedFetching() { isFetching.store (false); }
+    void               setState (NetworkRequest::FetchStateType state) { fetchState.store (state); }
+    [[nodiscard]] auto getState() const noexcept { return fetchState.load(); }
 
 private:
-    HINTERNET         session = nullptr;
-    HINTERNET         connect = nullptr;
-    HINTERNET         request = nullptr;
-    std::string       url     = "";
-    std::atomic<bool> isFetching { false };
+    HINTERNET                                   session = nullptr;
+    HINTERNET                                   connect = nullptr;
+    HINTERNET                                   request = nullptr;
+    std::string                                 url     = "";
+    std::atomic<NetworkRequest::FetchStateType> fetchState { FetchStateType::Idle };
+    std::mutex                                  handleMutex;  // Protects handle access.
 
     static std::wstring stringToWString (const std::string& str)
     {
@@ -446,29 +442,50 @@ void NetworkRequest::onResponseReceived (int statusCode, const std::string& resp
 {
     receivedResponse = true;
 
-    pimpl->setStoppedFetching();
-
     std::cout << "Response received: " << response << std::endl;
 
     if (statusCode < 300 && callback)
         callback (statusCode, response);
 }
 
-void NetworkRequest::onDoneFetching()
+void NetworkRequest::onFetchingDone()
 {
+    if (!pimpl)
+        return;
+
+    pimpl->setState (FetchStateType::DoneFetching);
 }
 
 void NetworkRequest::fetch (std::string_view newPayload)
 {
     receivedResponse = false;
 
-    pimpl = std::make_unique<Impl> (url);
+    try
+    {
+        pimpl = std::make_unique<Impl> (url);
 
-    payload = newPayload;
-    pimpl->fetch (newPayload, this, true, true);
+        payload = newPayload;
+
+        pimpl->fetch (newPayload, this, true, true);
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Exception during fetching: " << e.what() << "!\r\n";
+    }
 }
 
-void NetworkRequest::cancel() { }
+void NetworkRequest::cancel()
+{
+    try
+    {
+        if (pimpl)
+            pimpl->cancel();
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Exception during fetching: " << e.what() << "!\r\n";
+    }
+}
 
 }  // namespace foleys
 
