@@ -1,7 +1,6 @@
-name: licensing-client-examples
+name: licensing-client-libs
 
-on:
-  workflow_dispatch: # Lets you run a build from the UI.
+on: workflow_dispatch # Lets you run a build from the UI.
 
 jobs:
   build:
