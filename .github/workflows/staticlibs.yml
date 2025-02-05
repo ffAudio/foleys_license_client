@@ -31,10 +31,10 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Configure CMake
-        run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} lib
+        run: cmake --log-level=VERBOSE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} lib
 
       - name: Build
-        run: cmake --build --preset builder --config ${{ matrix.build_type }}
+        run: cmake --build --config ${{ matrix.build_type }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
