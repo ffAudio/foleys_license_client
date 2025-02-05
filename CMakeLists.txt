@@ -27,6 +27,7 @@ if (NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
 endif ()
 
+option(PREBUILT_SODIUM "Use the prebuilt sodium library" ON)
 
 # src contains the actual library
 add_subdirectory(src)

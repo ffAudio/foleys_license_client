@@ -30,7 +30,16 @@ FetchContent_Declare(nlohmann
         GIT_SHALLOW ON)
 FetchContent_MakeAvailable(nlohmann)
 
-include(Sodium)
+if (PREBUILT_SODIUM)
+    if (APPLE)
+        set(SODIUM_LIB ${CMAKE_CURRENT_LIST_DIR}/../libsodium/libsodium.a)
+    else ()
+        set(SODIUM_LIB ${CMAKE_CURRENT_LIST_DIR}/../libsodium/libsodium.lib)
+    endif ()
+else ()
+    include(Sodium)
+    set(SODIUM_LIB sodium)
+endif ()
 
 add_library(licensing
         INTERFACE)
@@ -68,9 +77,10 @@ endif ()
 target_link_libraries(licensing
         INTERFACE
         cpr::cpr
-        sodium)
+        ${SODIUM_LIB})
 
 target_include_directories(licensing
         INTERFACE
         ${nlohmann_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_LIST_DIR}/../libsodium/include
         ${CMAKE_CURRENT_LIST_DIR})
