@@ -26,7 +26,5 @@ var hierarchy =
       [ "License", "classfoleys_1_1License.html", null ]
     ] ],
     [ "ObserverList< ObserverType >", "classfoleys_1_1ObserverList.html", null ],
-    [ "ObserverList< foleys::LicenseUpdater::Observer >", "classfoleys_1_1ObserverList.html", null ],
-    [ "SharedObject< ObjectType >", "classfoleys_1_1SharedObject.html", null ],
-    [ "SharedObject< LicenseUpdater >", "classfoleys_1_1SharedObject.html", null ]
+    [ "SharedObject< ObjectType >", "classfoleys_1_1SharedObject.html", null ]
 ];
