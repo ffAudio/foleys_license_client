@@ -11,26 +11,25 @@
 
 *******************************************************************************/
 
-#if (WIN32)
 
-    #include "foleys_NetworkRequest.h"
-    #include <windows.h>
-    #include <winhttp.h>
-    #include <stdexcept>
-    #include <functional>
-    #include <iostream>
-    #include <cassert>
-    #include <sstream>
-    #include <mutex>
+#include "foleys_NetworkRequest.h"
+#include <windows.h>
+#include <winhttp.h>
+#include <stdexcept>
+#include <functional>
+#include <iostream>
+#include <cassert>
+#include <sstream>
+#include <mutex>
 
-    #pragma comment(lib, "winhttp.lib")
+#pragma comment(lib, "winhttp.lib")
 
-    #define ENABLE_LOGGING 0
+#define ENABLE_LOGGING 0
 
 
 inline void debugLog ([[maybe_unused]] const std::string& message, [[maybe_unused]] bool toCerr = false)
 {
-    #if ENABLE_LOGGING
+#if ENABLE_LOGGING
     if (toCerr)
         std::cerr << message << std::endl;
     else
@@ -40,10 +39,10 @@ inline void debugLog ([[maybe_unused]] const std::string& message, [[maybe_unuse
     OutputDebugStringA (message.c_str());
     OutputDebugStringA ("\n");
 
-        #if ASSERT_ON_FAULT
+    #if ASSERT_ON_FAULT
     assert (!toCerr);
-        #endif
     #endif
+#endif
 }
 
 
@@ -488,5 +487,3 @@ void NetworkRequest::cancel()
 }
 
 }  // namespace foleys
-
-#endif
