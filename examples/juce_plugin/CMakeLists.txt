@@ -56,7 +56,6 @@ target_link_libraries(FoleysJuceLicenseExample
         PRIVATE
         FoleysJuceLicenseExample_data
         licensing
-        sodium
         juce::juce_audio_processors
         juce::juce_audio_devices
         juce::juce_audio_utils

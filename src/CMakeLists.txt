@@ -30,8 +30,6 @@ FetchContent_Declare(nlohmann
         GIT_SHALLOW ON)
 FetchContent_MakeAvailable(nlohmann)
 
-include(Sodium)
-
 add_library(licensing
         INTERFACE)
 
@@ -47,6 +45,19 @@ target_sources(licensing
         private/foleys_Observers.h
         private/foleys_SystemInfo.h
         private/choc_Base64.h)
+
+if (PREBUILT_SODIUM)
+    if (APPLE)
+        set(SODIUM_LIB ${CMAKE_CURRENT_LIST_DIR}/../libsodium/macos/libsodium.a)
+    else ()
+        set(SODIUM_LIB ${CMAKE_CURRENT_LIST_DIR}/../libsodium/msvc-142/libsodium.lib)
+        target_compile_definitions(licensing INTERFACE SODIUM_STATIC)
+    endif ()
+else ()
+    include(Sodium)
+    set(SODIUM_LIB sodium)
+endif ()
+
 
 option(FOLEYS_LICENSING_HAS_JUCE "Set this ON if you build a juce project. juce needs be present in the including target." OFF)
 
@@ -68,9 +79,10 @@ endif ()
 target_link_libraries(licensing
         INTERFACE
         cpr::cpr
-        sodium)
+        ${SODIUM_LIB})
 
 target_include_directories(licensing
         INTERFACE
         ${nlohmann_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_LIST_DIR}/../libsodium/include
         ${CMAKE_CURRENT_LIST_DIR})
