@@ -11,6 +11,7 @@
 
 *******************************************************************************/
 
+#if (_WIN32)
 
 #include "foleys_NetworkRequest.h"
 #include <windows.h>
@@ -487,3 +488,5 @@ void NetworkRequest::cancel()
 }
 
 }  // namespace foleys
+
+#endif // _WIN32

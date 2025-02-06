@@ -32,7 +32,7 @@ public:
 
     void fetch (std::string_view newPayload);
 
-#if (WIN32)
+#if (_WIN32)
 
     enum class FetchStateType
     {
