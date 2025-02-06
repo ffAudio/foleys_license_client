@@ -25,6 +25,7 @@ LicensePanel::LicensePanel()
     const juce::Colour labelColour { 40, 41, 46 };
 
     addAndMakeVisible (closeButton);
+    addAndMakeVisible (refreshButton);
     addAndMakeVisible (title);
     addAndMakeVisible (enterSerial);
     addAndMakeVisible (code);
@@ -84,6 +85,10 @@ LicensePanel::LicensePanel()
         if (license.isAllowed() && onCloseRequest)
             onCloseRequest();
     };
+
+    setupButton (refreshButton, BinaryData::refreshicon_svg, BinaryData::refreshicon_svgSize, {});
+    refreshButton.setColour (juce::DrawableButton::backgroundColourId, buttonColour);
+    refreshButton.onClick = [this] { license.syncLicense(); };
 
     juce::Component::SafePointer<LicensePanel> safePointer (this);
     license.onLicenseReceived = [safePointer]
@@ -227,8 +232,9 @@ void LicensePanel::resized()
     websiteButton.setBounds (buttonArea.removeFromRight (w).withTrimmedLeft (10));
     homeButton.setBounds (buttonArea.reduced (10, 0));
 
-    demo.setBounds (area.removeFromBottom (60).withSizeKeepingCentre (std::min (area.getWidth(), 250), buttonHeight));
-    deactivate.setBounds (demo.getBounds().withX (demo.getRight() + 5).withWidth (40));
+    auto demoArea = area.removeFromBottom (60).withSizeKeepingCentre (std::min (area.getWidth(), 250), buttonHeight);
+    refreshButton.setBounds (demoArea.removeFromRight (demoArea.getHeight()));
+    demo.setBounds (demoArea.withTrimmedRight (10));
 
     auto third = area.getHeight() / 3;
     enterSerial.setBounds (area.removeFromTop (third));
