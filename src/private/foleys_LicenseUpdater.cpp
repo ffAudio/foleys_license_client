@@ -97,9 +97,9 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
     url += "auth/";
 #endif
 
-    auto newRequest = std::make_unique<NetworkRequest> (url);
+    request = std::make_unique<NetworkRequest> (url);
 
-    newRequest->callback = [this] (int status, std::string_view downloaded)
+    request->callback = [this] (int status, std::string_view downloaded)
     {
         if (status > 399)
         {
@@ -172,8 +172,7 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
         sendUpdateSignal();
     };
 
-    newRequest->fetch (payload);
-    request = std::move (newRequest);
+    request->fetch (payload);
 }
 
 std::vector<Licensing::Activation> LicenseUpdater::getActivations()
