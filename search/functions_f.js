@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['waspopupshown_0',['wasPopupShown',['../classfoleys_1_1LicenseUpdater.html#a40ad9a276b1e6da8d3f0f92f0c84512d',1,'foleys::LicenseUpdater']]]
+  ['update_0',['update',['../classLicensePanel.html#ac5c54df7ed3b930268c8d7752c101725',1,'LicensePanel']]]
 ];

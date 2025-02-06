@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['license_0',['license',['../classLicenseDeactivate.html#a0e41a977a3b7893918e792034f07c3a5',1,'LicenseDeactivate']]],
-  ['localstorage_1',['localStorage',['../namespacefoleys_1_1Licensing.html#a5f8599b5b2aa621042d1e5452b181246',1,'foleys::Licensing']]]
+  ['kuseragent_0',['kUserAgent',['../classfoleys_1_1NetworkRequest.html#acca758ea564086a2c3091bccc73575b1',1,'foleys::NetworkRequest']]]
 ];

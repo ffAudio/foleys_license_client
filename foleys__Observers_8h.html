@@ -101,8 +101,7 @@ $(function(){initNavTree('foleys__Observers_8h.html',''); initResizable(true); }
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle"><div class="title">foleys_Observers.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -117,46 +116,7 @@ Classes</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacefoleys.html">foleys</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a21d4c5cab994108c224f275d961c9c3e" id="r_a21d4c5cab994108c224f275d961c9c3e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21d4c5cab994108c224f275d961c9c3e">FOLEYS_DECLARE_SAFEPOINTER</a>(name)</td></tr>
-<tr class="memdesc:a21d4c5cab994108c224f275d961c9c3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add this FOLEYS_DECLARE_SAFEPOINTER macro to your observer declaration.  <br /></td></tr>
-<tr class="separator:a21d4c5cab994108c224f275d961c9c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a21d4c5cab994108c224f275d961c9c3e" name="a21d4c5cab994108c224f275d961c9c3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21d4c5cab994108c224f275d961c9c3e">&#9670;&#160;</a></span>FOLEYS_DECLARE_SAFEPOINTER</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define FOLEYS_DECLARE_SAFEPOINTER</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keyword">using </span>SafePointer = std::shared_ptr&lt;name*&gt;; \</div>
-<div class="line">    <span class="keyword">virtual</span> ~name()                             \</div>
-<div class="line">    {                                           \</div>
-<div class="line">        (*reference) = <span class="keyword">nullptr</span>;                 \</div>
-<div class="line">    }                                           \</div>
-<div class="line">    SafePointer getSafePointer()                \</div>
-<div class="line">    {                                           \</div>
-<div class="line">        <span class="keywordflow">return</span> reference;                       \</div>
-<div class="line">    }                                           \</div>
-<div class="line">                                                \</div>
-<div class="line"><span class="keyword">private</span>:                                        \</div>
-<div class="line">    SafePointer reference { std::make_shared&lt;name*&gt; (<span class="keyword">this</span>) };</div>
-</div><!-- fragment -->
-<p>Add this FOLEYS_DECLARE_SAFEPOINTER macro to your observer declaration. </p>
-<p>This allows to check if observers were deleted while iterating the list (dangling). </p>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.15-->
@@ -164,7 +124,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d49b597d86ed44de6eb8a459f0ed40df.html">private</a></li><li class="navelem"><a class="el" href="foleys__Observers_8h.html">foleys_Observers.h</a></li>
-    <li class="footer">Generated on Thu Feb 6 2025 14:41:51 for foleys_licensing_client by
+    <li class="footer">Generated on Thu Feb 6 2025 22:39:21 for foleys_licensing_client by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.13.2 </li>
   </ul>

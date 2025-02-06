@@ -1,15 +1,13 @@
 var searchData=
 [
-  ['paint_0',['paint',['../classDeactivateItem.html#a4f2c219a2cbbd6b61e7c41564dac6169',1,'DeactivateItem::paint()'],['../classLicenseDeactivate.html#a4f2c219a2cbbd6b61e7c41564dac6169',1,'LicenseDeactivate::paint()'],['../classLicensePanel.html#a4f2c219a2cbbd6b61e7c41564dac6169',1,'LicensePanel::paint()'],['../classLicensingDemoEditor.html#a4f2c219a2cbbd6b61e7c41564dac6169',1,'LicensingDemoEditor::paint()']]],
-  ['paintlistboxitem_1',['paintListBoxItem',['../classLicenseDeactivate.html#a2be2f3151a52f260326d86936643ebab',1,'LicenseDeactivate']]],
-  ['popup_2',['Popup',['../classfoleys_1_1Popup.html',1,'foleys']]],
-  ['popupholder_3',['PopupHolder',['../classfoleys_1_1PopupHolder.html',1,'PopupHolder'],['../classfoleys_1_1PopupHolder.html#a5a1e10d31d1a62688fe733cbf4c977cd',1,'foleys::PopupHolder::PopupHolder()']]],
-  ['preparetoplay_4',['prepareToPlay',['../classLicensingDemoProcessor.html#ab9c02b1536cfd6fe8a9076b7cc23a6bf',1,'LicensingDemoProcessor']]],
-  ['privatekey_5',['privateKey',['../namespaceLicenseData.html#a549750adf27e1a337ffb77a4c0883775',1,'LicenseData']]],
-  ['processblock_6',['processBlock',['../classLicensingDemoProcessor.html#a4d8d52ef1b70d68e39c11e697457661d',1,'LicensingDemoProcessor']]],
-  ['producesmidi_7',['producesMidi',['../classLicensingDemoProcessor.html#a98c7c57619e08b04594d70cfe6466bac',1,'LicensingDemoProcessor']]],
-  ['productname_8',['productName',['../namespaceLicenseData.html#a8c78d84570b8e34351a02bb2b0773604',1,'LicenseData']]],
-  ['productuid_9',['productUid',['../namespaceLicenseData.html#ad2ec12bef669f59efd160412b10f194f',1,'LicenseData']]],
-  ['ptr_10',['Ptr',['../classfoleys_1_1LicenseUpdater.html#ae5af5318cc4d801ca9349ec2b1ef900a',1,'foleys::LicenseUpdater']]],
-  ['publickey_11',['publicKey',['../namespaceLicenseData.html#a5b2b79e2f63d76e1908b46c17a01dacf',1,'LicenseData']]]
+  ['observer_0',['Observer',['../structfoleys_1_1LicenseUpdater_1_1Observer.html',1,'foleys::LicenseUpdater']]],
+  ['observerlist_1',['ObserverList',['../classfoleys_1_1ObserverList.html',1,'ObserverList&lt; ObserverType &gt;'],['../classfoleys_1_1ObserverList.html#a6a3767ae62fbff01c100c36121298327',1,'foleys::ObserverList::ObserverList()=default'],['../classfoleys_1_1ObserverList.html#a875a641891d7dc204bc084584e93a4c5',1,'foleys::ObserverList::ObserverList(const ObserverList &amp;)=delete']]],
+  ['observerlist_3c_20foleys_3a_3alicenseupdater_3a_3aobserver_20_3e_2',['ObserverList&lt; foleys::LicenseUpdater::Observer &gt;',['../classfoleys_1_1ObserverList.html',1,'foleys']]],
+  ['oncloserequest_3',['onCloseRequest',['../classfoleys_1_1Popup.html#a574ca98e4e2b10b18de43b9c6651beb4',1,'foleys::Popup']]],
+  ['ondeactivate_4',['onDeactivate',['../classLicenseDeactivate.html#abdaadd63d4861b6a2b95174ff4b968e3',1,'LicenseDeactivate']]],
+  ['onlicensereceived_5',['onLicenseReceived',['../classfoleys_1_1License.html#a4313443442dbebb1f121f75d5effe8f7',1,'foleys::License']]],
+  ['operator_2a_6',['operator*',['../classfoleys_1_1SharedObject.html#a553a276955466bc3757b30b9977e695b',1,'foleys::SharedObject']]],
+  ['operator_2d_3e_7',['operator-&gt;',['../classfoleys_1_1SharedObject.html#a85cda0e5a4a56a744599c3529d71e55b',1,'foleys::SharedObject']]],
+  ['operator_3d_8',['operator=',['../classfoleys_1_1ObserverList.html#a136564028677531eb1a0c0f1e4d8024f',1,'foleys::ObserverList']]],
+  ['os_9',['os',['../main_8cpp.html#a21eb4deee7062247dcc46b9d6039a963',1,'main.cpp']]]
 ];

@@ -10,7 +10,7 @@ var classfoleys_1_1LicenseUpdater =
     [ "fetchLicenseData", "classfoleys_1_1LicenseUpdater.html#ae900db9214cee5e2e35c80a8c1a4c6b0", null ],
     [ "addObserver", "classfoleys_1_1LicenseUpdater.html#a20adffdeb27b0fe5f93f2b4f97b8d520", null ],
     [ "removeObserver", "classfoleys_1_1LicenseUpdater.html#a6d1927540a1a8f48d688c7b1d01742c4", null ],
-    [ "setupLicenseData", "classfoleys_1_1LicenseUpdater.html#afe93a737fcb9f31effa84644c39ac8b1", null ],
+    [ "setupLicenseData", "classfoleys_1_1LicenseUpdater.html#a0639615bb90ed5ba0c39e716da417005", null ],
     [ "getContents", "classfoleys_1_1LicenseUpdater.html#ad544dd9a348c1204140ffd60b84795cf", null ],
     [ "getActivations", "classfoleys_1_1LicenseUpdater.html#af7c0c25b0cc31fdaf7f773f221d26388", null ],
     [ "wasPopupShown", "classfoleys_1_1LicenseUpdater.html#a40ad9a276b1e6da8d3f0f92f0c84512d", null ],

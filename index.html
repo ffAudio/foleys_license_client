@@ -116,11 +116,10 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <div class="line">        GIT_TAG main</div>
 <div class="line">        GIT_SHALLOW ON)</div>
 <div class="line">FetchContent_MakeAvailable(license)</div>
-</div><!-- fragment --><p>The included CPR library requires</p><ul>
-<li>CMAKE_CXX_STANDARD_REQUIRED OFF</li>
-<li>CMAKE_OSX_DEPLOYMENT_TARGET &gt;= 10.15</li>
-</ul>
-<p>Once you created a product in the website you also create a Version there, which has it's own unique key pair to talk to the server. Also the version number will show up in the usage statistics. </p>
+</div><!-- fragment --><p>Since this project uses objective-C on mac, you need to enable OBJXX in your top level CMakeLists.txt: </p><div class="fragment"><div class="line">if (APPLE)</div>
+<div class="line">    enable_language(OBJCXX)</div>
+<div class="line">endif()</div>
+</div><!-- fragment --><p>Once you created a product in the website you also create a Version there, which has it's own unique key pair to talk to the server. Also the version number will show up in the usage statistics. </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
@@ -129,7 +128,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Feb 6 2025 14:41:51 for foleys_licensing_client by
+    <li class="footer">Generated on Thu Feb 6 2025 22:39:21 for foleys_licensing_client by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.13.2 </li>
   </ul>

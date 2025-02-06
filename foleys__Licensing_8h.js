@@ -1,6 +1,8 @@
 var foleys__Licensing_8h =
 [
     [ "Activation", "structfoleys_1_1Licensing_1_1Activation.html", "structfoleys_1_1Licensing_1_1Activation" ],
+    [ "FOLEYS_DISABLE_COPY", "foleys__Licensing_8h.html#a31ebdcbf5e6c3d9b970df86eed4377a2", null ],
+    [ "FOLEYS_DECLARE_SAFEPOINTER", "foleys__Licensing_8h.html#a57686ee7502f2bf651652dc825cc3a56", null ],
     [ "Error", "namespacefoleys_1_1Licensing.html#a2c3e4bb40f36b262a5214e2da2bca9c5", [
       [ "NoError", "namespacefoleys_1_1Licensing.html#a2c3e4bb40f36b262a5214e2da2bca9c5a70a47cae4eb221930f2663fd244369ea", null ],
       [ "ServerNotAvailable", "namespacefoleys_1_1Licensing.html#a2c3e4bb40f36b262a5214e2da2bca9c5adb14b4e1d54726472228aefe90d2877e", null ],

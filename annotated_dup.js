@@ -7,10 +7,12 @@ var annotated_dup =
       [ "Crypto", "structfoleys_1_1Crypto.html", null ],
       [ "License", "classfoleys_1_1License.html", "classfoleys_1_1License" ],
       [ "LicenseUpdater", "classfoleys_1_1LicenseUpdater.html", "classfoleys_1_1LicenseUpdater" ],
+      [ "NetworkRequest", "classfoleys_1_1NetworkRequest.html", "classfoleys_1_1NetworkRequest" ],
       [ "ObserverList", "classfoleys_1_1ObserverList.html", "classfoleys_1_1ObserverList" ],
       [ "Popup", "classfoleys_1_1Popup.html", "classfoleys_1_1Popup" ],
       [ "PopupHolder", "classfoleys_1_1PopupHolder.html", "classfoleys_1_1PopupHolder" ],
-      [ "SharedObject", "classfoleys_1_1SharedObject.html", "classfoleys_1_1SharedObject" ]
+      [ "SharedObject", "classfoleys_1_1SharedObject.html", "classfoleys_1_1SharedObject" ],
+      [ "SystemInfo", "structfoleys_1_1SystemInfo.html", null ]
     ] ],
     [ "DeactivateItem", "classDeactivateItem.html", "classDeactivateItem" ],
     [ "LicenseDeactivate", "classLicenseDeactivate.html", "classLicenseDeactivate" ],

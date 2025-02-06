@@ -1,8 +1,8 @@
 var main_8cpp =
 [
     [ "main", "main_8cpp.html#a2c3f6775325c30275d11c6abee2db6a0", null ],
-    [ "localStorage", "namespacefoleys_1_1Licensing.html#a5f8599b5b2aa621042d1e5452b181246", null ],
-    [ "hardwareUid", "namespacefoleys_1_1Licensing.html#ab378a4bda59bb8dc7beaa2fe33bde5bf", null ],
-    [ "os", "namespacefoleys_1_1Licensing.html#a074bfd499d1bedb30906b698bd2bf3a6", null ],
-    [ "host", "namespacefoleys_1_1Licensing.html#abac1e0c47ea7bc0ff3cf8cabb28cfe2d", null ]
+    [ "localStorage", "main_8cpp.html#aa389c5d91b132c09153a19ea4f7e6d5f", null ],
+    [ "hardwareUid", "main_8cpp.html#a982ea909d683be09d15420553b0900f5", null ],
+    [ "os", "main_8cpp.html#a21eb4deee7062247dcc46b9d6039a963", null ],
+    [ "host", "main_8cpp.html#ad18c636f056c142d320c0b9d57f03b41", null ]
 ];

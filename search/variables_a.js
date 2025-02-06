@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['version_0',['version',['../namespaceLicenseData.html#acd029dc25ee39d55797595073101a092',1,'LicenseData']]]
+  ['user_0',['user',['../structfoleys_1_1Licensing_1_1Activation.html#a6dfa0071362986f2680867cd51fa2ea8',1,'foleys::Licensing::Activation']]]
 ];

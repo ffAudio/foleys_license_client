@@ -20,6 +20,6 @@ var classfoleys_1_1License =
     [ "demoDaysLeft", "classfoleys_1_1License.html#ad27b7aa0d0c88b1849ad1ba1ab9a181e", null ],
     [ "startDemo", "classfoleys_1_1License.html#aa06ce3029f069415dfd6cb7bed24f9df", null ],
     [ "setPopupWasShown", "classfoleys_1_1License.html#a710d753aea35fc7b7a60326d41f6e399", null ],
-    [ "setupLicenseData", "classfoleys_1_1License.html#a6b6a1543b933f12a3669a1964d8ab07e", null ],
+    [ "setupLicenseData", "classfoleys_1_1License.html#a3929a756db7fa49b46f57b7b9b3fe0cd", null ],
     [ "onLicenseReceived", "classfoleys_1_1License.html#a4313443442dbebb1f121f75d5effe8f7", null ]
 ];

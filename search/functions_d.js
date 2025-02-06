@@ -1,14 +1,7 @@
 var searchData=
 [
-  ['setactivation_0',['setActivation',['../classDeactivateItem.html#aac69d55bdd99b5b7a701ff213db6744d',1,'DeactivateItem']]],
-  ['setclosefunction_1',['setCloseFunction',['../classLicenseDeactivate.html#a5f8b2926add1643df82c6abc19392e51',1,'LicenseDeactivate']]],
-  ['setcurrentprogram_2',['setCurrentProgram',['../classLicensingDemoProcessor.html#a7faca5e5d97a0b47fd2ec6b7fb8b1dce',1,'LicensingDemoProcessor']]],
-  ['setpopupwasshown_3',['setPopupWasShown',['../classfoleys_1_1License.html#a710d753aea35fc7b7a60326d41f6e399',1,'foleys::License::setPopupWasShown()'],['../classfoleys_1_1LicenseUpdater.html#a710d753aea35fc7b7a60326d41f6e399',1,'foleys::LicenseUpdater::setPopupWasShown()']]],
-  ['setstateinformation_4',['setStateInformation',['../classLicensingDemoProcessor.html#a2809260e0d5579f0831d8a50ee9c82ec',1,'LicensingDemoProcessor']]],
-  ['setuplicensedata_5',['setupLicenseData',['../classfoleys_1_1License.html#a6b6a1543b933f12a3669a1964d8ab07e',1,'foleys::License::setupLicenseData()'],['../classfoleys_1_1LicenseUpdater.html#afe93a737fcb9f31effa84644c39ac8b1',1,'foleys::LicenseUpdater::setupLicenseData()']]],
-  ['sharedobject_6',['SharedObject',['../classfoleys_1_1SharedObject.html#ad4171ce6ba05590a7f51544b2da9965c',1,'foleys::SharedObject']]],
-  ['shouldshowpopup_7',['shouldShowPopup',['../classfoleys_1_1License.html#a274223b34a27531d10d48e4d8e65a504',1,'foleys::License']]],
-  ['showpopup_8',['showPopup',['../classfoleys_1_1PopupHolder.html#a406794f99917a954b4005c275272ca98',1,'foleys::PopupHolder']]],
-  ['startdemo_9',['startDemo',['../classfoleys_1_1License.html#aa06ce3029f069415dfd6cb7bed24f9df',1,'foleys::License']]],
-  ['synclicense_10',['syncLicense',['../classfoleys_1_1License.html#aa5f4d6533ed7873b825a3788fa041668',1,'foleys::License']]]
+  ['refreshcomponentforrow_0',['refreshComponentForRow',['../classLicenseDeactivate.html#a069b3537746c4e115f3dbcc662ccac48',1,'LicenseDeactivate']]],
+  ['releaseresources_1',['releaseResources',['../classLicensingDemoProcessor.html#ae2ec82cb5acbefbac9cb8e0530b9b803',1,'LicensingDemoProcessor']]],
+  ['removeobserver_2',['removeObserver',['../classfoleys_1_1LicenseUpdater.html#a6d1927540a1a8f48d688c7b1d01742c4',1,'foleys::LicenseUpdater::removeObserver()'],['../classfoleys_1_1ObserverList.html#a2b4435975a3b9c15f45354d0da23a545',1,'foleys::ObserverList::removeObserver()']]],
+  ['resized_3',['resized',['../classDeactivateItem.html#a31cc081b3c77bc8855de79094fc1da42',1,'DeactivateItem::resized()'],['../classLicenseDeactivate.html#a31cc081b3c77bc8855de79094fc1da42',1,'LicenseDeactivate::resized()'],['../classLicensePanel.html#a31cc081b3c77bc8855de79094fc1da42',1,'LicensePanel::resized()'],['../classLicensingDemoEditor.html#a31cc081b3c77bc8855de79094fc1da42',1,'LicensingDemoEditor::resized()']]]
 ];

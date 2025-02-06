@@ -146,8 +146,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6d1927540a1a8f48d688c7b1d01742c4" id="r_a6d1927540a1a8f48d688c7b1d01742c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d1927540a1a8f48d688c7b1d01742c4">removeObserver</a> (<a class="el" href="structfoleys_1_1LicenseUpdater_1_1Observer.html">Observer</a> *observer)</td></tr>
 <tr class="memdesc:a6d1927540a1a8f48d688c7b1d01742c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deregister an observer.  <br /></td></tr>
 <tr class="separator:a6d1927540a1a8f48d688c7b1d01742c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe93a737fcb9f31effa84644c39ac8b1" id="r_afe93a737fcb9f31effa84644c39ac8b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe93a737fcb9f31effa84644c39ac8b1">setupLicenseData</a> (const std::filesystem::path &amp;licenseFile, std::string_view hwUID, std::initializer_list&lt; std::pair&lt; std::string, std::string &gt; &gt; data)</td></tr>
-<tr class="separator:afe93a737fcb9f31effa84644c39ac8b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0639615bb90ed5ba0c39e716da417005" id="r_a0639615bb90ed5ba0c39e716da417005"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0639615bb90ed5ba0c39e716da417005">setupLicenseData</a> (const std::string &amp;licenseFile, std::string_view hwUID, std::initializer_list&lt; std::pair&lt; std::string, std::string &gt; &gt; data)</td></tr>
+<tr class="separator:a0639615bb90ed5ba0c39e716da417005"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad544dd9a348c1204140ffd60b84795cf" id="r_ad544dd9a348c1204140ffd60b84795cf"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad544dd9a348c1204140ffd60b84795cf">getContents</a> ()</td></tr>
 <tr class="separator:ad544dd9a348c1204140ffd60b84795cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7c0c25b0cc31fdaf7f773f221d26388" id="r_af7c0c25b0cc31fdaf7f773f221d26388"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structfoleys_1_1Licensing_1_1Activation.html">Licensing::Activation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af7c0c25b0cc31fdaf7f773f221d26388">getActivations</a> ()</td></tr>
@@ -304,7 +304,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classfoleys_1_1License.html#a7f834b48b7f292ef341bbb66a5a21942">License::decodeDateTime()</a>, <a class="el" href="#ae900db9214cee5e2e35c80a8c1a4c6b0">fetchLicenseData()</a>, and <a class="el" href="#ad544dd9a348c1204140ffd60b84795cf">getContents()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="#a215eac15b29a8e2ffc7832522491e12d">LicenseUpdater()</a>, and <a class="el" href="#afe93a737fcb9f31effa84644c39ac8b1">setupLicenseData()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a215eac15b29a8e2ffc7832522491e12d">LicenseUpdater()</a>, and <a class="el" href="#a0639615bb90ed5ba0c39e716da417005">setupLicenseData()</a>.</p>
 
 </div>
 </div>
@@ -391,8 +391,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="afe93a737fcb9f31effa84644c39ac8b1" name="afe93a737fcb9f31effa84644c39ac8b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe93a737fcb9f31effa84644c39ac8b1">&#9670;&#160;</a></span>setupLicenseData()</h2>
+<a id="a0639615bb90ed5ba0c39e716da417005" name="a0639615bb90ed5ba0c39e716da417005"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0639615bb90ed5ba0c39e716da417005">&#9670;&#160;</a></span>setupLicenseData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -400,7 +400,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void setupLicenseData </td>
           <td>(</td>
-          <td class="paramtype">const std::filesystem::path &amp;</td>          <td class="paramname"><span class="paramname"><em>licenseFile</em></span>, </td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>licenseFile</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -526,7 +526,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacefoleys.html">foleys</a></li><li class="navelem"><a class="el" href="classfoleys_1_1LicenseUpdater.html">LicenseUpdater</a></li>
-    <li class="footer">Generated on Thu Feb 6 2025 14:41:51 for foleys_licensing_client by
+    <li class="footer">Generated on Thu Feb 6 2025 22:39:21 for foleys_licensing_client by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
