@@ -151,6 +151,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa4209e4ee4cf7845b19a19a001d543b2" id="r_aa4209e4ee4cf7845b19a19a001d543b2"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::time_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4209e4ee4cf7845b19a19a001d543b2">expires</a> () const</td></tr>
 <tr class="memdesc:aa4209e4ee4cf7845b19a19a001d543b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">This returns the expiry time/date or nullopt if it is a perpetual license.  <br /></td></tr>
 <tr class="separator:aa4209e4ee4cf7845b19a19a001d543b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a182c7b23a793ffdc9b98d6920b77e360" id="r_a182c7b23a793ffdc9b98d6920b77e360"><td class="memItemLeft" align="right" valign="top">std::optional&lt; std::time_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a182c7b23a793ffdc9b98d6920b77e360">lastChecked</a> () const</td></tr>
+<tr class="separator:a182c7b23a793ffdc9b98d6920b77e360"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dda5c72ab43f5868320b1bdc9ceac03" id="r_a5dda5c72ab43f5868320b1bdc9ceac03"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5dda5c72ab43f5868320b1bdc9ceac03">getLicenseeEmail</a> () const</td></tr>
 <tr class="memdesc:a5dda5c72ab43f5868320b1bdc9ceac03"><td class="mdescLeft">&#160;</td><td class="mdescRight">When activated this can be used to display the licensee.  <br /></td></tr>
 <tr class="separator:a5dda5c72ab43f5868320b1bdc9ceac03"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -454,6 +456,24 @@ Public Attributes</h2></td></tr>
 
 <p>This returns the expiry time/date or nullopt if it is a perpetual license. </p>
 <dl class="section return"><dt>Returns</dt><dd>The expiry date </dd></dl>
+
+</div>
+</div>
+<a id="a182c7b23a793ffdc9b98d6920b77e360" name="a182c7b23a793ffdc9b98d6920b77e360"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a182c7b23a793ffdc9b98d6920b77e360">&#9670;&#160;</a></span>lastChecked()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::time_t &gt; lastChecked </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>the timestamp when the last server response was received </dd></dl>
 
 </div>
 </div>
@@ -800,7 +820,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacefoleys.html">foleys</a></li><li class="navelem"><a class="el" href="classfoleys_1_1License.html">License</a></li>
-    <li class="footer">Generated on Thu Feb 6 2025 22:39:21 for foleys_licensing_client by
+    <li class="footer">Generated on Mon Feb 10 2025 10:12:58 for foleys_licensing_client by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
