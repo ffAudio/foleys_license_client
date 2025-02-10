@@ -88,6 +88,11 @@ public:
     std::optional<std::time_t> expires() const;
 
     /**
+     * @return the timestamp when the last server response was received
+     */
+    std::optional<std::time_t> lastChecked() const;
+
+    /**
      * When activated this can be used to display the licensee
      * @return the email the license is licensed to
      */
@@ -175,7 +180,7 @@ private:
     std::atomic<bool>          demoAvailable = false;
     std::atomic<int>           demoDays      = 0;
     std::optional<std::time_t> expiryDate;
-    std::time_t                checked = {};
+    std::optional<std::time_t> checked;
 };
 
 
