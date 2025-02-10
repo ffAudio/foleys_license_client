@@ -49,6 +49,7 @@ private:
     juce::DrawableButton homeButton { "My Licenses", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
     juce::DrawableButton websiteButton { "Buy License", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
     juce::Label          copyright;
+    juce::Label          timestamp;
 
     std::unique_ptr<juce::Component> deactivationPanel;
 

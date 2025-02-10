@@ -36,6 +36,7 @@ LicensePanel::LicensePanel()
     addAndMakeVisible (homeButton);
     addAndMakeVisible (websiteButton);
     addAndMakeVisible (copyright);
+    addAndMakeVisible (timestamp);
     addAndMakeVisible (deactivate);
 
     title.setJustificationType (juce::Justification::centred);
@@ -137,6 +138,18 @@ void LicensePanel::update()
     demo.setEnabled (license.canDemo() || license.isAllowed());
     deactivate.setVisible (license.isActivated());
 
+    if (auto checked = license.lastChecked())
+    {
+        auto date = *checked;
+        char buff[20];
+        strftime (buff, 20, "%d. %m. %Y %H:%M", localtime (&date));
+        timestamp.setText (TRANS ("Checked: ") + juce::String (buff) + " UTC", juce::sendNotification);
+    }
+    else
+    {
+        timestamp.setText (TRANS ("Never checked"), juce::sendNotification);
+    }
+
     if (license.isActivated())
     {
         if (license.expires())
@@ -210,6 +223,8 @@ void LicensePanel::paint (juce::Graphics& g)
 
 void LicensePanel::resized()
 {
+    timestamp.setBounds (getWidth() - 222, getHeight() - 27, 200, 25);
+
     const auto buttonHeight = 30;
 
     auto area = getLocalBounds().reduced (40);

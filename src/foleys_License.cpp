@@ -79,6 +79,12 @@ std::optional<std::time_t> License::expires() const
     return expiryDate;
 }
 
+std::optional<std::time_t> License::lastChecked() const
+{
+    return checked;
+}
+
+
 std::string License::getLicenseeEmail() const
 {
     std::scoped_lock guard (processingLock);
@@ -142,7 +148,7 @@ std::pair<Licensing::Error, std::string> License::processData (std::string_view 
 
     std::scoped_lock guard (processingLock);
 
-    checked       = decodeDateTime (response["checked"], "%Y-%m-%dT%H:%M:%S");
+    checked       = decodeDateTime (response["checked"], "%Y-%m-%d %H:%M:%S");
     activatedFlag = response["activated"];
     email         = response.contains ("licensee_email") ? response["licensee_email"] : "";
 
