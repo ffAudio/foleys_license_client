@@ -15,7 +15,7 @@ For details refer to the LICENSE.md
 #ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_POPUPHOLDER_H
 #define FOLEYS_LICENSING_CLIENT_FOLEYS_POPUPHOLDER_H
 
-#include <juce_gui_basics/juce_gui_basics.h>
+#include "juce_gui_basics/juce_gui_basics.h"
 
 namespace foleys
 {

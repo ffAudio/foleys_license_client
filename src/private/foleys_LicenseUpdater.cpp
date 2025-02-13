@@ -60,7 +60,7 @@ void LicenseUpdater::fetchIfNecessary (int hours)
         return;
     }
 
-    auto timestamp = License::decodeDateTime (json[LicenseID::checked], "%Y-%m-%dT%H:%M:%S");
+    auto timestamp = License::decodeDateTime (json[LicenseID::checked], "%Y-%m-%d %H:%M:%S");
     auto seconds   = std::difftime (std::time (nullptr), timestamp);
 
     if (seconds > 3600 * hours)

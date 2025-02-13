@@ -9,6 +9,10 @@ option(FOLEYS_LICENSING_HAS_JUCE "Enable juce GUI for the license client" ON)
 
 include(juce)
 
+juce_set_aax_sdk_path("/Users/daniel/Developer/Foleys/SDK/aax_sdk")
+
+juce_add_module("${CMAKE_CURRENT_LIST_DIR}/../../foleys_license_juce")
+
 juce_add_plugin(FoleysJuceLicenseExample
         PRODUCT_NAME LicenseExample
         COMPANY_NAME Manufacturer
@@ -20,7 +24,7 @@ juce_add_plugin(FoleysJuceLicenseExample
         IS_MIDI_EFFECT FALSE
         EDITOR_WANTS_KEYBOARD_FOCUS FALSE
         COPY_PLUGIN_AFTER_BUILD TRUE
-        FORMATS AU VST3 Standalone
+        FORMATS AU VST3 Standalone AAX
         BUNDLE_ID com.example.foleyslicenseexample)
 
 target_sources(FoleysJuceLicenseExample
@@ -57,7 +61,7 @@ juce_add_binary_data(
 target_link_libraries(FoleysJuceLicenseExample
         PRIVATE
         FoleysJuceLicenseExample_data
-        licensing
+        foleys_license_cuce
         juce::juce_audio_processors
         juce::juce_audio_devices
         juce::juce_audio_utils
