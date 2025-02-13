@@ -9,6 +9,15 @@ option(FOLEYS_LICENSING_HAS_JUCE "Enable juce GUI for the license client" ON)
 
 include(juce)
 
+juce_add_module("${CMAKE_CURRENT_LIST_DIR}/../../foleys_license_juce")
+
+target_sources(foleys_license_juce INTERFACE LicenseData.cpp)
+if (APPLE)
+    target_link_directories(foleys_license_juce INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../libsodium/macos")
+else()
+    target_link_directories(foleys_license_juce INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../libsodium/msvc-143")
+endif ()
+
 juce_add_plugin(FoleysJuceLicenseExample
         PRODUCT_NAME LicenseExample
         COMPANY_NAME Manufacturer
@@ -34,10 +43,6 @@ target_sources(FoleysJuceLicenseExample
         LicenseDeactivate.cpp
         LicenseDeactivate.h)
 
-target_sources(licensing
-        INTERFACE
-        LicenseData.cpp)
-
 target_compile_definitions(FoleysJuceLicenseExample
         PRIVATE
         JUCE_DISPLAY_SPLASH_SCREEN=0
@@ -57,7 +62,7 @@ juce_add_binary_data(
 target_link_libraries(FoleysJuceLicenseExample
         PRIVATE
         FoleysJuceLicenseExample_data
-        licensing
+        foleys_license_juce
         juce::juce_audio_processors
         juce::juce_audio_devices
         juce::juce_audio_utils

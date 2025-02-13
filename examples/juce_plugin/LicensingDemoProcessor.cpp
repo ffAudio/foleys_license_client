@@ -5,6 +5,7 @@
 #include "LicensingDemoProcessor.h"
 #include "LicensingDemoEditor.h"
 
+#include <juce_events/juce_events.h>
 
 LicensingDemoProcessor::LicensingDemoProcessor()
 {
@@ -12,9 +13,7 @@ LicensingDemoProcessor::LicensingDemoProcessor()
                               { { LicenseID::version, LicenseData::version },
                                 { LicenseID::hardware, juce::SystemStats::getUniqueDeviceID().toRawUTF8() },
                                 { LicenseID::os, juce::SystemStats::getOperatingSystemName().toRawUTF8() },
-                                { LicenseID::host, juce::JUCEApplicationBase::isStandaloneApp() ?
-                                                     "Standalone" :
-                                                     juce::PluginHostType().getHostDescription() } });
+                                { LicenseID::host, juce::JUCEApplicationBase::isStandaloneApp() ? "Standalone" : juce::PluginHostType().getHostDescription() } });
 }
 
 void LicensingDemoProcessor::prepareToPlay ([[maybe_unused]] double sampleRate, [[maybe_unused]] int expectedNumSamples) { }

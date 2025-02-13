@@ -7,7 +7,7 @@
 
 
 #include <juce_audio_processors/juce_audio_processors.h>
-#include <foleys_License.h>
+#include <foleys_license_juce/foleys_license_juce.h>
 
 
 class LicensingDemoProcessor : public juce::AudioProcessor
