@@ -14,7 +14,7 @@
 #ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_NETWORKREQUEST_H
 #define FOLEYS_LICENSING_CLIENT_FOLEYS_NETWORKREQUEST_H
 
-#include "foleys_Licensing.h"
+#include "foleys_license_common/foleys_LicenseDefines.h"
 
 #include <functional>
 #include <memory>

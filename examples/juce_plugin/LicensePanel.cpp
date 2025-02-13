@@ -12,11 +12,11 @@ For details refer to the LICENSE.md
 *******************************************************************************/
 
 
+#include <foleys_license_juce/foleys_license_juce.h>
+
 #include "LicensePanel.h"
 #include "LicenseDeactivate.h"
 #include "BinaryData.h"
-
-#include <foleys_License.h>
 
 
 LicensePanel::LicensePanel()
