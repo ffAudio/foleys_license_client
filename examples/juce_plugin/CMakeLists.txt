@@ -13,6 +13,13 @@ juce_set_aax_sdk_path("/Users/daniel/Developer/Foleys/SDK/aax_sdk")
 
 juce_add_module("${CMAKE_CURRENT_LIST_DIR}/../../foleys_license_juce")
 
+target_sources(foleys_license_juce INTERFACE LicenseData.cpp)
+if (APPLE)
+    target_link_directories(foleys_license_juce INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../libsodium/macos")
+else()
+    target_link_directories(foleys_license_juce INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../libsodium/msvc-143")
+endif ()
+
 juce_add_plugin(FoleysJuceLicenseExample
         PRODUCT_NAME LicenseExample
         COMPANY_NAME Manufacturer
@@ -37,10 +44,6 @@ target_sources(FoleysJuceLicenseExample
         LicensePanel.h
         LicenseDeactivate.cpp
         LicenseDeactivate.h)
-
-target_sources(foleys_license_juce
-        INTERFACE
-        LicenseData.cpp)
 
 target_compile_definitions(FoleysJuceLicenseExample
         PRIVATE

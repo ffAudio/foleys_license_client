@@ -14,6 +14,8 @@
     license:          ISC license
 
     dependencies:     juce_events
+    OSXLibs:          sodium
+    windowsLibs:      libsodium
 
     END_JUCE_MODULE_DECLARATION
 
