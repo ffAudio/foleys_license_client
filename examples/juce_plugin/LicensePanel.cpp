@@ -18,8 +18,6 @@ For details refer to the LICENSE.md
 #include "LicenseDeactivate.h"
 #include "BinaryData.h"
 
-#include <foleys_License.h>
-
 
 LicensePanel::LicensePanel()
 {

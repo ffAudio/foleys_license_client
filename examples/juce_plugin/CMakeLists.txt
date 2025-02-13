@@ -38,7 +38,7 @@ target_sources(FoleysJuceLicenseExample
         LicenseDeactivate.cpp
         LicenseDeactivate.h)
 
-target_sources(licensing
+target_sources(foleys_license_juce
         INTERFACE
         LicenseData.cpp)
 
@@ -61,7 +61,7 @@ juce_add_binary_data(
 target_link_libraries(FoleysJuceLicenseExample
         PRIVATE
         FoleysJuceLicenseExample_data
-        foleys_license_cuce
+        foleys_license_juce
         juce::juce_audio_processors
         juce::juce_audio_devices
         juce::juce_audio_utils
