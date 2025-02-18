@@ -41,9 +41,9 @@
 #define FOLEYS_LICENSING_HAS_JUCE 1
 #endif
 
-#include <juce_events/juce_events.h>
+#include "juce_events/juce_events.h"
 
-#include "../src/foleys_License.h"
 #include "GUI/foleys_PopupHolder.h"
+#include "../src/foleys_License.h"
 
 #endif  // FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSE_JUCE_H

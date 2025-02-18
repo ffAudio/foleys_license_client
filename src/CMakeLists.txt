@@ -67,5 +67,4 @@ target_include_directories(licensing
         ${nlohmann_SOURCE_DIR}/include
         ${CMAKE_CURRENT_LIST_DIR}/../libsodium/include
         ${filesystem_SOURCE_DIR}/include
-#        ${platformfolders_SOURCE_DIR}/sago
         ${CMAKE_CURRENT_LIST_DIR})

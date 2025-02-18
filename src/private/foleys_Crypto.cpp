@@ -19,6 +19,10 @@ For details refer to the LICENSE.md
 #include <sodium.h>
 #include <vector>
 
+#if _WIN32
+    #pragma comment(lib, "libsodium.lib")
+#endif
+
 namespace foleys
 {
 
