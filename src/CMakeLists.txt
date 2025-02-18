@@ -42,16 +42,6 @@ else ()
     set(SODIUM_LIB sodium)
 endif ()
 
-
-option(FOLEYS_LICENSING_HAS_JUCE "Set this ON if you build a juce project. juce needs be present in the including target." OFF)
-
-if (FOLEYS_LICENSING_HAS_JUCE)
-    target_sources(licensing
-            INTERFACE
-            juce/foleys_PopupHolder.h)
-endif ()
-
-
 if (APPLE)
     target_sources(licensing
             INTERFACE
@@ -77,5 +67,4 @@ target_include_directories(licensing
         ${nlohmann_SOURCE_DIR}/include
         ${CMAKE_CURRENT_LIST_DIR}/../libsodium/include
         ${filesystem_SOURCE_DIR}/include
-#        ${platformfolders_SOURCE_DIR}/sago
         ${CMAKE_CURRENT_LIST_DIR})

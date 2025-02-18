@@ -31,6 +31,9 @@ public:
     ObjectType* operator->() const { return sharedObject.get(); }
     ObjectType& operator*() const { return *sharedObject; }
 
+    SharedObject& operator= (const SharedObject&) = delete;
+    SharedObject& operator= (SharedObject&&)      = delete;
+
 private:
     struct Wrapper
     {
@@ -56,9 +59,6 @@ private:
     }
 
     std::shared_ptr<ObjectType> sharedObject = wrapper().getOrCreate();
-
-    SharedObject& operator= (const SharedObject&) = delete;
-    SharedObject& operator= (SharedObject&&)      = delete;
 };
 
 }  // namespace foleys

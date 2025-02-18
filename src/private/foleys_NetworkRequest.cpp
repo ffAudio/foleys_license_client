@@ -11,7 +11,7 @@
 
 *******************************************************************************/
 
-#if (_WIN32)
+#if _WIN32
 
 #include "foleys_NetworkRequest.h"
 #include <windows.h>

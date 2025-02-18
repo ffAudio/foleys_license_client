@@ -15,10 +15,10 @@ For details refer to the LICENSE.md
 #ifndef FOLEYS_LICENSING_CLIENT_LICENSEPANEL_H
 #define FOLEYS_LICENSING_CLIENT_LICENSEPANEL_H
 
-#include "juce/foleys_PopupHolder.h"
+
+#include <foleys_license_juce/foleys_license_juce.h>
 
 #include <juce_gui_basics/juce_gui_basics.h>
-#include <foleys_License.h>
 
 
 class LicensePanel : public foleys::Popup

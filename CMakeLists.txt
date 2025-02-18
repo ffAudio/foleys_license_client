@@ -16,13 +16,19 @@ For details refer to the LICENSE.md
 *******************************************************************************
 ]]
 
-set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures" FORCE)
-set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
+if (NOT DEFINED CMAKE_OSX_ARCHITECTURES)
+    set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Architectures" FORCE)
+endif ()
+
+if (NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
+endif ()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(FetchContent)
 
 project(foleys_licensing_client
-        VERSION 0.0.1)
+        VERSION 0.1.0)
 
 if (NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
@@ -30,9 +36,11 @@ endif ()
 
 option(PREBUILT_SODIUM "Use the prebuilt sodium library" ON)
 
-if (APPLE)
-    enable_language(OBJCXX)
-endif()
+option(FOLEYS_DISABLE_JUCE "opt-out from JUCE" OFF)
+if (NOT FOLEYS_DISABLE_JUCE)
+    include(juce)
+    juce_add_module(foleys_license_juce ALIAS_NAMESPACE foleys)
+endif ()
 
 # src contains the actual library
 add_subdirectory(src)
