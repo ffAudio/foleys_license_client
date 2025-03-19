@@ -13,6 +13,8 @@ namespace foleys
 
 LicenseUpdaterJuce::LicenseUpdaterJuce()
 {
+    // if this is called immediately, setupLicenseData had no chance
+    // plus it will delay when scanning
     juce::WeakReference<LicenseUpdaterJuce> checker (this);
     juce::Timer::callAfterDelay (2000,
                                  [checker]
@@ -37,6 +39,25 @@ void LicenseUpdaterJuce::setupLicenseData (const std::string& licenseFileName, s
     data        = dataToUse;
 }
 
+bool LicenseUpdaterJuce::setServerResponse (juce::String plain)
+{
+    auto json = juce::JSON::parse (plain);
+
+    lastErrorString = json.getProperty (LicenseID::error, "").toString().toStdString();
+    if (json.hasProperty (LicenseID::checked))
+        lastCheck = Helpers::decodeDateTime (json.getProperty (LicenseID::checked, "1970-01-01 00:00:00").toString().toStdString(), "%Y-%m-%d %H:%M:%S");
+
+    if (json.getProperty (LicenseID::hardware, "").toString() != hardwareUid)
+    {
+        lastError = LicenseDefines::Error::HardwareMismatch;
+        sendChangeMessage();
+        return false;
+    }
+
+    sendChangeMessage();
+    return true;
+}
+
 juce::String LicenseUpdaterJuce::getLicenseText() const
 {
     const juce::ScopedLock lock (licenseFileLock);
@@ -50,14 +71,12 @@ juce::String LicenseUpdaterJuce::getLicenseText() const
     return {};
 }
 
-
 void LicenseUpdaterJuce::fetchIfNecessary (int hours)
 {
     auto plain = getLicenseText();
-    auto json  = juce::JSON::parse (plain);
-    if (json.hasProperty (LicenseID::checked))
+    if (plain.isNotEmpty())
     {
-        lastCheck = Helpers::decodeDateTime (json.getProperty (LicenseID::checked, "1970-01-01 00:00:00").toString().toStdString(), "%Y-%m-%d %H:%M:%S");
+        setServerResponse (plain);
     }
 
     auto now = time (nullptr);
@@ -69,11 +88,6 @@ void LicenseUpdaterJuce::fetchIfNecessary (int hours)
     fetchLicenseData();
 }
 
-
-/**
- * Tries to get new license data from the server.
- * @param action an optional action. Allowed values: 'demo' or 'activate'. Anything else just gets the status
- */
 void LicenseUpdaterJuce::fetchLicenseData (std::string_view action, const std::vector<std::pair<std::string, std::string>>& additionalData)
 {
     juce::var json (new juce::DynamicObject);
@@ -105,11 +119,11 @@ void LicenseUpdaterJuce::finished (juce::URL::DownloadTask* task, bool success)
         auto result = task->getTargetLocation().loadFileAsString();
         auto plain  = Crypto::decrypt (result.toStdString());
 
-        DBG ("Result: " << plain);
-        // TODO: check if applicable
-
-        task->getTargetLocation().moveFileTo (licenseFile);
-        sendChangeMessage();
+        if (setServerResponse (plain))
+        {
+            task->getTargetLocation().moveFileTo (licenseFile);
+            sendChangeMessage();
+        }
     }
 
     task->getTargetLocation().deleteFile();

@@ -17,25 +17,30 @@ For details refer to the LICENSE.md
 
 namespace LicenseID
 {
-static constexpr const char* action      = "action";
-static constexpr const char* checked     = "checked";
-static constexpr const char* error       = "error";
-static constexpr const char* product     = "product";
-static constexpr const char* hardware    = "hardware";
-static constexpr const char* version     = "version";
-static constexpr const char* email       = "email";
-static constexpr const char* serial      = "serial";
-static constexpr const char* host        = "host";
-static constexpr const char* id          = "id";
-static constexpr const char* os          = "os";
-static constexpr const char* computer    = "computer";
-static constexpr const char* user        = "user";
-static constexpr const char* activated   = "activated";
-static constexpr const char* activations = "activations";
-static constexpr const char* demo        = "demo";
-static constexpr const char* login       = "login";
-static constexpr const char* activate    = "activate";
-static constexpr const char* deactivate  = "deactivate";
+static constexpr const char* action          = "action";
+static constexpr const char* checked         = "checked";
+static constexpr const char* error           = "error";
+static constexpr const char* product         = "product";
+static constexpr const char* hardware        = "hardware";
+static constexpr const char* version         = "version";
+static constexpr const char* email           = "email";
+static constexpr const char* serial          = "serial";
+static constexpr const char* host            = "host";
+static constexpr const char* id              = "id";
+static constexpr const char* os              = "os";
+static constexpr const char* computer        = "computer";
+static constexpr const char* user            = "user";
+static constexpr const char* activated       = "activated";
+static constexpr const char* activations     = "activations";
+static constexpr const char* demo            = "demo";
+static constexpr const char* login           = "login";
+static constexpr const char* activate        = "activate";
+static constexpr const char* deactivate      = "deactivate";
+static constexpr const char* license_expires = "license_expires";
+static constexpr const char* licensee_email  = "licensee_email";
+static constexpr const char* demo_available  = "demo_available";
+static constexpr const char* demo_days       = "demo_days";
+static constexpr const char* demo_ends       = "demo_ends";
 }  // namespace LicenseID
 
 

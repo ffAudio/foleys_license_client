@@ -1,0 +1,15 @@
+//
+// Created by Daniel Walz on 19.03.25.
+//
+
+#ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_CHECKS_H
+#define FOLEYS_LICENSING_CLIENT_FOLEYS_CHECKS_H
+
+namespace foleys
+{
+
+
+
+}
+
+#endif  // FOLEYS_LICENSING_CLIENT_FOLEYS_CHECKS_H

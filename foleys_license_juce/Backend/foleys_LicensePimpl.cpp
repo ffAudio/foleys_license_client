@@ -101,22 +101,22 @@ struct License::Pimpl : public juce::ChangeListener
         {
             checked       = Helpers::decodeDateTime (object->getProperty (LicenseID::checked).toString().toStdString(), "%Y-%m-%d %H:%M:%S");
             activatedFlag = object->getProperty (LicenseID::activated);
-            email         = object->getProperty ("licensee_email").toString().toStdString();
+            email         = object->getProperty (LicenseID::licensee_email).toString().toStdString();
 
             licenseHardware = object->getProperty (LicenseID::hardware).toString().toStdString();
 
-            if (object->hasProperty ("license_expires"))
-                expiryDate = Helpers::decodeDateTime (object->getProperty ("license_expires").toString().toStdString(), "%Y-%m-%d");
+            if (object->hasProperty (LicenseID::license_expires))
+                expiryDate = Helpers::decodeDateTime (object->getProperty (LicenseID::license_expires).toString().toStdString(), "%Y-%m-%d");
             else
                 expiryDate = std::nullopt;
 
-            if (object->hasProperty ("demo_available"))
+            if (object->hasProperty (LicenseID::demo_available))
             {
-                demoAvailable = object->getProperty ("demo_available");
-                demoDays      = object->getProperty ("demo_days");
-                if (object->hasProperty ("demo_ends"))
+                demoAvailable = object->getProperty (LicenseID::demo_available);
+                demoDays      = object->getProperty (LicenseID::demo_days);
+                if (object->hasProperty (LicenseID::demo_ends))
                 {
-                    auto ends          = Helpers::decodeDateTime (object->getProperty ("demo_ends").toString().toStdString(), "%Y-%m-%d");
+                    auto ends          = Helpers::decodeDateTime (object->getProperty (LicenseID::demo_ends).toString().toStdString(), "%Y-%m-%d");
                     auto localDemoDays = static_cast<int> (1 + difftime (ends, std::time (nullptr)) / (24 * 3600));
                     demoDays           = std::min (demoDays.load(), localDemoDays);
                 }

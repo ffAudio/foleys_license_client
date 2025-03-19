@@ -76,22 +76,22 @@ struct License::Pimpl : public LicenseUpdater::Observer
 
         checked       = Helpers::decodeDateTime (json[LicenseID::checked], "%Y-%m-%d %H:%M:%S");
         activatedFlag = json[LicenseID::activated];
-        email         = json["licensee_email"];
+        email         = json[LicenseID::licensee_email];
 
         licenseHardware = json[LicenseID::hardware];
 
-        if (json.contains ("license_expires"))
-            expiryDate = Helpers::decodeDateTime (json["license_expires"], "%Y-%m-%d");
+        if (json.contains (LicenseID::license_expires))
+            expiryDate = Helpers::decodeDateTime (json[LicenseID::license_expires], "%Y-%m-%d");
         else
             expiryDate = std::nullopt;
 
-        if (json.contains ("demo_available"))
+        if (json.contains (LicenseID::demo_available))
         {
-            demoAvailable = json["demo_available"];
-            demoDays      = json["demo_days"];
-            if (json.contains ("demo_ends"))
+            demoAvailable = json[LicenseID::demo_available];
+            demoDays      = json[LicenseID::demo_days];
+            if (json.contains (LicenseID::demo_ends))
             {
-                auto ends          = Helpers::decodeDateTime (json["demo_ends"], "%Y-%m-%d");
+                auto ends          = Helpers::decodeDateTime (json[LicenseID::demo_ends], "%Y-%m-%d");
                 auto localDemoDays = static_cast<int> (1 + difftime (ends, std::time (nullptr)) / (24 * 3600));
                 demoDays           = std::min (demoDays.load(), localDemoDays);
             }

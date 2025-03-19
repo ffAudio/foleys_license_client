@@ -24,6 +24,13 @@ public:
 
     void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
 
+    /**
+     * Process the license data for the updater
+     * @param plain the license decrypted
+     * @returns true if the license was valid and applicable
+     */
+    bool setServerResponse(juce::String plain);
+
     juce::String getLicenseText() const;
 
     /**
