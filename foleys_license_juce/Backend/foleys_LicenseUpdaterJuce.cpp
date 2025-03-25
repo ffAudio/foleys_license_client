@@ -117,16 +117,24 @@ void LicenseUpdaterJuce::finished (juce::URL::DownloadTask* task, bool success)
     {
         task->getTargetLocation();
         auto result = task->getTargetLocation().loadFileAsString();
-        auto plain  = Crypto::decrypt (result.toStdString());
 
-        if (setServerResponse (plain))
+        if (result.isNotEmpty())
         {
-            task->getTargetLocation().moveFileTo (licenseFile);
-            sendChangeMessage();
+            auto plain = Crypto::decrypt (result.toStdString());
+
+            if (setServerResponse (plain))
+            {
+                task->getTargetLocation().moveFileTo (licenseFile);
+            }
+        }
+        else
+        {
+            lastError = LicenseDefines::Error::ServerAnswerInvalid;
         }
     }
 
     task->getTargetLocation().deleteFile();
+    sendChangeMessage();
 }
 
 
