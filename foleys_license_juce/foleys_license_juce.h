@@ -43,7 +43,9 @@
 
 #include "juce_events/juce_events.h"
 
-#include "GUI/foleys_PopupHolder.h"
 #include "../foleys_license_common/foleys_License.h"
+#include "GUI/foleys_PopupHolder.h"
+#include "GUI/foleys_LicensePanel.h"
+#include "GUI/foleys_LicenseDeactivate.h"
 
 #endif  // FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSE_JUCE_H

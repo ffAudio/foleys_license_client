@@ -2,8 +2,10 @@
 // Created by Daniel Walz on 11.10.24.
 //
 
-#include "LicenseDeactivate.h"
+#include "foleys_LicenseDeactivate.h"
 
+namespace foleys
+{
 
 LicenseDeactivate::LicenseDeactivate()
 {
@@ -89,3 +91,5 @@ juce::Component* LicenseDeactivate::refreshComponentForRow (int rowNumber, [[may
     comp->setActivation (activations[size_t (rowNumber)]);
     return comp;
 }
+
+}  // namespace foleys

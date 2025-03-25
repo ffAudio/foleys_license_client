@@ -12,12 +12,14 @@ For details refer to the LICENSE.md
 *******************************************************************************/
 
 
-#include <foleys_license_juce/foleys_license_juce.h>
+#include "foleys_license_juce/foleys_license_juce.h"
 
-#include "LicensePanel.h"
-#include "LicenseDeactivate.h"
+#include "foleys_LicensePanel.h"
+#include "foleys_LicenseDeactivate.h"
 #include "BinaryData.h"
 
+namespace foleys
+{
 
 LicensePanel::LicensePanel()
 {
@@ -259,3 +261,5 @@ void LicensePanel::resized()
     submit.setBounds (area.removeFromRight (area.getWidth() / 4).reduced (10));
     code.setBounds (area.reduced (10));
 }
+
+}  // namespace foleys

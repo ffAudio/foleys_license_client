@@ -8,10 +8,8 @@
 
 LicensingDemoEditor::LicensingDemoEditor (LicensingDemoProcessor& p) : juce::AudioProcessorEditor (&p), audioProcessor (p)
 {
-    juce::Component::SafePointer<LicensingDemoEditor> safePointer (this);
-
     addAndMakeVisible (aboutButton);
-    aboutButton.onClick = [this] { popupHolder.showPopup (std::make_unique<LicensePanel>()); };
+    aboutButton.onClick = [this] { popupHolder.showPopup (std::make_unique<foleys::LicensePanel>()); };
 
     setResizable (true, true);
     setSize (640, 480);
@@ -19,7 +17,7 @@ LicensingDemoEditor::LicensingDemoEditor (LicensingDemoProcessor& p) : juce::Aud
     foleys::License license;
     if (license.shouldShowPopup())
     {
-        popupHolder.showPopup (std::make_unique<LicensePanel>());
+        popupHolder.showPopup (std::make_unique<foleys::LicensePanel>());
         license.setPopupWasShown (true);
     }
 }

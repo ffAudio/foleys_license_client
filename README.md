@@ -30,7 +30,8 @@ FetchContent_Declare(license
 FetchContent_MakeAvailable(license)
 ```
 
-Since this project uses objective-C on mac, you need to enable OBJXX in your top level CMakeLists.txt:
+Since this project uses objective-C on mac, you need to enable OBJXX in your top level CMakeLists.txt
+(this doesn't apply for the juce flavour)
 ```cmake
 if (APPLE)
     enable_language(OBJCXX)

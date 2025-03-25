@@ -8,7 +8,7 @@
 
 #include <foleys_license_juce/foleys_license_juce.h>
 
-#include "LicensePanel.h"
+#include "foleys_license_juce/GUI/foleys_LicensePanel.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_audio_processors/juce_audio_processors.h>
