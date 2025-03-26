@@ -26,7 +26,17 @@ namespace foleys
 class LicensePanel : public foleys::Popup
 {
 public:
-    explicit LicensePanel();
+    enum Button
+    {
+        Unknown = 0,
+        Close,
+        Refresh,
+        Manual,
+        UserPage,
+        ProductPage
+    };
+
+    LicensePanel();
 
     void paint (juce::Graphics& g) override;
     void resized() override;
@@ -34,6 +44,8 @@ public:
     void update();
 
     void activate (const juce::String& serial, size_t deactivate);
+
+    void setButtonIcon (Button buttonType, const char* imageData, size_t imageDataSize);
 
 private:
     foleys::License license;

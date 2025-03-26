@@ -69,40 +69,19 @@ LicensePanel::LicensePanel()
     copyright.setText (LicenseData::copyright, juce::dontSendNotification);
     copyright.setFont (juce::Font (12.0f));
 
-    const auto setupButton = [] (auto& button, const char* icon, size_t icon_size, const juce::URL& url)
-    {
-        auto image = juce::DrawableComposite::createFromImageData (icon, icon_size);
-        image->replaceColour (juce::Colours::black, juce::Colours::silver);
-        button.setImages (image.get());
-        button.setColour (juce::DrawableButton::backgroundColourId, juce::Colours::darkgrey);
-        button.onClick = [url] { url.launchInDefaultBrowser(); };
-    };
+    manualButton.onClick  = [] { juce::URL (LicenseData::manualUrl).launchInDefaultBrowser(); };
+    homeButton.onClick    = [] { juce::URL (LicenseData::authServerUrl).launchInDefaultBrowser(); };
+    websiteButton.onClick = [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); };
 
-    setupButton (manualButton, BinaryData::pdficon_svg, BinaryData::pdficon_svgSize, juce::URL (LicenseData::manualUrl));
-    setupButton (homeButton, BinaryData::keyicon_svg, BinaryData::keyicon_svgSize, juce::URL (LicenseData::authServerUrl));
-    setupButton (websiteButton, BinaryData::wwwicon_svg, BinaryData::wwwicon_svgSize, juce::URL (LicenseData::buyUrl));
-
-    setupButton (closeButton, BinaryData::closeicon_svg, BinaryData::closeicon_svgSize, {});
     closeButton.onClick = [this]
     {
         if (license.isAllowed() && onCloseRequest)
             onCloseRequest();
     };
 
-    setupButton (refreshButton, BinaryData::refreshicon_svg, BinaryData::refreshicon_svgSize, {});
-    refreshButton.setColour (juce::DrawableButton::backgroundColourId, buttonColour);
     refreshButton.onClick = [this] { license.syncLicense(); };
 
-    juce::Component::SafePointer<LicensePanel> safePointer (this);
-    license.onLicenseReceived = [safePointer]
-    {
-        juce::MessageManager::callAsync (
-          [safePointer]
-          {
-              if (safePointer)
-                  safePointer->update();
-          });
-    };
+    license.onLicenseReceived = [this] { update(); };
 
     demo.onClick = [this]
     {
@@ -217,6 +196,27 @@ void LicensePanel::activate (const juce::String& serial, size_t deactivateID)
     license.activate (data);
 }
 
+void LicensePanel::setButtonIcon (Button buttonType, const char* imageData, size_t imageDataSize)
+{
+    auto image = juce::DrawableComposite::createFromImageData (imageData, imageDataSize);
+    image->replaceColour (juce::Colours::black, juce::Colours::silver);
+    const auto setupButton = [&] (juce::DrawableButton& button)
+    {
+        button.setImages (image.get());
+        button.setColour (juce::DrawableButton::backgroundColourId, juce::Colours::darkgrey);
+    };
+
+    switch (buttonType)
+    {
+        case Close: setupButton (closeButton); break;
+        case Refresh: setupButton (refreshButton); break;
+        case Manual: setupButton (manualButton); break;
+        case UserPage: setupButton (homeButton); break;
+        case ProductPage: setupButton (websiteButton); break;
+        case Unknown: [[fallthrough]];
+        default: break;
+    }
+}
 
 void LicensePanel::paint (juce::Graphics& g)
 {

@@ -5,11 +5,30 @@
 #include "LicensingDemoEditor.h"
 #include "LicensingDemoProcessor.h"
 
+#include "BinaryData.h"
+
+
+namespace
+{
+
+void showLicensePanel (foleys::PopupHolder& popupHolder)
+{
+    auto licensePanel = std::make_unique<foleys::LicensePanel>();
+    licensePanel->setButtonIcon (foleys::LicensePanel::Manual, BinaryData::pdficon_svg, BinaryData::pdficon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::UserPage, BinaryData::keyicon_svg, BinaryData::keyicon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::ProductPage, BinaryData::wwwicon_svg, BinaryData::wwwicon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::Close, BinaryData::closeicon_svg, BinaryData::closeicon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::Refresh, BinaryData::refreshicon_svg, BinaryData::refreshicon_svgSize);
+
+    popupHolder.showPopup (std::move (licensePanel));
+}
+
+}  // namespace
 
 LicensingDemoEditor::LicensingDemoEditor (LicensingDemoProcessor& p) : juce::AudioProcessorEditor (&p), audioProcessor (p)
 {
     addAndMakeVisible (aboutButton);
-    aboutButton.onClick = [this] { popupHolder.showPopup (std::make_unique<foleys::LicensePanel>()); };
+    aboutButton.onClick = [this] { showLicensePanel (popupHolder); };
 
     setResizable (true, true);
     setSize (640, 480);
@@ -17,7 +36,7 @@ LicensingDemoEditor::LicensingDemoEditor (LicensingDemoProcessor& p) : juce::Aud
     foleys::License license;
     if (license.shouldShowPopup())
     {
-        popupHolder.showPopup (std::make_unique<foleys::LicensePanel>());
+        showLicensePanel (popupHolder);
         license.setPopupWasShown (true);
     }
 }
