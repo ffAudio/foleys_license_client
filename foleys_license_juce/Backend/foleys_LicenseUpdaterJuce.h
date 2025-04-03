@@ -22,15 +22,27 @@ public:
     LicenseUpdaterJuce();
     ~LicenseUpdaterJuce() override;
 
+    /**
+     * Setup the license client
+     * @param licenseFile the location where to save and load the license to
+     * @param hwUID a unique hardware uid of the machine trying to authenticate
+     * @param data an associative array of data you want to include in all requests
+     */
     void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
 
     /**
      * Process the license data for the updater
      * @param plain the license decrypted
+     * @param fromServer notify all license objects of a new license state
      * @returns true if the license was valid and applicable
      */
-    bool setServerResponse(juce::String plain);
+    bool setServerResponse (juce::String plain, bool fromServer);
 
+    /**
+     * Allow all License objects to read the license content.
+     * This is thread safe through a mutex
+     * @return the license content in plain text
+     */
     juce::String getLicenseText() const;
 
     /**
@@ -52,16 +64,29 @@ public:
      */
     void fetchIfNecessary (int hours = 24);
 
-
     /**
      * Tries to get new license data from the server.
      * @param action an optional action. Allowed values: 'demo' or 'activate'. Anything else just gets the status
      */
     void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, std::string>>& data = {});
 
+    /**
+     * Callback from the license download
+     * @param task
+     * @param success
+     */
     void finished (juce::URL::DownloadTask* task, bool success) override;
 
+    /**
+     * Check a local flag, if the popup was already dismissed by the user (is reset on restart)
+     * @return
+     */
     bool popupWasShown() const { return popupShown; }
+
+    /**
+     * Set the flag when the popup was already shown to the user
+     * @param wasShown
+     */
     void setPopupWasShown (bool wasShown) { popupShown.store (wasShown); }
 
 private:

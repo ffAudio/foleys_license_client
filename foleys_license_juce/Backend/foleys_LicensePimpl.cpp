@@ -17,10 +17,7 @@ struct License::Pimpl : public juce::ChangeListener
     explicit Pimpl (License& ownerToUse) : owner (ownerToUse)
     {
         updater->addChangeListener (this);
-
-        auto text = updater->getLicenseText();
-        if (text.isNotEmpty())
-            setLicenseData (text);
+        reload();
     }
 
     ~Pimpl() override { updater->removeChangeListener (this); }
@@ -30,6 +27,12 @@ struct License::Pimpl : public juce::ChangeListener
         updater->setupLicenseData (licenseFile, hwUID, data);
     }
 
+    void reload()
+    {
+        auto text = updater->getLicenseText();
+        if (text.isNotEmpty())
+            setLicenseData (text);
+    }
 
     [[nodiscard]] std::string getLicenseeEmail() const { return email; }
 
@@ -86,10 +89,7 @@ struct License::Pimpl : public juce::ChangeListener
 
     void changeListenerCallback (juce::ChangeBroadcaster*) override
     {
-        auto text = updater->getLicenseText();
-        if (text.isNotEmpty())
-            setLicenseData (text);
-
+        reload();
         owner.licenseChanged();
     }
 

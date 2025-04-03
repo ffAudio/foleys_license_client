@@ -39,7 +39,7 @@ void LicenseUpdaterJuce::setupLicenseData (const std::string& licenseFileName, s
     data        = dataToUse;
 }
 
-bool LicenseUpdaterJuce::setServerResponse (juce::String plain)
+bool LicenseUpdaterJuce::setServerResponse (juce::String plain, bool fromServer)
 {
     auto json = juce::JSON::parse (plain);
 
@@ -50,11 +50,15 @@ bool LicenseUpdaterJuce::setServerResponse (juce::String plain)
     if (json.getProperty (LicenseID::hardware, "").toString() != hardwareUid)
     {
         lastError = LicenseDefines::Error::HardwareMismatch;
-        sendChangeMessage();
+        if (fromServer)
+            sendChangeMessage();
+
         return false;
     }
 
-    sendChangeMessage();
+    if (fromServer)
+        sendChangeMessage();
+
     return true;
 }
 
@@ -76,7 +80,7 @@ void LicenseUpdaterJuce::fetchIfNecessary (int hours)
     auto plain = getLicenseText();
     if (plain.isNotEmpty())
     {
-        setServerResponse (plain);
+        setServerResponse (plain, false);
     }
 
     auto now = time (nullptr);
@@ -122,7 +126,7 @@ void LicenseUpdaterJuce::finished (juce::URL::DownloadTask* task, bool success)
         {
             auto plain = Crypto::decrypt (result.toStdString());
 
-            if (setServerResponse (plain))
+            if (setServerResponse (plain, true))
             {
                 task->getTargetLocation().moveFileTo (licenseFile);
             }

@@ -43,7 +43,10 @@ public:
      */
     void syncLicense();
 
-
+    /**
+     * Check the last error code from the license server or from failed attempts to synchronise
+     * @return
+     */
     [[nodiscard]] LicenseDefines::Error getLastError() const;
 
     /**
@@ -154,6 +157,9 @@ public:
      */
     void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data = {});
 
+    /**
+     * Callback for the LicenseUpdater
+     */
     void licenseChanged() const;
 
 private:
