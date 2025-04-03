@@ -30,6 +30,12 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Downgrade CMake
+        if: runner.os == 'windows'
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.28.x'
+
       - name: Install ninja
         if: runner.os == 'macOS'
         run: brew install ninja
@@ -39,7 +45,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Configure CMake
-        run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DFOLEYS_LICENSING_HAS_JUCE=${{ matrix.using_juce }} -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+        run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DFOLEYS_LICENSING_HAS_JUCE=${{ matrix.using_juce }}
 
       - name: Build
         run: cmake --build --preset builder --config ${{ matrix.build_type }}
