@@ -39,7 +39,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Configure CMake
-        run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DFOLEYS_LICENSING_HAS_JUCE=${{ matrix.using_juce }}
+        run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DFOLEYS_LICENSING_HAS_JUCE=${{ matrix.using_juce }} -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 
       - name: Build
         run: cmake --build --preset builder --config ${{ matrix.build_type }}
