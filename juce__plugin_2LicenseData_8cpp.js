@@ -1,4 +1,4 @@
-var foleys__LicenseData_8h =
+var juce__plugin_2LicenseData_8cpp =
 [
     [ "productName", "namespaceLicenseData.html#a8c78d84570b8e34351a02bb2b0773604", null ],
     [ "copyright", "namespaceLicenseData.html#a13776449af03dd383861adddf9019515", null ],

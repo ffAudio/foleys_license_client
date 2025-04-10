@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['isactivated_0',['isActivated',['../classfoleys_1_1License.html#aa640df27053f7d08f9a3a002247f55fa',1,'foleys::License']]],
-  ['isallowed_1',['isAllowed',['../classfoleys_1_1License.html#a31acbcecead44b1de6418a3d6324a0ef',1,'foleys::License']]],
-  ['isdemo_2',['isDemo',['../classfoleys_1_1License.html#ac7fffe1bb37c6ebec2e36f8aa0a9816c',1,'foleys::License']]],
-  ['isexpired_3',['isExpired',['../classfoleys_1_1License.html#a72b04552f657bbfa9384c3c6139a7725',1,'foleys::License']]],
-  ['ismidieffect_4',['isMidiEffect',['../classLicensingDemoProcessor.html#a347f09426ce02b12b21b42dbe46cd596',1,'LicensingDemoProcessor']]]
+  ['paint_0',['paint',['../classLicensingDemoEditor.html#a4f2c219a2cbbd6b61e7c41564dac6169',1,'LicensingDemoEditor']]],
+  ['preparetoplay_1',['prepareToPlay',['../classLicensingDemoProcessor.html#ab9c02b1536cfd6fe8a9076b7cc23a6bf',1,'LicensingDemoProcessor']]],
+  ['processblock_2',['processBlock',['../classLicensingDemoProcessor.html#a4d8d52ef1b70d68e39c11e697457661d',1,'LicensingDemoProcessor']]],
+  ['producesmidi_3',['producesMidi',['../classLicensingDemoProcessor.html#a98c7c57619e08b04594d70cfe6466bac',1,'LicensingDemoProcessor']]]
 ];

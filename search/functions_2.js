@@ -1,10 +1,9 @@
 var searchData=
 [
-  ['deactivate_0',['deactivate',['../classfoleys_1_1License.html#a62219314c40c1a05fddb2f42649db170',1,'foleys::License']]],
-  ['deactivateitem_1',['DeactivateItem',['../classDeactivateItem.html#afc24c994390ff5df8318682a4705da7e',1,'DeactivateItem']]],
-  ['decode_2',['decode',['../namespacechoc_1_1base64.html#a658f0781728b22e0a1ec8ee146c895b9',1,'choc::base64']]],
-  ['decodedatetime_3',['decodeDateTime',['../classfoleys_1_1License.html#a7f834b48b7f292ef341bbb66a5a21942',1,'foleys::License']]],
-  ['decodetocontainer_4',['decodeToContainer',['../namespacechoc_1_1base64.html#a83fdbf5c05de99fda4ad3bc379a56cbb',1,'choc::base64']]],
-  ['decrypt_5',['decrypt',['../structfoleys_1_1Crypto.html#adf063b7ba5479706b0d3403541dc794e',1,'foleys::Crypto']]],
-  ['demodaysleft_6',['demoDaysLeft',['../classfoleys_1_1License.html#ad27b7aa0d0c88b1849ad1ba1ab9a181e',1,'foleys::License']]]
+  ['getcurrentprogram_0',['getCurrentProgram',['../classLicensingDemoProcessor.html#a75dfefac91048c2c46e1a20ab17370a0',1,'LicensingDemoProcessor']]],
+  ['getname_1',['getName',['../classLicensingDemoProcessor.html#adbf13066cb3cd337c00c2f018762619c',1,'LicensingDemoProcessor']]],
+  ['getnumprograms_2',['getNumPrograms',['../classLicensingDemoProcessor.html#ae99efb4b105fec1629b02685d9200d2b',1,'LicensingDemoProcessor']]],
+  ['getprogramname_3',['getProgramName',['../classLicensingDemoProcessor.html#ae4b77ed382f112ec11ecd105cd89b1b3',1,'LicensingDemoProcessor']]],
+  ['getstateinformation_4',['getStateInformation',['../classLicensingDemoProcessor.html#a7ee356fdf265d2e09ad96df804ee0ddb',1,'LicensingDemoProcessor']]],
+  ['gettaillengthseconds_5',['getTailLengthSeconds',['../classLicensingDemoProcessor.html#a5b2e32b8028aa69f607eda5ac7e8bed5',1,'LicensingDemoProcessor']]]
 ];

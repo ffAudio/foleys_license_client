@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['haseditor_0',['hasEditor',['../classLicensingDemoProcessor.html#a8498ee47dacc3fd81f9409afc21f0a3d',1,'LicensingDemoProcessor']]]
+  ['main_0',['main',['../main_8cpp.html#a2c3f6775325c30275d11c6abee2db6a0',1,'main.cpp']]]
 ];

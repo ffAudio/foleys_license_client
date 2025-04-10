@@ -1,9 +1,12 @@
 var searchData=
 [
-  ['index_0',['index',['../structfoleys_1_1Licensing_1_1Activation.html#a3f42f10d93f6edb91d7d3f6edad25921',1,'foleys::Licensing::Activation']]],
-  ['isactivated_1',['isActivated',['../classfoleys_1_1License.html#aa640df27053f7d08f9a3a002247f55fa',1,'foleys::License']]],
-  ['isallowed_2',['isAllowed',['../classfoleys_1_1License.html#a31acbcecead44b1de6418a3d6324a0ef',1,'foleys::License']]],
-  ['isdemo_3',['isDemo',['../classfoleys_1_1License.html#ac7fffe1bb37c6ebec2e36f8aa0a9816c',1,'foleys::License']]],
-  ['isexpired_4',['isExpired',['../classfoleys_1_1License.html#a72b04552f657bbfa9384c3c6139a7725',1,'foleys::License']]],
-  ['ismidieffect_5',['isMidiEffect',['../classLicensingDemoProcessor.html#a347f09426ce02b12b21b42dbe46cd596',1,'LicensingDemoProcessor']]]
+  ['license_20client_0',['Foleys License Client',['../index.html',1,'']]],
+  ['licensedata_1',['LicenseData',['../namespaceLicenseData.html',1,'']]],
+  ['licensingdemoeditor_2',['LicensingDemoEditor',['../classLicensingDemoEditor.html',1,'LicensingDemoEditor'],['../classLicensingDemoEditor.html#aa17413b2e714d4ae3670277cb20f3a89',1,'LicensingDemoEditor::LicensingDemoEditor()']]],
+  ['licensingdemoeditor_2ecpp_3',['LicensingDemoEditor.cpp',['../LicensingDemoEditor_8cpp.html',1,'']]],
+  ['licensingdemoeditor_2eh_4',['LicensingDemoEditor.h',['../LicensingDemoEditor_8h.html',1,'']]],
+  ['licensingdemoprocessor_5',['LicensingDemoProcessor',['../classLicensingDemoProcessor.html',1,'LicensingDemoProcessor'],['../classLicensingDemoProcessor.html#affbc6507e41ea338ca5f92bf79aeb004',1,'LicensingDemoProcessor::LicensingDemoProcessor()']]],
+  ['licensingdemoprocessor_2ecpp_6',['LicensingDemoProcessor.cpp',['../LicensingDemoProcessor_8cpp.html',1,'']]],
+  ['licensingdemoprocessor_2eh_7',['LicensingDemoProcessor.h',['../LicensingDemoProcessor_8h.html',1,'']]],
+  ['localstorage_8',['localStorage',['../main_8cpp.html#aa389c5d91b132c09153a19ea4f7e6d5f',1,'main.cpp']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kuseragent_0',['kUserAgent',['../classfoleys_1_1NetworkRequest.html#acca758ea564086a2c3091bccc73575b1',1,'foleys::NetworkRequest']]]
+  ['manualurl_0',['manualUrl',['../namespaceLicenseData.html#a5115520061cf10e2942dec96ec8b8f6e',1,'LicenseData']]]
 ];

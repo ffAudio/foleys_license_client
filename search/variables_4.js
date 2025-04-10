@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['index_0',['index',['../structfoleys_1_1Licensing_1_1Activation.html#a3f42f10d93f6edb91d7d3f6edad25921',1,'foleys::Licensing::Activation']]]
+  ['localstorage_0',['localStorage',['../main_8cpp.html#aa389c5d91b132c09153a19ea4f7e6d5f',1,'main.cpp']]]
 ];

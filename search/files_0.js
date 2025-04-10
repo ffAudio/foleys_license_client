@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['choc_5fbase64_2eh_0',['choc_Base64.h',['../choc__Base64_8h.html',1,'']]]
+  ['juce_5fplugin_2flicensedata_2ecpp_0',['LicenseData.cpp',['../juce__plugin_2LicenseData_8cpp.html',1,'']]]
 ];

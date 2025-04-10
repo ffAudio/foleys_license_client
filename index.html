@@ -116,7 +116,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <div class="line">        GIT_TAG main</div>
 <div class="line">        GIT_SHALLOW ON)</div>
 <div class="line">FetchContent_MakeAvailable(license)</div>
-</div><!-- fragment --><p>Since this project uses objective-C on mac, you need to enable OBJXX in your top level CMakeLists.txt: </p><div class="fragment"><div class="line">if (APPLE)</div>
+</div><!-- fragment --><p>Since this project uses objective-C on mac, you need to enable OBJXX in your top level CMakeLists.txt (this doesn't apply for the juce flavour) </p><div class="fragment"><div class="line">if (APPLE)</div>
 <div class="line">    enable_language(OBJCXX)</div>
 <div class="line">endif()</div>
 </div><!-- fragment --><p>Once you created a product in the website you also create a Version there, which has it's own unique key pair to talk to the server. Also the version number will show up in the usage statistics. </p>
@@ -128,7 +128,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 10 2025 10:12:58 for foleys_licensing_client by
+    <li class="footer">Generated on Thu Apr 10 2025 20:32:32 for foleys_licensing_client by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.13.2 </li>
   </ul>

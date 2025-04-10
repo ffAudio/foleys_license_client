@@ -1,21 +1,7 @@
 var searchData=
 [
-  ['foleys_5fchecks_2eh_0',['foleys_Checks.h',['../foleys__Checks_8h.html',1,'']]],
-  ['foleys_5fcrypto_2ecpp_1',['foleys_Crypto.cpp',['../foleys__Crypto_8cpp.html',1,'']]],
-  ['foleys_5fcrypto_2eh_2',['foleys_Crypto.h',['../foleys__Crypto_8h.html',1,'']]],
-  ['foleys_5flicense_2ecpp_3',['foleys_License.cpp',['../foleys__License_8cpp.html',1,'']]],
-  ['foleys_5flicense_2eh_4',['foleys_License.h',['../foleys__License_8h.html',1,'']]],
-  ['foleys_5flicensedata_2eh_5',['foleys_LicenseData.h',['../foleys__LicenseData_8h.html',1,'']]],
-  ['foleys_5flicenseupdater_2ecpp_6',['foleys_LicenseUpdater.cpp',['../foleys__LicenseUpdater_8cpp.html',1,'']]],
-  ['foleys_5flicenseupdater_2eh_7',['foleys_LicenseUpdater.h',['../foleys__LicenseUpdater_8h.html',1,'']]],
-  ['foleys_5flicensing_2eh_8',['foleys_Licensing.h',['../foleys__Licensing_8h.html',1,'']]],
-  ['foleys_5fnetworkrequest_2ecpp_9',['foleys_NetworkRequest.cpp',['../foleys__NetworkRequest_8cpp.html',1,'']]],
-  ['foleys_5fnetworkrequest_2eh_10',['foleys_NetworkRequest.h',['../foleys__NetworkRequest_8h.html',1,'']]],
-  ['foleys_5fnetworkrequest_2emm_11',['foleys_NetworkRequest.mm',['../foleys__NetworkRequest_8mm.html',1,'']]],
-  ['foleys_5fobservers_2eh_12',['foleys_Observers.h',['../foleys__Observers_8h.html',1,'']]],
-  ['foleys_5fpopupholder_2eh_13',['foleys_PopupHolder.h',['../foleys__PopupHolder_8h.html',1,'']]],
-  ['foleys_5fsharedobject_2eh_14',['foleys_SharedObject.h',['../foleys__SharedObject_8h.html',1,'']]],
-  ['foleys_5fsysteminfo_2ecpp_15',['foleys_SystemInfo.cpp',['../foleys__SystemInfo_8cpp.html',1,'']]],
-  ['foleys_5fsysteminfo_2eh_16',['foleys_SystemInfo.h',['../foleys__SystemInfo_8h.html',1,'']]],
-  ['foleys_5fsysteminfo_2emm_17',['foleys_SystemInfo.mm',['../foleys__SystemInfo_8mm.html',1,'']]]
+  ['licensingdemoeditor_2ecpp_0',['LicensingDemoEditor.cpp',['../LicensingDemoEditor_8cpp.html',1,'']]],
+  ['licensingdemoeditor_2eh_1',['LicensingDemoEditor.h',['../LicensingDemoEditor_8h.html',1,'']]],
+  ['licensingdemoprocessor_2ecpp_2',['LicensingDemoProcessor.cpp',['../LicensingDemoProcessor_8cpp.html',1,'']]],
+  ['licensingdemoprocessor_2eh_3',['LicensingDemoProcessor.h',['../LicensingDemoProcessor_8h.html',1,'']]]
 ];
