@@ -6,7 +6,7 @@
 #define FOLEYS_LICENSING_CLIENT_FOLEYS_CHECKS_H
 
 
-#include "foleys_LicenseData.h"
+#include "foleys_license_common/foleys_LicenseData.h"
 
 #include <string>
 #include <nlohmann/json.hpp>

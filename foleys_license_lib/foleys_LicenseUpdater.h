@@ -15,11 +15,11 @@ For details refer to the LICENSE.md
 #ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEUPDATER_H
 #define FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEUPDATER_H
 
+#include "foleys_license_common/foleys_LicenseDefines.h"
 #include "foleys_Observers.h"
 #include "foleys_SharedObject.h"
 #include "foleys_NetworkRequest.h"
 
-#include "foleys_Licensing.h"
 
 namespace foleys
 {
@@ -37,7 +37,7 @@ public:
      * If the last action resulted in an error, this will return it
      * @return the error as string
      */
-    [[nodiscard]] Licensing::Error getLastError() const { return lastError; }
+    [[nodiscard]] LicenseDefines::Error getLastError() const { return lastError; }
 
     /**
      * If the last action resulted in an error, this will return it
@@ -86,19 +86,19 @@ public:
 
     void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
 
-    [[nodiscard]] std::string getContents();
+    [[nodiscard]] std::string getLicenseText();
 
     /**
      * In case of a failed activation, this contains existing activations for deactivation
      * @return a list of activated machines
      */
-    std::vector<Licensing::Activation> getActivations();
+    std::vector<Activation> getActivations();
 
     /**
      * Store a flag if the popup was already shown in that session
      * @return false if the popup wasn't shown yet
      */
-    [[nodiscard]] bool wasPopupShown() const { return popupShown; }
+    [[nodiscard]] bool popupWasShown() const { return popupShown; }
 
     void setPopupWasShown (bool wasShown) { popupShown = wasShown; }
 
@@ -113,7 +113,7 @@ private:
     std::string localStorage;
 
     std::vector<std::pair<std::string, std::string>> defaultData;
-    Licensing::Error                                 lastError = Licensing::Error::NoError;
+    LicenseDefines::Error                            lastError = LicenseDefines::Error::NoError;
     std::string                                      lastErrorString;
     ObserverList<Observer>                           observerList;
     bool                                             popupShown = false;

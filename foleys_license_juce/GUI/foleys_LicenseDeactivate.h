@@ -2,11 +2,17 @@
 // Created by Daniel Walz on 11.10.24.
 //
 
-#ifndef FOLEYS_LICENSING_CLIENT_LICENSEDEACTIVATE_H
-#define FOLEYS_LICENSING_CLIENT_LICENSEDEACTIVATE_H
+#ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEDEACTIVATE_H
+#define FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEDEACTIVATE_H
 
-#include <juce_gui_basics/juce_gui_basics.h>
-#include <foleys_License.h>
+#include "foleys_license_common/foleys_LicenseDefines.h"
+
+#include "foleys_license_juce/foleys_license_juce.h"
+
+#include "juce_gui_basics/juce_gui_basics.h"
+
+namespace foleys
+{
 
 class LicenseDeactivate
   : public juce::Component
@@ -33,12 +39,13 @@ public:
     std::function<void (size_t deactivate)> onDeactivate;
 
 private:
-    std::vector<foleys::Licensing::Activation> activations;
-    juce::ListBox                              deactivations;
-    juce::TextButton                           closeButton { "Close" };
+    std::vector<foleys::Activation> activations;
+    juce::ListBox                   deactivations;
+    juce::TextButton                closeButton { "Close" };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LicenseDeactivate)
 };
 
+}  // namespace foleys
 
-#endif  // FOLEYS_LICENSING_CLIENT_LICENSEDEACTIVATE_H
+#endif  // FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEDEACTIVATE_H

@@ -2,7 +2,7 @@
 // Created by Daniel Walz on 08.08.24.
 //
 
-#include <foleys_License.h>
+#include <foleys_license_lib.h>
 
 
 std::string localStorage = foleys::SystemInfo::createLicensePath("Manufacturer", "TestStandalone");

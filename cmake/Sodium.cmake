@@ -22,7 +22,7 @@ if (APPLE)
     ExternalProject_Add(libsodium
             PREFIX ${SODIUM_ROOT}
             URL https://download.libsodium.org/libsodium/releases/LATEST.tar.gz
-            PATCH_COMMAND patch -f ${SODIUM_PATH}/dist-build/macos.sh ${PROJECT_SOURCE_DIR}/src/sodium.patch || true
+            PATCH_COMMAND patch -f ${SODIUM_PATH}/dist-build/macos.sh ${PROJECT_SOURCE_DIR}/foleys_license_common/sodium.patch || true
             CONFIGURE_COMMAND ""
             BUILD_IN_SOURCE TRUE
             BUILD_COMMAND ${SODIUM_PATH}/dist-build/macos.sh

@@ -15,15 +15,8 @@
 #ifndef FOLEYS_LICENSE_CLIENT_FOLEYS_LICENSE_H
 #define FOLEYS_LICENSE_CLIENT_FOLEYS_LICENSE_H
 
-#include "private/foleys_SharedObject.h"
-#include "private/foleys_Observers.h"
-#include "private/foleys_LicenseData.h"
-#include "private/foleys_LicenseUpdater.h"
-#include "private/foleys_SystemInfo.h"
-
-#include <atomic>
-#include <optional>
-#include <ctime>
+#include "foleys_LicenseData.h"
+#include "foleys_LicenseDefines.h"
 
 #ifndef FOLEYS_LICENSE_ENCRYPT_REQUEST
     #define FOLEYS_LICENSE_ENCRYPT_REQUEST 0
@@ -32,11 +25,11 @@
 namespace foleys
 {
 
-class License : private LicenseUpdater::Observer
+class License
 {
 public:
     License();
-    ~License() override;
+    ~License();
 
     /**
      * Check if a popup should be shown.
@@ -50,8 +43,11 @@ public:
      */
     void syncLicense();
 
-
-    [[nodiscard]] Licensing::Error getLastError() const;
+    /**
+     * Check the last error code from the license server or from failed attempts to synchronise
+     * @return
+     */
+    [[nodiscard]] LicenseDefines::Error getLastError() const;
 
     /**
      * If the last action resulted in an error, this will return it
@@ -119,7 +115,7 @@ public:
      * In case of a failed activation, this contains existing activations for deactivation
      * @return a list of activated machines
      */
-    std::vector<Licensing::Activation> getActivations();
+    std::vector<Activation> getActivations();
 
     /**
      * Check if the user is allowed to start a demo
@@ -146,7 +142,7 @@ public:
      * Set a flag in the updater to avoid multiple times popup
      * @param wasShown
      */
-    void setPopupWasShown (bool wasShown) { updater->setPopupWasShown (wasShown); }
+    void setPopupWasShown (bool wasShown);
 
     /**
      * This is called when a valid license was received
@@ -161,26 +157,14 @@ public:
      */
     void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data = {});
 
-    [[nodiscard]] static time_t decodeDateTime (const std::string& timeString, const char* formatString);
+    /**
+     * Callback for the LicenseUpdater
+     */
+    void licenseChanged() const;
 
 private:
-    std::pair<Licensing::Error, std::string> loadLicenseBlob();
-
-    void licenseUpdated() override;
-
-    [[nodiscard]] std::pair<Licensing::Error, std::string> processData (std::string_view data);
-
-    LicenseUpdater::Ptr updater;
-
-    mutable std::mutex processingLock;
-
-    std::string                licenseHardware;
-    std::string                email;
-    std::atomic<bool>          activatedFlag = false;
-    std::atomic<bool>          demoAvailable = false;
-    std::atomic<int>           demoDays      = 0;
-    std::optional<std::time_t> expiryDate;
-    std::optional<std::time_t> checked;
+    struct Pimpl;
+    std::unique_ptr<Pimpl> pimpl;
 };
 
 

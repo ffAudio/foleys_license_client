@@ -13,10 +13,12 @@ For details refer to the LICENSE.md
 
 
 #include "foleys_LicenseUpdater.h"
-#include "foleys_LicenseData.h"
-#include "foleys_License.h"
+#include "foleys_license_common/foleys_LicenseData.h"
+#include "foleys_license_common/foleys_License.h"
+#include "foleys_license_common/foleys_Crypto.h"
+#include "foleys_license_common/foleys_LicenseHelpers.h"
+
 #include "foleys_NetworkRequest.h"
-#include "foleys_Crypto.h"
 #include "foleys_Checks.h"
 
 #include <nlohmann/json.hpp>
@@ -46,21 +48,21 @@ void LicenseUpdater::fetchIfNecessary (int hours)
     if (hardwareUid.empty())
         return;
 
-    auto contents = getContents();
+    auto contents = getLicenseText();
     if (contents.empty())
     {
         fetchLicenseData();
         return;
     }
 
-    auto json = nlohmann::json::parse (getContents(), nullptr, false);
+    auto json = nlohmann::json::parse (getLicenseText(), nullptr, false);
     if (json.is_discarded())
     {
         fetchLicenseData();
         return;
     }
 
-    auto timestamp = License::decodeDateTime (json[LicenseID::checked], "%Y-%m-%dT%H:%M:%S");
+    auto timestamp = Helpers::decodeDateTime (json[LicenseID::checked], "%Y-%m-%d %H:%M:%S");
     auto seconds   = std::difftime (std::time (nullptr), timestamp);
 
     if (seconds > 3600 * hours)
@@ -103,7 +105,7 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
     {
         if (status > 399)
         {
-            lastError       = Licensing::Error::ServerNotAvailable;
+            lastError       = LicenseDefines::Error::ServerNotAvailable;
             lastErrorString = "Server not reachable or timed out";
             return;
         }
@@ -112,19 +114,19 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
 
         if (answer.empty())
         {
-            lastError       = Licensing::Error::ServerAnswerInvalid;
+            lastError       = LicenseDefines::Error::ServerAnswerInvalid;
             lastErrorString = "Server Error (could not decrypt)";
             sendUpdateSignal();
             return;
         }
 
-        lastError       = Licensing::Error::NoError;
+        lastError       = LicenseDefines::Error::NoError;
         lastErrorString = "";
 
         auto json = nlohmann::json::parse (answer, nullptr, false);
         if (json.is_discarded())
         {
-            lastError       = Licensing::Error::ServerAnswerInvalid;
+            lastError       = LicenseDefines::Error::ServerAnswerInvalid;
             lastErrorString = "Server Error (invalid json)";
             sendUpdateSignal();
             return;
@@ -132,7 +134,7 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
 
         if (Checks::getHardwareUID (json) != hardwareUid)
         {
-            lastError       = Licensing::Error::ServerAnswerInvalid;
+            lastError       = LicenseDefines::Error::ServerAnswerInvalid;
             lastErrorString = "License not applicable";
             sendUpdateSignal();
             return;
@@ -143,7 +145,7 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
 
             if (localStorage.empty())
             {
-                lastError       = Licensing::Error::CouldNotSave;
+                lastError       = LicenseDefines::Error::CouldNotSave;
                 lastErrorString = "Could not open license file for writing";
                 sendUpdateSignal();
                 return;
@@ -158,14 +160,14 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
             }
             else
             {
-                lastError       = Licensing::Error::CouldNotSave;
+                lastError       = LicenseDefines::Error::CouldNotSave;
                 lastErrorString = "Could not open license file for writing";
             }
         }
 
         if (json.contains (LicenseID::error))
         {
-            lastError       = Licensing::Error::ServerError;
+            lastError       = LicenseDefines::Error::ServerError;
             lastErrorString = json[LicenseID::error];
         }
 
@@ -175,15 +177,15 @@ void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vecto
     request->fetch (payload);
 }
 
-std::vector<Licensing::Activation> LicenseUpdater::getActivations()
+std::vector<Activation> LicenseUpdater::getActivations()
 {
-    auto json = nlohmann::json::parse (getContents(), nullptr, false);
+    auto json = nlohmann::json::parse (getLicenseText(), nullptr, false);
     if (json.is_discarded())
         return {};
 
     if (json.contains (LicenseID::activations))
     {
-        std::vector<Licensing::Activation> acts;
+        std::vector<Activation> acts;
         for (const auto& a: json[LicenseID::activations])
             acts.push_back ({ a[LicenseID::id], a[LicenseID::computer], a[LicenseID::user] });
 
@@ -193,7 +195,7 @@ std::vector<Licensing::Activation> LicenseUpdater::getActivations()
     return {};
 }
 
-std::string LicenseUpdater::getContents()
+std::string LicenseUpdater::getLicenseText()
 {
     if (localStorage.empty())
         return {};

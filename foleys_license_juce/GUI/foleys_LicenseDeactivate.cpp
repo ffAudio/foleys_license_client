@@ -2,8 +2,10 @@
 // Created by Daniel Walz on 11.10.24.
 //
 
-#include "LicenseDeactivate.h"
+#include "foleys_LicenseDeactivate.h"
 
+namespace foleys
+{
 
 LicenseDeactivate::LicenseDeactivate()
 {
@@ -46,7 +48,7 @@ class DeactivateItem : public juce::Component
 public:
     explicit DeactivateItem (LicenseDeactivate& ownerToUse) : owner (ownerToUse) { addAndMakeVisible (deactivate); }
 
-    void setActivation (const foleys::Licensing::Activation& activationToUse)
+    void setActivation (const foleys::Activation& activationToUse)
     {
         activation         = activationToUse;
         deactivate.onClick = [this]
@@ -69,9 +71,9 @@ public:
     void resized() override { deactivate.setBounds (getRight() - 90, 6, 80, 24); }
 
 private:
-    LicenseDeactivate&            owner;
-    foleys::Licensing::Activation activation;
-    juce::TextButton              deactivate { "deactivate", "Deactivate" };
+    LicenseDeactivate& owner;
+    foleys::Activation activation;
+    juce::TextButton   deactivate { "deactivate", "Deactivate" };
 };
 
 juce::Component* LicenseDeactivate::refreshComponentForRow (int rowNumber, [[maybe_unused]] bool isRowSelected, juce::Component* existingComponentToUpdate)
@@ -89,3 +91,5 @@ juce::Component* LicenseDeactivate::refreshComponentForRow (int rowNumber, [[may
     comp->setActivation (activations[size_t (rowNumber)]);
     return comp;
 }
+
+}  // namespace foleys

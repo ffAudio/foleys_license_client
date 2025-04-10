@@ -5,9 +5,14 @@ cmake_minimum_required(VERSION 3.24.1 FATAL_ERROR)
 # ================================================================================
 
 
-option(FOLEYS_LICENSING_HAS_JUCE "Enable juce GUI for the license client" ON)
-
 include(juce)
+
+set(EXAMPLE_FORMATS AU VST3 Standalone)
+
+if (FOLEYS_LICENSING_BUILD_EXAMPLES_AAX)
+    list(APPEND EXAMPLE_FORMATS AAX)
+    juce_set_aax_sdk_path("/Users/daniel/Developer/Foleys/SDK/aax_sdk")
+endif ()
 
 juce_add_plugin(FoleysJuceLicenseExample
         PRODUCT_NAME LicenseExample
@@ -20,7 +25,7 @@ juce_add_plugin(FoleysJuceLicenseExample
         IS_MIDI_EFFECT FALSE
         EDITOR_WANTS_KEYBOARD_FOCUS FALSE
         COPY_PLUGIN_AFTER_BUILD TRUE
-        FORMATS AU VST3 Standalone
+        FORMATS ${EXAMPLE_FORMATS}
         BUNDLE_ID com.example.foleyslicenseexample)
 
 target_sources(FoleysJuceLicenseExample
@@ -29,13 +34,6 @@ target_sources(FoleysJuceLicenseExample
         LicensingDemoProcessor.h
         LicensingDemoEditor.cpp
         LicensingDemoEditor.h
-        LicensePanel.cpp
-        LicensePanel.h
-        LicenseDeactivate.cpp
-        LicenseDeactivate.h)
-
-target_sources(licensing
-        INTERFACE
         LicenseData.cpp)
 
 target_compile_definitions(FoleysJuceLicenseExample
@@ -57,7 +55,7 @@ juce_add_binary_data(
 target_link_libraries(FoleysJuceLicenseExample
         PRIVATE
         FoleysJuceLicenseExample_data
-        licensing
+        foleys::foleys_license_juce
         juce::juce_audio_processors
         juce::juce_audio_devices
         juce::juce_audio_utils

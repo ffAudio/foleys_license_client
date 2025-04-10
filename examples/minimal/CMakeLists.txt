@@ -10,7 +10,9 @@ add_executable(FoleysLicenseCLI)
 
 target_sources(FoleysLicenseCLI
         PRIVATE
-        main.cpp)
+        main.cpp
+        LicenseData.cpp
+)
 
 target_link_libraries(FoleysLicenseCLI
         PRIVATE

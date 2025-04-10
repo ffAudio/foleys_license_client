@@ -12,12 +12,13 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    name: Build ${{ matrix.os }} - ${{ matrix.build_type }}
+    name: Build ${{ matrix.os }} - ${{ matrix.build_type }} - JUCE ${{ matrix.using_juce }}
     strategy:
       fail-fast: false
       matrix:
         os: [ macos-latest, windows-latest ]
         build_type: [ Debug, Release ]
+        using_juce: [ 1, 0 ]
         include:
           - os: windows-latest
             CMAKE_PRESET: msvc
@@ -29,6 +30,12 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Downgrade CMake
+        if: runner.os == 'windows'
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.28.x'
+
       - name: Install ninja
         if: runner.os == 'macOS'
         run: brew install ninja
@@ -38,7 +45,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Configure CMake
-        run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        run: cmake --preset ${{ matrix.CMAKE_PRESET }} --log-level=VERBOSE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DFOLEYS_LICENSING_HAS_JUCE=${{ matrix.using_juce }}
 
       - name: Build
         run: cmake --build --preset builder --config ${{ matrix.build_type }}

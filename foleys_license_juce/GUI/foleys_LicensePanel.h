@@ -12,19 +12,31 @@ For details refer to the LICENSE.md
 *******************************************************************************/
 
 
-#ifndef FOLEYS_LICENSING_CLIENT_LICENSEPANEL_H
-#define FOLEYS_LICENSING_CLIENT_LICENSEPANEL_H
+#ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEPANEL_H
+#define FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEPANEL_H
 
-#include "juce/foleys_PopupHolder.h"
 
-#include <juce_gui_basics/juce_gui_basics.h>
-#include <foleys_License.h>
+#include "foleys_license_juce/foleys_license_juce.h"
 
+#include "juce_gui_basics/juce_gui_basics.h"
+
+namespace foleys
+{
 
 class LicensePanel : public foleys::Popup
 {
 public:
-    explicit LicensePanel();
+    enum Button
+    {
+        Unknown = 0,
+        Close,
+        Refresh,
+        Manual,
+        UserPage,
+        ProductPage
+    };
+
+    LicensePanel();
 
     void paint (juce::Graphics& g) override;
     void resized() override;
@@ -32,6 +44,8 @@ public:
     void update();
 
     void activate (const juce::String& serial, size_t deactivate);
+
+    void setButtonIcon (Button buttonType, const char* imageData, size_t imageDataSize);
 
 private:
     foleys::License license;
@@ -56,5 +70,6 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LicensePanel)
 };
 
+}  // namespace foleys
 
-#endif  // FOLEYS_LICENSING_CLIENT_LICENSEPANEL_H
+#endif  // FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEPANEL_H

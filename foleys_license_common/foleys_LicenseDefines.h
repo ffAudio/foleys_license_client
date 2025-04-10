@@ -11,8 +11,16 @@
 
  *******************************************************************************/
 
-#ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSING_H
-#define FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSING_H
+#ifndef FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEDEFINES_H
+#define FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEDEFINES_H
+
+#include <string>
+#include <atomic>
+#include <optional>
+#include <vector>
+#include <functional>
+#include <memory>
+#include <ctime>
 
 #define FOLEYS_DISABLE_COPY(className)                \
     className (const className&)            = delete; \
@@ -38,7 +46,7 @@ private:                                             \
 
 #include <string>
 
-namespace foleys::Licensing
+namespace foleys::LicenseDefines
 {
 
 enum class Error
@@ -63,6 +71,10 @@ enum class Status
     NoActivationLeft = 5,  //< tried to activate but no activations left
 };
 
+}  // namespace foleys::LicenseDefines
+
+namespace foleys
+{
 struct Activation
 {
     size_t      index = 0;
@@ -70,7 +82,7 @@ struct Activation
     std::string user;
 };
 
-}  // namespace foleys::Licensing
+}  // namespace foleys
 
 
-#endif  // FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSING_H
+#endif  // FOLEYS_LICENSING_CLIENT_FOLEYS_LICENSEDEFINES_H
