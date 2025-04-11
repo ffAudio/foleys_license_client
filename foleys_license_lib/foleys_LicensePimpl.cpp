@@ -38,9 +38,9 @@ struct License::Pimpl : public LicenseUpdater::Observer
         updater->fetchLicenseData (action, data);
     }
 
-    [[nodiscard]] bool isDemo() const { return demoDays > 0 && !demoAvailable; }
+    [[nodiscard]] bool isDemo() const { return demoDays.load() > 0 && !owner.demoAvailable; }
 
-    bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !activatedFlag.load()); }
+    bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !owner.activatedFlag.load()); }
 
     void setPopupWasShown (bool wasShown) { updater->setPopupWasShown (wasShown); }
 
@@ -72,11 +72,14 @@ struct License::Pimpl : public LicenseUpdater::Observer
     {
         auto json = nlohmann::json::parse (updater->getLicenseText(), nullptr, false);
         if (json.is_discarded())
+        {
+            owner.activatedFlag = false;
+            owner.allowedFlag   = false;
             return { LicenseDefines::Error::ServerAnswerInvalid, "Got invalid license data (bad json)" };
-
-        checked       = Helpers::decodeDateTime (json[LicenseID::checked], "%Y-%m-%d %H:%M:%S");
-        activatedFlag = json[LicenseID::activated];
-        email         = json[LicenseID::licensee_email];
+        }
+        checked             = Helpers::decodeDateTime (json[LicenseID::checked], "%Y-%m-%d %H:%M:%S");
+        owner.activatedFlag = json[LicenseID::activated];
+        email               = json[LicenseID::licensee_email];
 
         licenseHardware = json[LicenseID::hardware];
 
@@ -87,8 +90,8 @@ struct License::Pimpl : public LicenseUpdater::Observer
 
         if (json.contains (LicenseID::demo_available))
         {
-            demoAvailable = json[LicenseID::demo_available];
-            demoDays      = json[LicenseID::demo_days];
+            owner.demoAvailable = json[LicenseID::demo_available];
+            demoDays            = json[LicenseID::demo_days];
             if (json.contains (LicenseID::demo_ends))
             {
                 auto ends          = Helpers::decodeDateTime (json[LicenseID::demo_ends], "%Y-%m-%d");
@@ -98,14 +101,18 @@ struct License::Pimpl : public LicenseUpdater::Observer
         }
         else
         {
-            demoAvailable = false;
-            demoDays      = 0;
+            owner.demoAvailable = false;
+            demoDays            = 0;
         }
 
         if (json.contains (LicenseID::error))
         {
-            return { LicenseDefines::Error::HardwareMismatch, json[LicenseID::error] };
+            owner.activatedFlag = false;
+            owner.allowedFlag   = false;
+            return { LicenseDefines::Error::ServerError, json[LicenseID::error] };
         }
+
+        owner.allowedFlag = (owner.activatedFlag && !isExpired()) || isDemo();
 
         return { LicenseDefines::Error::NoError, {} };
     }
@@ -116,9 +123,7 @@ struct License::Pimpl : public LicenseUpdater::Observer
     std::mutex                   processLock;
     std::string                  licenseHardware;
     std::string                  email;
-    std::atomic<bool>            activatedFlag = false;
-    std::atomic<bool>            demoAvailable = false;
-    std::atomic<int>             demoDays      = 0;
+    std::atomic<int>             demoDays = 0;
     std::optional<std::time_t>   expiryDate;
     std::optional<std::time_t>   checked;
 

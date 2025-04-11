@@ -41,9 +41,9 @@ struct License::Pimpl : public juce::ChangeListener
         updater->fetchLicenseData (action, data);
     }
 
-    [[nodiscard]] bool isDemo() const { return demoDays > 0 && !demoAvailable; }
+    [[nodiscard]] bool isDemo() const { return demoDays > 0 && !owner.demoAvailable; }
 
-    bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !activatedFlag.load()); }
+    bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !owner.activatedFlag.load()); }
 
     void setPopupWasShown (bool wasShown) { updater->setPopupWasShown (wasShown); }
 
@@ -99,9 +99,9 @@ struct License::Pimpl : public juce::ChangeListener
 
         if (auto* object = data.getDynamicObject())
         {
-            checked       = Helpers::decodeDateTime (object->getProperty (LicenseID::checked).toString().toStdString(), "%Y-%m-%d %H:%M:%S");
-            activatedFlag = object->getProperty (LicenseID::activated);
-            email         = object->getProperty (LicenseID::licensee_email).toString().toStdString();
+            checked             = Helpers::decodeDateTime (object->getProperty (LicenseID::checked).toString().toStdString(), "%Y-%m-%d %H:%M:%S");
+            owner.activatedFlag = object->getProperty (LicenseID::activated);
+            email               = object->getProperty (LicenseID::licensee_email).toString().toStdString();
 
             licenseHardware = object->getProperty (LicenseID::hardware).toString().toStdString();
 
@@ -112,8 +112,8 @@ struct License::Pimpl : public juce::ChangeListener
 
             if (object->hasProperty (LicenseID::demo_available))
             {
-                demoAvailable = object->getProperty (LicenseID::demo_available);
-                demoDays      = object->getProperty (LicenseID::demo_days);
+                owner.demoAvailable = object->getProperty (LicenseID::demo_available);
+                demoDays            = object->getProperty (LicenseID::demo_days);
                 if (object->hasProperty (LicenseID::demo_ends))
                 {
                     auto ends          = Helpers::decodeDateTime (object->getProperty (LicenseID::demo_ends).toString().toStdString(), "%Y-%m-%d");
@@ -123,17 +123,23 @@ struct License::Pimpl : public juce::ChangeListener
             }
             else
             {
-                demoAvailable = false;
-                demoDays      = 0;
+                owner.demoAvailable = false;
+                demoDays            = 0;
             }
 
             if (object->hasProperty (LicenseID::error))
             {
-                return { LicenseDefines::Error::HardwareMismatch, object->getProperty (LicenseID::error).toString().toStdString() };
+                owner.allowedFlag = false;
+                return { LicenseDefines::Error::ServerError, object->getProperty (LicenseID::error).toString().toStdString() };
             }
+
+            owner.allowedFlag = (owner.activatedFlag && !isExpired()) || isDemo();
 
             return { LicenseDefines::Error::NoError, {} };
         }
+
+        owner.allowedFlag   = false;
+        owner.activatedFlag = false;
 
         return { LicenseDefines::Error::ServerAnswerInvalid, "Got invalid license data (bad json)" };
     }
@@ -144,9 +150,7 @@ struct License::Pimpl : public juce::ChangeListener
     juce::CriticalSection                                   processLock;
     std::string                                             licenseHardware;
     std::string                                             email;
-    std::atomic<bool>                                       activatedFlag = false;
-    std::atomic<bool>                                       demoAvailable = false;
-    std::atomic<int>                                        demoDays      = 0;
+    std::atomic<int>                                        demoDays = 0;
     std::optional<std::time_t>                              expiryDate;
     std::optional<std::time_t>                              checked;
 
