@@ -42,7 +42,7 @@ void License::syncLicense()
 
 bool License::isActivated() const
 {
-    return pimpl->activatedFlag.load();
+    return activatedFlag.load();
 }
 
 bool License::isExpired() const
@@ -52,7 +52,7 @@ bool License::isExpired() const
 
 bool License::isAllowed() const
 {
-    return (isActivated() && !isExpired()) || isDemo();
+    return allowedFlag;
 }
 
 LicenseDefines::Error License::getLastError() const
@@ -108,7 +108,7 @@ std::vector<Activation> License::getActivations()
 
 bool License::canDemo() const
 {
-    return pimpl->demoAvailable;
+    return demoAvailable;
 }
 
 bool License::isDemo() const

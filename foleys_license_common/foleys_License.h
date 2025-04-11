@@ -163,6 +163,10 @@ public:
     void licenseChanged() const;
 
 private:
+    std::atomic<bool>                                       activatedFlag = false;
+    std::atomic<bool>                                       demoAvailable = false;
+    std::atomic<bool>                                       allowedFlag = false;
+
     struct Pimpl;
     std::unique_ptr<Pimpl> pimpl;
 };
