@@ -59,6 +59,11 @@ public:
      */
     void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, std::string>>& data = {});
 
+    /**
+     * Create a request payload to get an offline license
+     * @return A JSON string containing the request data
+     */
+    std::string getOfflineRequest() const;
 
     /**
      * Each License is an observer to the LicenseUpdater. You can add anything as observer,

@@ -158,14 +158,27 @@ public:
     void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data = {});
 
     /**
+     * Try to set the content of a license file and store it on success
+     * @param content the encrypted content of the file
+     * @return true if applied successfully
+     */
+    bool setOfflineLicenseData (std::string_view content);
+
+    /**
+     * Create a payload for an activation request
+     * @return
+     */
+    [[nodiscard]] std::string getOfflineRequest() const;
+
+    /**
      * Callback for the LicenseUpdater
      */
     void licenseChanged() const;
 
 private:
-    std::atomic<bool>                                       activatedFlag = false;
-    std::atomic<bool>                                       demoAvailable = false;
-    std::atomic<bool>                                       allowedFlag = false;
+    std::atomic<bool> activatedFlag = false;
+    std::atomic<bool> demoAvailable = false;
+    std::atomic<bool> allowedFlag   = false;
 
     struct Pimpl;
     std::unique_ptr<Pimpl> pimpl;

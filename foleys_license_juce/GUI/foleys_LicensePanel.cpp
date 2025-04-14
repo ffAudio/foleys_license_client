@@ -40,6 +40,7 @@ LicensePanel::LicensePanel()
     addAndMakeVisible (copyright);
     addAndMakeVisible (timestamp);
     addAndMakeVisible (deactivate);
+    addAndMakeVisible (offlineButton);
 
     title.setJustificationType (juce::Justification::centred);
     title.setColour (juce::Label::textColourId, juce::Colours::silver);
@@ -213,18 +214,45 @@ void LicensePanel::setButtonIcon (Button buttonType, const char* imageData, size
         case Manual: setupButton (manualButton); break;
         case UserPage: setupButton (homeButton); break;
         case ProductPage: setupButton (websiteButton); break;
+        case OfflineAuth: setupButton (offlineButton); break;
         case Unknown: [[fallthrough]];
         default: break;
     }
 }
 
+bool LicensePanel::isInterestedInFileDrag (const juce::StringArray& files)
+{
+    if (files.size() != 1)
+        return false;
+
+    auto file = juce::File (files.getReference (0));
+
+    return file.hasFileExtension (".lic") && file.existsAsFile();
+}
+
+void LicensePanel::filesDropped (const juce::StringArray& files, [[maybe_unused]] int x, [[maybe_unused]] int y)
+{
+    auto file = juce::File (files.getReference (0));
+
+    license.setOfflineLicenseData (file.loadFileAsString().toStdString());
+}
+
 void LicensePanel::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::black.withAlpha (0.8f));
+    if (onPaint)
+        onPaint (g);
+    else
+        g.fillAll (juce::Colours::black.withAlpha (0.8f));
 }
 
 void LicensePanel::resized()
 {
+    if (onResized)
+    {
+        onResized();
+        return;
+    }
+
     timestamp.setBounds (getWidth() - 222, getHeight() - 27, 200, 25);
 
     const auto buttonHeight = 30;
@@ -244,10 +272,11 @@ void LicensePanel::resized()
     copyright.setBounds (area.removeFromBottom (30).withTrimmedTop (10));
 
     auto       buttonArea = area.removeFromBottom (area.getHeight() / 4);
-    const auto w          = buttonArea.getWidth() / 3;
-    manualButton.setBounds (buttonArea.removeFromLeft (w).withTrimmedRight (10));
-    websiteButton.setBounds (buttonArea.removeFromRight (w).withTrimmedLeft (10));
-    homeButton.setBounds (buttonArea.reduced (10, 0));
+    const auto w          = buttonArea.getWidth() / 4;
+    homeButton.setBounds (buttonArea.removeFromLeft (w).withTrimmedRight (10));
+    websiteButton.setBounds (buttonArea.removeFromLeft (w).withTrimmedRight (10));
+    offlineButton.setBounds (buttonArea.removeFromLeft (w).withTrimmedRight (10));
+    manualButton.setBounds (buttonArea.reduced (10, 0));
 
     auto demoArea = area.removeFromBottom (60).withSizeKeepingCentre (std::min (area.getWidth(), 250), buttonHeight);
     refreshButton.setBounds (demoArea.removeFromRight (demoArea.getHeight()));

@@ -45,6 +45,7 @@
 
 #include "../foleys_license_common/foleys_License.h"
 #include "GUI/foleys_PopupHolder.h"
+#include "GUI/foleys_FileDragButton.h"
 #include "GUI/foleys_LicensePanel.h"
 #include "GUI/foleys_LicenseDeactivate.h"
 

@@ -93,6 +93,10 @@ struct License::Pimpl : public juce::ChangeListener
         owner.licenseChanged();
     }
 
+    [[nodiscard]] std::string getOfflineRequest() const { return updater->getOfflineRequest(); }
+
+    bool setOfflineLicenseData (std::string_view content) { return updater->setOfflineLicenseData (content); }
+
     std::pair<LicenseDefines::Error, std::string> setLicenseData (const juce::String& text)
     {
         auto data = juce::JSON::parse (text);

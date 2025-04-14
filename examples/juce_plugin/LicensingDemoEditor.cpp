@@ -19,6 +19,7 @@ void showLicensePanel (foleys::PopupHolder& popupHolder)
     licensePanel->setButtonIcon (foleys::LicensePanel::ProductPage, BinaryData::wwwicon_svg, BinaryData::wwwicon_svgSize);
     licensePanel->setButtonIcon (foleys::LicensePanel::Close, BinaryData::closeicon_svg, BinaryData::closeicon_svgSize);
     licensePanel->setButtonIcon (foleys::LicensePanel::Refresh, BinaryData::refreshicon_svg, BinaryData::refreshicon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::OfflineAuth, BinaryData::saveicon_svg, BinaryData::saveicon_svgSize);
 
     popupHolder.showPopup (std::move (licensePanel));
 }

@@ -50,7 +50,8 @@ juce_add_binary_data(
         Resources/refresh-icon.svg
         Resources/pdf-icon.svg
         Resources/key-icon.svg
-        Resources/www-icon.svg)
+        Resources/www-icon.svg
+        Resources/save-icon.svg)
 
 target_link_libraries(FoleysJuceLicenseExample
         PRIVATE

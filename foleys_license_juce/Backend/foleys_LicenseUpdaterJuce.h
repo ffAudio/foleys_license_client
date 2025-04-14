@@ -33,10 +33,9 @@ public:
     /**
      * Process the license data for the updater
      * @param plain the license decrypted
-     * @param fromServer notify all license objects of a new license state
      * @returns true if the license was valid and applicable
      */
-    bool setServerResponse (juce::String plain, bool fromServer);
+    bool setServerResponse (juce::String plain);
 
     /**
      * Allow all License objects to read the license content.
@@ -76,6 +75,19 @@ public:
      * @param success
      */
     void finished (juce::URL::DownloadTask* task, bool success) override;
+
+    /**
+     * Create a payload for an offline request
+     * @return
+     */
+    [[nodiscard]] std::string getOfflineRequest() const;
+
+    /**
+     * Try and store license file
+     * @param content
+     * @return true if the license was accepted
+     */
+    bool setOfflineLicenseData (std::string_view content);
 
     /**
      * Check a local flag, if the popup was already dismissed by the user (is reset on restart)

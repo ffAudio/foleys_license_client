@@ -136,6 +136,17 @@ void License::setPopupWasShown (bool wasShown)
     pimpl->setPopupWasShown (wasShown);
 }
 
+std::string License::getOfflineRequest() const
+{
+    return pimpl->getOfflineRequest();
+}
+
+bool License::setOfflineLicenseData (std::string_view content)
+{
+    return pimpl->setOfflineLicenseData (content);
+}
+
+
 // ================================================================================
 
 

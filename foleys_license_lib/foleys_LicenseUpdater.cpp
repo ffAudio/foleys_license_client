@@ -211,6 +211,20 @@ std::string LicenseUpdater::getLicenseText()
     return Crypto::decrypt (cipher);
 }
 
+std::string LicenseUpdater::getOfflineRequest() const
+{
+    nlohmann::json requestData;
+    requestData[LicenseID::action]   = LicenseID::activate;
+    requestData[LicenseID::product]  = LicenseData::productUid;
+    requestData[LicenseID::hardware] = hardwareUid;
+    // TODO: add computer and user name
+
+    for (const auto& pair: defaultData)
+        requestData[pair.first] = pair.second;
+
+    return requestData.dump();
+}
+
 void LicenseUpdater::sendUpdateSignal()
 {
     observerList.call ([] (auto& l) { l.licenseUpdated(); });

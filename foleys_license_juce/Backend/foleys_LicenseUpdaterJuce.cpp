@@ -39,7 +39,7 @@ void LicenseUpdaterJuce::setupLicenseData (const std::string& licenseFileName, s
     data        = dataToUse;
 }
 
-bool LicenseUpdaterJuce::setServerResponse (juce::String plain, bool fromServer)
+bool LicenseUpdaterJuce::setServerResponse (juce::String plain)
 {
     auto json = juce::JSON::parse (plain);
 
@@ -50,14 +50,8 @@ bool LicenseUpdaterJuce::setServerResponse (juce::String plain, bool fromServer)
     if (json.getProperty (LicenseID::hardware, "").toString() != hardwareUid)
     {
         lastError = LicenseDefines::Error::HardwareMismatch;
-        if (fromServer)
-            sendChangeMessage();
-
         return false;
     }
-
-    if (fromServer)
-        sendChangeMessage();
 
     return true;
 }
@@ -80,7 +74,7 @@ void LicenseUpdaterJuce::fetchIfNecessary (int hours)
     auto plain = getLicenseText();
     if (plain.isNotEmpty())
     {
-        setServerResponse (plain, false);
+        setServerResponse (plain);
     }
 
     auto now = time (nullptr);
@@ -90,6 +84,23 @@ void LicenseUpdaterJuce::fetchIfNecessary (int hours)
         return;
     }
     fetchLicenseData();
+}
+
+[[nodiscard]] std::string LicenseUpdaterJuce::getOfflineRequest() const
+{
+    juce::var json (new juce::DynamicObject);
+    if (auto* object = json.getDynamicObject())
+    {
+        object->setProperty (LicenseID::action, LicenseID::activate);
+        object->setProperty (LicenseID::product, LicenseData::productUid);
+        object->setProperty (LicenseID::computer, juce::SystemStats::getComputerName());
+        object->setProperty (LicenseID::user, juce::SystemStats::getFullUserName());
+
+        for (const auto& item: data)
+            object->setProperty (item.first.data(), item.second.data());
+    }
+
+    return juce::JSON::toString (json).toStdString();
 }
 
 void LicenseUpdaterJuce::fetchLicenseData (std::string_view action, const std::vector<std::pair<std::string, std::string>>& additionalData)
@@ -126,8 +137,9 @@ void LicenseUpdaterJuce::finished (juce::URL::DownloadTask* task, bool success)
         {
             auto plain = Crypto::decrypt (result.toStdString());
 
-            if (setServerResponse (plain, true))
+            if (setServerResponse (plain))
             {
+                const juce::ScopedLock lock (licenseFileLock);
                 task->getTargetLocation().moveFileTo (licenseFile);
             }
         }
@@ -139,6 +151,27 @@ void LicenseUpdaterJuce::finished (juce::URL::DownloadTask* task, bool success)
 
     task->getTargetLocation().deleteFile();
     sendChangeMessage();
+}
+
+bool LicenseUpdaterJuce::setOfflineLicenseData (std::string_view content)
+{
+    auto success = false;
+    auto text    = Crypto::decrypt (content);
+
+    if (setServerResponse (text))
+    {
+        const juce::ScopedLock lock (licenseFileLock);
+        if (auto stream = licenseFile.createOutputStream())
+        {
+            stream->setPosition (0);
+            stream->truncate();
+            stream->write (content.data(), content.size());
+            success = true;
+        }
+    }
+
+    sendChangeMessage();
+    return success;
 }
 
 
