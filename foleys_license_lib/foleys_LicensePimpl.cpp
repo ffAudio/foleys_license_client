@@ -56,6 +56,7 @@ struct License::Pimpl : public LicenseUpdater::Observer
 
     [[nodiscard]] std::string getLastErrorString() const { return updater->getLastErrorString(); }
 
+    [[nodiscard]] std::string getOfflineRequest() const { return updater->getOfflineRequest(); }
 
     [[nodiscard]] std::vector<Activation> getActivations() { return {}; }
 
@@ -67,6 +68,8 @@ struct License::Pimpl : public LicenseUpdater::Observer
 
         owner.licenseChanged();
     }
+
+    bool setOfflineLicenseData (std::string_view content) { return false; }
 
     std::pair<LicenseDefines::Error, std::string> setLicenseData (std::string_view text)
     {

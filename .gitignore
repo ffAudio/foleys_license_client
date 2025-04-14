@@ -1,8 +1,8 @@
 **/.DS_Store
 **/.idea
 
-Input/*
-!Input/.keep
+examples/juce_plugin/LicenseData.cpp
+examples/minimal/LicenseData.cpp
 
 Builds
 cmake-build*

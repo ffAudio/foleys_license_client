@@ -10,3 +10,4 @@
 
 #include "GUI/foleys_LicensePanel.cpp"
 #include "GUI/foleys_LicenseDeactivate.cpp"
+#include "GUI/foleys_FileDragButton.cpp"
