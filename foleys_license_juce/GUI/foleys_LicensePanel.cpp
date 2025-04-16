@@ -183,6 +183,9 @@ void LicensePanel::update()
     {
         deactivationPanel.reset();
     }
+
+    if (onLicenseChanged)
+        onLicenseChanged (license);
 }
 
 void LicensePanel::activate (const juce::String& serial, size_t deactivateID)
@@ -234,7 +237,11 @@ void LicensePanel::filesDropped (const juce::StringArray& files, [[maybe_unused]
 {
     auto file = juce::File (files.getReference (0));
 
-    license.setOfflineLicenseData (file.loadFileAsString().toStdString());
+    if (license.setOfflineLicenseData (file.loadFileAsString().toStdString()))
+    {
+        if (onLicenseChanged)
+            onLicenseChanged (license);
+    }
 }
 
 void LicensePanel::paint (juce::Graphics& g)
@@ -249,7 +256,7 @@ void LicensePanel::resized()
 {
     if (onResized)
     {
-        onResized();
+        onResized (getLocalBounds());
         return;
     }
 
