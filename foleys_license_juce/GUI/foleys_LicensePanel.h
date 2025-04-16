@@ -57,12 +57,17 @@ public:
     /**
      * A lambda you can customize for your own layout
      */
-    std::function<void()> onResized;
+    std::function<void(juce::Rectangle<int>)> onResized;
 
     /**
      * A lambda you can customize for your own drawing
      */
     std::function<void(juce::Graphics&)> onPaint;
+
+    /**
+     * A lambda that is called when the license has changed
+     */
+    std::function<void(foleys::License&)> onLicenseChanged;
 
 private:
     foleys::License license;
