@@ -146,6 +146,12 @@ bool License::setOfflineLicenseData (std::string_view content)
     return pimpl->setOfflineLicenseData (content);
 }
 
+std::string License::getRawLicenseData() const
+{
+    return pimpl->getRawLicenseData();
+}
+
+
 
 // ================================================================================
 

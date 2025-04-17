@@ -120,6 +120,11 @@ struct License::Pimpl : public LicenseUpdater::Observer
         return { LicenseDefines::Error::NoError, {} };
     }
 
+    std::string getRawLicenseData() const
+    {
+        return updater->getLicenseText();
+    }
+
 
     SharedObject<LicenseUpdater> updater;
     License&                     owner;

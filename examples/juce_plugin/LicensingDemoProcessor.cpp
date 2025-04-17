@@ -22,6 +22,11 @@ LicensingDemoProcessor::LicensingDemoProcessor()
                                 { LicenseID::hardware, juce::SystemStats::getUniqueDeviceID().toRawUTF8() },
                                 { LicenseID::os, juce::SystemStats::getOperatingSystemName().toRawUTF8() },
                                 { LicenseID::host, juce::JUCEApplicationBase::isStandaloneApp() ? "Standalone" : juce::PluginHostType().getHostDescription() } });
+
+    license.onLicenseReceived = [this]
+    {
+        DBG ("License received: " + license.getRawLicenseData());
+    };
 }
 
 void LicensingDemoProcessor::prepareToPlay ([[maybe_unused]] double sampleRate, [[maybe_unused]] int expectedNumSamples) { }

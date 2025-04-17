@@ -175,6 +175,12 @@ public:
      */
     void licenseChanged() const;
 
+    /**
+     * This is for debugging only. Don't use this in production.
+     * @return the raw data received from the server
+     */
+    std::string getRawLicenseData() const;
+
 private:
     std::atomic<bool> activatedFlag = false;
     std::atomic<bool> demoAvailable = false;
