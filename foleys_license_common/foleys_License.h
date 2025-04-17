@@ -17,6 +17,7 @@
 
 #include "foleys_LicenseData.h"
 #include "foleys_LicenseDefines.h"
+#include "foleys_LicenseHelpers.h"
 
 #ifndef FOLEYS_LICENSE_ENCRYPT_REQUEST
     #define FOLEYS_LICENSE_ENCRYPT_REQUEST 0

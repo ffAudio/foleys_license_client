@@ -122,10 +122,7 @@ void LicensePanel::update()
 
     if (auto checked = license.lastChecked())
     {
-        auto date = *checked;
-        char buff[20];
-        strftime (buff, 20, "%d. %m. %Y %H:%M", localtime (&date));
-        timestamp.setText (TRANS ("Checked: ") + juce::String (buff) + " UTC", juce::sendNotification);
+        timestamp.setText (TRANS ("Checked: ") + juce::String (Helpers::formatDateTime (*checked, "%d. %m. %Y %H:%M")) + " UTC", juce::sendNotification);
     }
     else
     {
@@ -137,9 +134,7 @@ void LicensePanel::update()
         if (license.expires())
         {
             const auto date = *license.expires();
-            char       buff[20];
-            strftime (buff, 20, "%d. %m %Y", localtime (&date));
-            demo.setButtonText (LicenseData::productName + TRANS (" expires ") + juce::String (buff));
+            demo.setButtonText (LicenseData::productName + TRANS (" expires ") + juce::String (Helpers::formatDateTime (date, "%d. %m %Y")));
         }
         else
             demo.setButtonText (LicenseData::productName + TRANS (" activated"));
@@ -154,10 +149,7 @@ void LicensePanel::update()
         status.setText (lastError, juce::dontSendNotification);
     else if (license.isExpired())
     {
-        char dateString[64];
-        auto expiryDate = *license.expires();
-        std::strftime (dateString, 64, "%d. %b %Y", std::localtime (&expiryDate));
-        status.setText ("Your license expired on " + juce::String (dateString), juce::dontSendNotification);
+        status.setText ("Your license expired on " + juce::String (Helpers::formatDateTime (*license.expires(), "%d. %b %Y")), juce::dontSendNotification);
     }
     else if (license.isActivated())
         status.setText ("", juce::sendNotification);
