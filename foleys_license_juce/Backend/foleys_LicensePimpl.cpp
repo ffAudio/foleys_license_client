@@ -148,6 +148,12 @@ struct License::Pimpl : public juce::ChangeListener
         return { LicenseDefines::Error::ServerAnswerInvalid, "Got invalid license data (bad json)" };
     }
 
+    std::string getRawLicenseData() const
+    {
+        return updater->getLicenseText().toStdString();
+    }
+
+
 
     juce::SharedResourcePointer<foleys::LicenseUpdaterJuce> updater;
     License&                                                owner;
