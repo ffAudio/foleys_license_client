@@ -113,7 +113,7 @@ bool License::canDemo() const
 
 bool License::isDemo() const
 {
-    return pimpl->isDemo();
+    return !activatedFlag && pimpl->demoDays > 0 && !demoAvailable;
 }
 
 int License::demoDaysLeft() const
