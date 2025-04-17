@@ -139,10 +139,10 @@ void LicensePanel::update()
             const auto date = *license.expires();
             char       buff[20];
             strftime (buff, 20, "%d. %m %Y", localtime (&date));
-            demo.setButtonText (TRANS ("Plugin expires ") + juce::String (buff));
+            demo.setButtonText (LicenseData::productName + TRANS (" expires ") + juce::String (buff));
         }
         else
-            demo.setButtonText (TRANS ("Plugin activated"));
+            demo.setButtonText (LicenseData::productName + TRANS (" activated"));
     }
     else if (license.isDemo())
         demo.setButtonText (TRANS ("Days to evaluate: ") + juce::String (license.demoDaysLeft()));

@@ -41,8 +41,6 @@ struct License::Pimpl : public juce::ChangeListener
         updater->fetchLicenseData (action, data);
     }
 
-    [[nodiscard]] bool isDemo() const { return demoDays > 0 && !owner.demoAvailable; }
-
     bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !owner.activatedFlag.load()); }
 
     void setPopupWasShown (bool wasShown) { updater->setPopupWasShown (wasShown); }
@@ -137,7 +135,7 @@ struct License::Pimpl : public juce::ChangeListener
                 return { LicenseDefines::Error::ServerError, object->getProperty (LicenseID::error).toString().toStdString() };
             }
 
-            owner.allowedFlag = (owner.activatedFlag && !isExpired()) || isDemo();
+            owner.allowedFlag = (owner.activatedFlag && !isExpired()) || owner.isDemo();
 
             return { LicenseDefines::Error::NoError, {} };
         }

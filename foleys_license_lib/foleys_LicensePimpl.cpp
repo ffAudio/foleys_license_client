@@ -38,8 +38,6 @@ struct License::Pimpl : public LicenseUpdater::Observer
         updater->fetchLicenseData (action, data);
     }
 
-    [[nodiscard]] bool isDemo() const { return demoDays.load() > 0 && !owner.demoAvailable; }
-
     bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !owner.activatedFlag.load()); }
 
     void setPopupWasShown (bool wasShown) { updater->setPopupWasShown (wasShown); }
@@ -115,7 +113,7 @@ struct License::Pimpl : public LicenseUpdater::Observer
             return { LicenseDefines::Error::ServerError, json[LicenseID::error] };
         }
 
-        owner.allowedFlag = (owner.activatedFlag && !isExpired()) || isDemo();
+        owner.allowedFlag = (owner.activatedFlag && !isExpired()) || owner.isDemo();
 
         return { LicenseDefines::Error::NoError, {} };
     }
