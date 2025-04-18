@@ -16,7 +16,6 @@ For details refer to the LICENSE.md
 
 #include "foleys_LicensePanel.h"
 #include "foleys_LicenseDeactivate.h"
-#include "BinaryData.h"
 
 namespace foleys
 {
