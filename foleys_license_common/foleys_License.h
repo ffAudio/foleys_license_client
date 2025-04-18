@@ -174,7 +174,7 @@ public:
     /**
      * Callback for the LicenseUpdater
      */
-    void licenseChanged() const;
+    void licenseChanged();
 
     /**
      * This is for debugging only. Don't use this in production.
@@ -183,9 +183,12 @@ public:
     std::string getRawLicenseData() const;
 
 private:
+    void syncPimpl();
+
     std::atomic<bool> activatedFlag = false;
     std::atomic<bool> demoAvailable = false;
     std::atomic<bool> allowedFlag   = false;
+    std::atomic<int>  demoDays      = 0;
 
     struct Pimpl;
     std::unique_ptr<Pimpl> pimpl;

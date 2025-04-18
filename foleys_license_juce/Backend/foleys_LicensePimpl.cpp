@@ -41,7 +41,7 @@ struct License::Pimpl : public juce::ChangeListener
         updater->fetchLicenseData (action, data);
     }
 
-    bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !owner.activatedFlag.load()); }
+    bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !activatedFlag.load()); }
 
     void setPopupWasShown (bool wasShown) { updater->setPopupWasShown (wasShown); }
 
@@ -101,9 +101,9 @@ struct License::Pimpl : public juce::ChangeListener
 
         if (auto* object = data.getDynamicObject())
         {
-            checked             = Helpers::decodeDateTime (object->getProperty (LicenseID::checked).toString().toStdString(), "%Y-%m-%d %H:%M:%S");
-            owner.activatedFlag = object->getProperty (LicenseID::activated);
-            email               = object->getProperty (LicenseID::licensee_email).toString().toStdString();
+            checked       = Helpers::decodeDateTime (object->getProperty (LicenseID::checked).toString().toStdString(), "%Y-%m-%d %H:%M:%S");
+            activatedFlag = object->getProperty (LicenseID::activated);
+            email         = object->getProperty (LicenseID::licensee_email).toString().toStdString();
 
             licenseHardware = object->getProperty (LicenseID::hardware).toString().toStdString();
 
@@ -114,8 +114,8 @@ struct License::Pimpl : public juce::ChangeListener
 
             if (object->hasProperty (LicenseID::demo_available))
             {
-                owner.demoAvailable = object->getProperty (LicenseID::demo_available);
-                demoDays            = object->getProperty (LicenseID::demo_days);
+                demoAvailable = object->getProperty (LicenseID::demo_available);
+                demoDays      = object->getProperty (LicenseID::demo_days);
                 if (object->hasProperty (LicenseID::demo_ends))
                 {
                     auto ends          = Helpers::decodeDateTime (object->getProperty (LicenseID::demo_ends).toString().toStdString(), "%Y-%m-%d");
@@ -125,42 +125,35 @@ struct License::Pimpl : public juce::ChangeListener
             }
             else
             {
-                owner.demoAvailable = false;
-                demoDays            = 0;
+                demoAvailable = false;
+                demoDays      = 0;
             }
 
             if (object->hasProperty (LicenseID::error))
             {
-                owner.allowedFlag = false;
                 return { LicenseDefines::Error::ServerError, object->getProperty (LicenseID::error).toString().toStdString() };
             }
-
-            owner.allowedFlag = (owner.activatedFlag && !isExpired()) || owner.isDemo();
 
             return { LicenseDefines::Error::NoError, {} };
         }
 
-        owner.allowedFlag   = false;
-        owner.activatedFlag = false;
+        activatedFlag = false;
 
         return { LicenseDefines::Error::ServerAnswerInvalid, "Got invalid license data (bad json)" };
     }
 
-    std::string getRawLicenseData() const
-    {
-        return updater->getLicenseText().toStdString();
-    }
-
-
+    std::string getRawLicenseData() const { return updater->getLicenseText().toStdString(); }
 
     juce::SharedResourcePointer<foleys::LicenseUpdaterJuce> updater;
     License&                                                owner;
     juce::CriticalSection                                   processLock;
     std::string                                             licenseHardware;
     std::string                                             email;
-    std::atomic<int>                                        demoDays = 0;
     std::optional<std::time_t>                              expiryDate;
     std::optional<std::time_t>                              checked;
+    std::atomic<bool>                                       activatedFlag = false;
+    std::atomic<bool>                                       demoAvailable = false;
+    std::atomic<int>                                        demoDays      = 0;
 
     Pimpl (const Pimpl&)            = delete;
     Pimpl (const Pimpl&&)           = delete;
