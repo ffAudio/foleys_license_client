@@ -26,6 +26,7 @@ namespace foleys
 License::License()
 {
     pimpl = std::make_unique<Pimpl> (*this);
+    syncPimpl();
 }
 
 License::~License() = default;
@@ -33,16 +34,18 @@ License::~License() = default;
 void License::setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
 {
     pimpl->setupLicenseData (licenseFile, hwUID, data);
+    syncPimpl();
 }
 
 void License::syncLicense()
 {
     pimpl->fetchLicenseData();
+    syncPimpl();
 }
 
 bool License::isActivated() const
 {
-    return activatedFlag.load();
+    return activatedFlag;
 }
 
 bool License::isExpired() const
@@ -75,8 +78,9 @@ std::optional<std::time_t> License::lastChecked() const
     return pimpl->checked;
 }
 
-void License::licenseChanged() const
+void License::licenseChanged()
 {
+    syncPimpl();
     if (onLicenseReceived)
         onLicenseReceived();
 }
@@ -113,12 +117,12 @@ bool License::canDemo() const
 
 bool License::isDemo() const
 {
-    return !activatedFlag && pimpl->demoDays > 0 && !demoAvailable;
+    return !activatedFlag && demoDays > 0 && !demoAvailable;
 }
 
 int License::demoDaysLeft() const
 {
-    return pimpl->demoDays;
+    return demoDays;
 }
 
 void License::startDemo()
@@ -151,7 +155,13 @@ std::string License::getRawLicenseData() const
     return pimpl->getRawLicenseData();
 }
 
-
+void License::syncPimpl()
+{
+    activatedFlag = pimpl->activatedFlag.load();
+    demoAvailable = pimpl->demoAvailable.load();
+    demoDays      = pimpl->demoDays.load();
+    allowedFlag   = (activatedFlag && !pimpl->isExpired()) || (!activatedFlag && demoDays >= 0 && !demoAvailable);
+}
 
 // ================================================================================
 
