@@ -22,12 +22,17 @@ namespace foleys
 
 LicensePanel::LicensePanel()
 {
-    const juce::Colour buttonColour { 55, 69, 129 };
-    const juce::Colour labelColour { 40, 41, 46 };
+    if (!isColourSpecified (buttonColourId))
+        setColour (buttonColourId, juce::Colour { 55, 69, 129 });
+    if (!isColourSpecified (inactiveTextColourId))
+        setColour (inactiveTextColourId, juce::Colour { 40, 41, 46 });
+    if (!isColourSpecified (footerColourId))
+        setColour (footerColourId, juce::Colours::silver);
 
+    addChildComponent (title);
+    addChildComponent (copyright);
     addAndMakeVisible (closeButton);
     addAndMakeVisible (refreshButton);
-    addAndMakeVisible (title);
     addAndMakeVisible (enterSerial);
     addAndMakeVisible (code);
     addAndMakeVisible (submit);
@@ -36,38 +41,44 @@ LicensePanel::LicensePanel()
     addAndMakeVisible (manualButton);
     addAndMakeVisible (homeButton);
     addAndMakeVisible (websiteButton);
-    addAndMakeVisible (copyright);
     addAndMakeVisible (timestamp);
     addAndMakeVisible (deactivate);
     addAndMakeVisible (offlineButton);
 
-    title.setJustificationType (juce::Justification::centred);
-    title.setColour (juce::Label::textColourId, juce::Colours::silver);
-    title.setText (LicenseData::productName, juce::dontSendNotification);
-    title.setFont (juce::Font (24.0f));
 
-    code.setColour (juce::TextEditor::backgroundColourId, labelColour);
+    title.setJustificationType (juce::Justification::centred);
+    title.setText (LicenseData::productName, juce::dontSendNotification);
+
+#if JUCE_VERSION >= 0x080000
+    title.setFont (juce::FontOptions { kTitleFontHeight });
+    enterSerial.setFont (juce::FontOptions { kFontHeight });
+    timestamp.setFont (juce::FontOptions { kSmallFontHeight });
+    copyright.setFont (juce::FontOptions { kSmallFontHeight });
+#else
+    title.setFont (juce::Font (kTitleFontHeight));
+    enterSerial.setFont (juce::Font (kFontHeight));
+    timestamp.setFont (juce::Font (kSmallFontHeight));
+    copyright.setFont (juce::Font (kSmallFontHeight));
+#endif
+
+    const auto inactiveTextColour = findColour (inactiveTextColourId);
+    code.setColour (juce::TextEditor::backgroundColourId, inactiveTextColour);
     code.setTextToShowWhenEmpty ("XXXX-YYYY-ZZZZ-WWWW", juce::Colours::grey);
     code.setJustification (juce::Justification::centred);
 
-    submit.setColour (juce::TextButton::buttonColourId, buttonColour);
-    submit.setColour (juce::TextButton::textColourOffId, juce::Colours::silver);
-    demo.setColour (juce::TextButton::buttonColourId, buttonColour);
-    demo.setColour (juce::TextButton::textColourOffId, juce::Colours::silver);
-    deactivate.setColour (juce::TextButton::buttonColourId, buttonColour);
-    deactivate.setColour (juce::TextButton::textColourOffId, juce::Colours::silver);
+    deactivate.setColour (juce::TextButton::buttonColourId, findColour (buttonColourId));
 
     enterSerial.setJustificationType (juce::Justification::centred);
-    enterSerial.setColour (juce::Label::textColourId, juce::Colours::silver);
-    enterSerial.setFont (juce::Font (18.0f));
 
-    status.setJustificationType (juce::Justification::centred);
-    status.setColour (juce::Label::textColourId, juce::Colours::silver);
+    status.setColour (juce::Label::textColourId, inactiveTextColour);
 
-    copyright.setJustificationType (juce::Justification::centred);
-    copyright.setColour (juce::Label::textColourId, juce::Colours::silver);
+    const auto footerColour = findColour (footerColourId);
+    copyright.setJustificationType (juce::Justification::left);
+    copyright.setColour (juce::Label::textColourId, footerColour);
     copyright.setText (LicenseData::copyright, juce::dontSendNotification);
-    copyright.setFont (juce::Font (12.0f));
+
+    timestamp.setJustificationType (juce::Justification::right);
+    timestamp.setColour (juce::Label::textColourId, footerColour);
 
     manualButton.onClick  = [] { juce::URL (LicenseData::manualUrl).launchInDefaultBrowser(); };
     homeButton.onClick    = [] { juce::URL (LicenseData::authServerUrl).launchInDefaultBrowser(); };
@@ -113,8 +124,18 @@ LicensePanel::LicensePanel()
     update();
 }
 
+void LicensePanel::setStyle (int styleFlags)
+{
+    m_style = styleFlags;
+
+    copyright.setVisible (m_style & ShowCopyright);
+    title.setVisible (m_style & ShowTitle);
+}
+
 void LicensePanel::update()
 {
+    setStyle (m_style);
+
     closeButton.setVisible (license.isAllowed());
     demo.setEnabled (license.canDemo() || license.isAllowed());
     deactivate.setVisible (license.isActivated());
@@ -237,10 +258,10 @@ void LicensePanel::filesDropped (const juce::StringArray& files, [[maybe_unused]
 
 void LicensePanel::paint (juce::Graphics& g)
 {
-    if (onPaint)
-        onPaint (g);
-    else
-        g.fillAll (juce::Colours::black.withAlpha (0.8f));
+    // if (onPaint)
+    //     onPaint (g);
+    // else
+    g.fillAll (juce::Colours::black.withAlpha (0.8f));
 }
 
 void LicensePanel::resized()
@@ -251,12 +272,11 @@ void LicensePanel::resized()
         return;
     }
 
-    timestamp.setBounds (getWidth() - 222, getHeight() - 27, 200, 25);
+    auto area = getLocalBounds().withSizeKeepingCentre (std::min (getWidth(), kMaxWidth), getHeight());
 
-    const auto buttonHeight = 30;
-
-    auto area = getLocalBounds().reduced (40);
-    area      = area.withSizeKeepingCentre (std::min (area.getWidth(), 400), area.getHeight());
+    const bool hasTitle  = (m_style & ShowTitle);
+    const auto numRows   = 8 + (hasTitle ? 1 : 0);
+    const auto rowHeight = std::max (kMaxRowHeight, (area.getHeight() / numRows) - kGrid);
 
     if (deactivationPanel)
     {
@@ -264,29 +284,53 @@ void LicensePanel::resized()
         deactivationPanel->toFront (false);
     }
 
-    closeButton.setBounds (getRight() - buttonHeight, 0, buttonHeight, buttonHeight);
+    area.removeFromTop (kGrid);
 
-    title.setBounds (area.removeFromTop (40).reduced (80, 0));
-    copyright.setBounds (area.removeFromBottom (30).withTrimmedTop (10));
+    auto topRow = area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth(), kMaxRowHeight);
+    closeButton.setBounds (topRow.removeFromRight (kMaxRowHeight));
+    topRow.removeFromLeft (rowHeight);
+    title.setBounds (topRow);
 
-    auto       buttonArea = area.removeFromBottom (area.getHeight() / 4);
-    const auto w          = buttonArea.getWidth() / 4;
-    homeButton.setBounds (buttonArea.removeFromLeft (w).withTrimmedRight (10));
-    websiteButton.setBounds (buttonArea.removeFromLeft (w).withTrimmedRight (10));
-    offlineButton.setBounds (buttonArea.removeFromLeft (w).withTrimmedRight (10));
-    manualButton.setBounds (buttonArea.reduced (10, 0));
+    area.removeFromTop (kGrid);
 
-    auto demoArea = area.removeFromBottom (60).withSizeKeepingCentre (std::min (area.getWidth(), 250), buttonHeight);
-    refreshButton.setBounds (demoArea.removeFromRight (demoArea.getHeight()));
-    demo.setBounds (demoArea.withTrimmedRight (10));
+    if (hasTitle)
+        area.removeFromTop (rowHeight + kGrid);
 
-    auto third = area.getHeight() / 3;
-    enterSerial.setBounds (area.removeFromTop (third));
-    status.setBounds (area.removeFromBottom (third));
+    enterSerial.setBounds (area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth(), kMaxRowHeight));
 
-    area = area.withSizeKeepingCentre (area.getWidth() - 60, buttonHeight + 20);
-    submit.setBounds (area.removeFromRight (area.getWidth() / 4).reduced (10));
-    code.setBounds (area.reduced (10));
+    area.removeFromTop (kGrid);
+
+    auto       codeRow         = area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth() - (12 * kGrid), kMaxRowHeight);
+    const auto codeButtonWidth = codeRow.getWidth() / 4;
+    submit.setBounds (codeRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
+    code.setBounds (codeRow.reduced (2 * kGrid, 0));
+
+    area.removeFromTop (kGrid);
+
+    auto demoRow = area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth() - (12 * kGrid), kMaxRowHeight);
+    refreshButton.setBounds (demoRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
+    demo.setBounds (demoRow.reduced (2 * kGrid, 0));
+
+    area.removeFromTop (kGrid);
+
+    auto statusRow = area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth() - (12 * kGrid), kMaxRowHeight);
+    deactivate.setBounds (statusRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
+    status.setBounds (statusRow.reduced (2 * kGrid, 0));
+
+    area.removeFromTop (kGrid);
+
+    const auto footerBounds = area.removeFromBottom (rowHeight).withSizeKeepingCentre (getWidth(), kMaxRowHeight);
+    timestamp.setBounds (footerBounds.withTrimmedTop (2 * kGrid));
+    copyright.setBounds (footerBounds.withTrimmedTop (2 * kGrid));
+
+    area.removeFromBottom (kGrid);
+
+    auto       buttonRow = area.removeFromBottom ((2 * rowHeight) + kGrid).withSizeKeepingCentre (area.getWidth(), (2 * kMaxRowHeight) + kGrid);
+    const auto w         = buttonRow.getWidth() / 4;
+    homeButton.setBounds (buttonRow.removeFromLeft (w).withTrimmedRight (10));
+    websiteButton.setBounds (buttonRow.removeFromLeft (w).withTrimmedRight (10));
+    offlineButton.setBounds (buttonRow.removeFromLeft (w).withTrimmedRight (10));
+    manualButton.setBounds (buttonRow.reduced (10, 0));
 }
 
 }  // namespace foleys

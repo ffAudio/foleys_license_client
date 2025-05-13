@@ -28,6 +28,14 @@ class LicensePanel
   , public juce::FileDragAndDropTarget
 {
 public:
+    static constexpr auto kGrid            = 5;
+    static constexpr auto kMaxRowHeight    = kGrid * 6;
+    static constexpr auto kMaxWidth        = 400;
+    static constexpr auto kSmallFontHeight = 12.0f;
+    static constexpr auto kFontHeight      = 16.0f;
+    static constexpr auto kTitleFontHeight = 24.0f;
+
+
     enum Button
     {
         Unknown = 0,
@@ -37,6 +45,12 @@ public:
         UserPage,
         ProductPage,
         OfflineAuth
+    };
+
+    enum Style
+    {
+        ShowTitle     = 1,
+        ShowCopyright = 2
     };
 
     LicensePanel();
@@ -54,29 +68,40 @@ public:
 
     void filesDropped (const juce::StringArray& files, int x, int y) override;
 
+    void setStyle (int styleFlags);
+
     /**
      * A lambda you can customize for your own layout
      */
-    std::function<void(juce::Rectangle<int>)> onResized;
+    std::function<void (juce::Rectangle<int>)> onResized;
 
     /**
      * A lambda you can customize for your own drawing
      */
-    std::function<void(juce::Graphics&)> onPaint;
+    std::function<void (juce::Graphics&)> onPaint;
 
     /**
      * A lambda that is called when the license has changed
      */
-    std::function<void(foleys::License&)> onLicenseChanged;
+    std::function<void (foleys::License&)> onLicenseChanged;
+
+    enum ColourIds
+    {
+        buttonColourId       = 0x5a3c500,
+        footerColourId       = 0x5a3c501,
+        inactiveTextColourId = 0x5a3c502
+    };
+
 
 private:
     foleys::License license;
 
+    int                    m_style = (ShowTitle | ShowCopyright);
     juce::Label            title;
     juce::Label            enterSerial { {}, TRANS ("ENTER SERIAL") };
     juce::TextEditor       code;
-    juce::TextButton       submit { TRANS ("ENTER"), TRANS ("Submit code") };
     juce::Label            status;
+    juce::TextButton       submit { TRANS ("ENTER"), TRANS ("Submit code") };
     juce::TextButton       demo { TRANS ("Start Demo"), TRANS ("Start your 14 days free trial period") };
     juce::TextButton       deactivate { TRANS ("Deactivate"), TRANS ("Deactivate this machine") };
     juce::DrawableButton   closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
