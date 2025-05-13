@@ -191,10 +191,10 @@ void LicensePanel::activate (const juce::String& serial, size_t deactivateID)
     license.activate (data);
 }
 
-void LicensePanel::setButtonIcon (Button buttonType, const char* imageData, size_t imageDataSize)
+void LicensePanel::setButtonIcon (Button buttonType, juce::Colour buttonColour, const char* imageData, size_t imageDataSize)
 {
     auto image = juce::DrawableComposite::createFromImageData (imageData, imageDataSize);
-    image->replaceColour (juce::Colours::black, juce::Colours::silver);
+    image->replaceColour (juce::Colours::black, buttonColour);
     const auto setupButton = [&] (juce::DrawableButton& button)
     {
         button.setImages (image.get());

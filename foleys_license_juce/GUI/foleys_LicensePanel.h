@@ -48,7 +48,7 @@ public:
 
     void activate (const juce::String& serial, size_t deactivate);
 
-    void setButtonIcon (Button buttonType, const char* imageData, size_t imageDataSize);
+    void setButtonIcon (Button buttonType, juce::Colour buttonColour, const char* imageData, size_t imageDataSize);
 
     bool isInterestedInFileDrag (const juce::StringArray& files) override;
 
