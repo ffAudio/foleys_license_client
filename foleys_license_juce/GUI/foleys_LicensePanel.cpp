@@ -31,18 +31,18 @@ LicensePanel::LicensePanel()
 
     addChildComponent (title);
     addChildComponent (copyright);
+    addChildComponent (m_codeEditor);
+    addChildComponent (m_codeLabel);
+    addChildComponent (m_submitCodeButton);
     addAndMakeVisible (closeButton);
     addAndMakeVisible (refreshButton);
-    addAndMakeVisible (enterSerial);
-    addAndMakeVisible (code);
-    addAndMakeVisible (submit);
     addAndMakeVisible (status);
     addAndMakeVisible (demo);
     addAndMakeVisible (manualButton);
     addAndMakeVisible (homeButton);
     addAndMakeVisible (websiteButton);
     addAndMakeVisible (timestamp);
-    addAndMakeVisible (deactivate);
+    addAndMakeVisible (m_deactivateButton);
     addAndMakeVisible (offlineButton);
 
 
@@ -51,7 +51,7 @@ LicensePanel::LicensePanel()
 
 #if JUCE_VERSION >= 0x080000
     title.setFont (juce::FontOptions { kTitleFontHeight });
-    enterSerial.setFont (juce::FontOptions { kFontHeight });
+    m_codeLabel.setFont (juce::FontOptions { kFontHeight });
     timestamp.setFont (juce::FontOptions { kSmallFontHeight });
     copyright.setFont (juce::FontOptions { kSmallFontHeight });
 #else
@@ -62,15 +62,13 @@ LicensePanel::LicensePanel()
 #endif
 
     const auto inactiveTextColour = findColour (inactiveTextColourId);
-    code.setColour (juce::TextEditor::backgroundColourId, inactiveTextColour);
-    code.setTextToShowWhenEmpty ("XXXX-YYYY-ZZZZ-WWWW", juce::Colours::grey);
-    code.setJustification (juce::Justification::centred);
+    m_codeEditor.setColour (juce::TextEditor::backgroundColourId, inactiveTextColour);
+    m_codeEditor.setTextToShowWhenEmpty ("XXXX-YYYY-ZZZZ-WWWW", juce::Colours::grey);
+    m_codeEditor.setJustification (juce::Justification::centred);
 
-    deactivate.setColour (juce::TextButton::buttonColourId, findColour (buttonColourId));
+    m_deactivateButton.setColour (juce::TextButton::buttonColourId, findColour (buttonColourId));
 
-    enterSerial.setJustificationType (juce::Justification::centred);
-
-    status.setColour (juce::Label::textColourId, inactiveTextColour);
+    m_codeLabel.setJustificationType (juce::Justification::centred);
 
     const auto footerColour = findColour (footerColourId);
     copyright.setJustificationType (juce::Justification::left);
@@ -107,17 +105,17 @@ LicensePanel::LicensePanel()
         }
     };
 
-    deactivate.onClick = [this]
+    m_deactivateButton.onClick = [this]
     {
         if (license.isActivated())
             license.deactivate();
     };
 
-    submit.onClick = [this]
+    m_submitCodeButton.onClick = [this]
     {
-        if (!code.isEmpty())
+        if (!m_codeEditor.isEmpty())
         {
-            activate (code.getText(), 0);
+            activate (m_codeEditor.getText(), 0);
         }
     };
 
@@ -136,20 +134,36 @@ void LicensePanel::update()
 {
     setStyle (m_style);
 
+    auto licenseState = license.syncState();
+    switch (licenseState)
+    {
+        case foleys::License::Unknown: DBG ("License state: Unknown."); break;
+        case foleys::License::Error: DBG ("License state: Error."); break;
+        case foleys::License::DemoExpired: DBG ("License state: Demo Expired."); break;
+        case foleys::License::Expired: DBG ("License state: Expired."); break;
+        case foleys::License::DemoAvailable: DBG ("License state: Demo Available."); break;
+        case foleys::License::DemoRunning: DBG ("License state: Demo Running."); break;
+        case foleys::License::ActivationsUsed: DBG ("License state: No Activations Left."); break;
+        case foleys::License::ActivationsAvailable: DBG ("License state: Activations Available."); break;
+        case foleys::License::Activated: DBG ("License state: Activated."); break;
+        default: break;
+    }
+
     closeButton.setVisible (license.isAllowed());
     demo.setEnabled (license.canDemo() || license.isAllowed());
-    deactivate.setVisible (license.isActivated());
+
+    const auto isActivated = license.isActivated();
+    m_deactivateButton.setVisible (isActivated);
+    m_codeEditor.setVisible (!isActivated);
+    m_submitCodeButton.setVisible (!isActivated);
+    m_codeLabel.setVisible (!isActivated);
 
     if (auto checked = license.lastChecked())
-    {
         timestamp.setText (TRANS ("Checked: ") + juce::String (Helpers::formatDateTime (*checked, "%d. %m. %Y %H:%M")) + " UTC", juce::sendNotification);
-    }
     else
-    {
         timestamp.setText (TRANS ("Never checked"), juce::sendNotification);
-    }
 
-    if (license.isActivated())
+    if (isActivated)
     {
         if (license.expires())
         {
@@ -160,9 +174,13 @@ void LicensePanel::update()
             demo.setButtonText (LicenseData::productName + TRANS (" activated"));
     }
     else if (license.isDemo())
+    {
         demo.setButtonText (TRANS ("Days to evaluate: ") + juce::String (license.demoDaysLeft()));
+    }
     else if (!license.canDemo())
+    {
         demo.setButtonText (TRANS ("Demo expired, please buy a license"));
+    }
 
     juce::String lastError (license.getLastErrorString());
     if (lastError.isNotEmpty())
@@ -171,7 +189,7 @@ void LicensePanel::update()
     {
         status.setText ("Your license expired on " + juce::String (Helpers::formatDateTime (*license.expires(), "%d. %b %Y")), juce::dontSendNotification);
     }
-    else if (license.isActivated())
+    else if (isActivated)
         status.setText ("", juce::sendNotification);
     else if (license.isDemo())
         status.setText ({}, juce::dontSendNotification);
@@ -181,10 +199,11 @@ void LicensePanel::update()
         status.setText ("If you bought a license enter your email and hit Activate", juce::dontSendNotification);
 
     // Show a panel to deactivate a machine
-    if (!code.isEmpty() && !license.getActivations().empty())
+    const auto activations = license.getActivations();
+    if (!m_codeEditor.isEmpty() && !activations.empty())
     {
         auto panel          = std::make_unique<LicenseDeactivate>();
-        panel->onDeactivate = [this] (size_t idToDeactivate) { activate (code.getText(), idToDeactivate); };
+        panel->onDeactivate = [this] (size_t idToDeactivate) { activate (m_codeEditor.getText(), idToDeactivate); };
         panel->setCloseFunction ([this] { deactivationPanel.reset(); });
 
         addAndMakeVisible (panel.get());
@@ -296,14 +315,14 @@ void LicensePanel::resized()
     if (hasTitle)
         area.removeFromTop (rowHeight + kGrid);
 
-    enterSerial.setBounds (area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth(), kMaxRowHeight));
+    m_codeLabel.setBounds (area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth(), kMaxRowHeight));
 
     area.removeFromTop (kGrid);
 
     auto       codeRow         = area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth() - (12 * kGrid), kMaxRowHeight);
     const auto codeButtonWidth = codeRow.getWidth() / 4;
-    submit.setBounds (codeRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
-    code.setBounds (codeRow.reduced (2 * kGrid, 0));
+    m_submitCodeButton.setBounds (codeRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
+    m_codeEditor.setBounds (codeRow.reduced (2 * kGrid, 0));
 
     area.removeFromTop (kGrid);
 
@@ -314,7 +333,7 @@ void LicensePanel::resized()
     area.removeFromTop (kGrid);
 
     auto statusRow = area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth() - (12 * kGrid), kMaxRowHeight);
-    deactivate.setBounds (statusRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
+    m_deactivateButton.setBounds (statusRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
     status.setBounds (statusRow.reduced (2 * kGrid, 0));
 
     area.removeFromTop (kGrid);

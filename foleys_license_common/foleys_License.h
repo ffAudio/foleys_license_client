@@ -32,6 +32,19 @@ public:
     License();
     ~License();
 
+    enum State
+    {
+        Unknown = 0,
+        Error,
+        DemoExpired,
+        Expired,
+        DemoAvailable,
+        DemoRunning,
+        ActivationsUsed,
+        ActivationsAvailable,
+        Activated
+    };
+
     /**
      * Check if a popup should be shown.
      * Usually when there is no local license and in demo only once per day.
@@ -182,13 +195,18 @@ public:
      */
     std::string getRawLicenseData() const;
 
+    [[nodiscard]] State syncState();
+    [[nodiscard]] State getState() const { return m_state.load(); }
+
 private:
     void syncPimpl();
 
-    std::atomic<bool> activatedFlag = false;
-    std::atomic<bool> demoAvailable = false;
-    std::atomic<bool> allowedFlag   = false;
-    std::atomic<int>  demoDays      = 0;
+    std::atomic<State> m_state       = State::Unknown;
+    std::atomic<bool>  activatedFlag = false;
+    std::atomic<bool>  demoAvailable = false;
+    std::atomic<bool>  allowedFlag   = false;
+    std::atomic<int>   demoDays      = 0;
+
 
     struct Pimpl;
     std::unique_ptr<Pimpl> pimpl;

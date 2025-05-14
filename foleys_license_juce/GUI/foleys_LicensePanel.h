@@ -101,9 +101,9 @@ private:
     juce::Label            enterSerial { {}, TRANS ("ENTER SERIAL") };
     juce::TextEditor       code;
     juce::Label            status;
-    juce::TextButton       submit { TRANS ("ENTER"), TRANS ("Submit code") };
+    juce::TextButton       m_submitCodeButton { TRANS ("ENTER"), TRANS ("Submit code") };
     juce::TextButton       demo { TRANS ("Start Demo"), TRANS ("Start your 14 days free trial period") };
-    juce::TextButton       deactivate { TRANS ("Deactivate"), TRANS ("Deactivate this machine") };
+    juce::TextButton       m_deactivateButton { TRANS ("Deactivate"), TRANS ("Deactivate this machine") };
     juce::DrawableButton   closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
     juce::DrawableButton   refreshButton { "Refresh license", juce::DrawableButton::ButtonStyle::ImageFitted };
     juce::DrawableButton   manualButton { "Manual Guide", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
