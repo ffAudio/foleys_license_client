@@ -29,36 +29,36 @@ LicensePanel::LicensePanel()
     if (!isColourSpecified (footerColourId))
         setColour (footerColourId, juce::Colours::silver);
 
-    addChildComponent (title);
-    addChildComponent (copyright);
+    addChildComponent (m_title);
+    addChildComponent (m_copyright);
     addChildComponent (m_codeEditor);
     addChildComponent (m_codeLabel);
     addChildComponent (m_submitCodeButton);
-    addAndMakeVisible (closeButton);
-    addAndMakeVisible (refreshButton);
-    addAndMakeVisible (status);
-    addAndMakeVisible (demo);
-    addAndMakeVisible (manualButton);
-    addAndMakeVisible (homeButton);
-    addAndMakeVisible (websiteButton);
-    addAndMakeVisible (timestamp);
+    addAndMakeVisible (m_closeButton);
+    addAndMakeVisible (m_refreshButton);
+    addAndMakeVisible (m_status);
+    addAndMakeVisible (m_demo);
+    addAndMakeVisible (m_manualButton);
+    addAndMakeVisible (m_homeButton);
+    addAndMakeVisible (m_websiteButton);
+    addAndMakeVisible (m_timestamp);
     addAndMakeVisible (m_deactivateButton);
-    addAndMakeVisible (offlineButton);
+    addAndMakeVisible (m_offlineButton);
 
 
-    title.setJustificationType (juce::Justification::centred);
-    title.setText (LicenseData::productName, juce::dontSendNotification);
+    m_title.setJustificationType (juce::Justification::centred);
+    m_title.setText (LicenseData::productName, juce::dontSendNotification);
 
 #if JUCE_VERSION >= 0x080000
-    title.setFont (juce::FontOptions { kTitleFontHeight });
+    m_title.setFont (juce::FontOptions { kTitleFontHeight });
     m_codeLabel.setFont (juce::FontOptions { kFontHeight });
-    timestamp.setFont (juce::FontOptions { kSmallFontHeight });
-    copyright.setFont (juce::FontOptions { kSmallFontHeight });
+    m_timestamp.setFont (juce::FontOptions { kSmallFontHeight });
+    m_copyright.setFont (juce::FontOptions { kSmallFontHeight });
 #else
-    title.setFont (juce::Font (kTitleFontHeight));
-    enterSerial.setFont (juce::Font (kFontHeight));
-    timestamp.setFont (juce::Font (kSmallFontHeight));
-    copyright.setFont (juce::Font (kSmallFontHeight));
+    m_title.setFont (juce::Font (kTitleFontHeight));
+    m_codeLabel.setFont (juce::Font (kFontHeight));
+    m_timestamp.setFont (juce::Font (kSmallFontHeight));
+    m_copyright.setFont (juce::Font (kSmallFontHeight));
 #endif
 
     const auto inactiveTextColour = findColour (inactiveTextColourId);
@@ -71,28 +71,28 @@ LicensePanel::LicensePanel()
     m_codeLabel.setJustificationType (juce::Justification::centred);
 
     const auto footerColour = findColour (footerColourId);
-    copyright.setJustificationType (juce::Justification::left);
-    copyright.setColour (juce::Label::textColourId, footerColour);
-    copyright.setText (LicenseData::copyright, juce::dontSendNotification);
+    m_copyright.setJustificationType (juce::Justification::left);
+    m_copyright.setColour (juce::Label::textColourId, footerColour);
+    m_copyright.setText (LicenseData::copyright, juce::dontSendNotification);
 
-    timestamp.setJustificationType (juce::Justification::right);
-    timestamp.setColour (juce::Label::textColourId, footerColour);
+    m_timestamp.setJustificationType (juce::Justification::right);
+    m_timestamp.setColour (juce::Label::textColourId, footerColour);
 
-    manualButton.onClick  = [] { juce::URL (LicenseData::manualUrl).launchInDefaultBrowser(); };
-    homeButton.onClick    = [] { juce::URL (LicenseData::authServerUrl).launchInDefaultBrowser(); };
-    websiteButton.onClick = [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); };
+    m_manualButton.onClick  = [] { juce::URL (LicenseData::manualUrl).launchInDefaultBrowser(); };
+    m_homeButton.onClick    = [] { juce::URL (LicenseData::authServerUrl).launchInDefaultBrowser(); };
+    m_websiteButton.onClick = [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); };
 
-    closeButton.onClick = [this]
+    m_closeButton.onClick = [this]
     {
         if (license.isAllowed() && onCloseRequest)
             onCloseRequest();
     };
 
-    refreshButton.onClick = [this] { license.syncLicense(); };
+    m_refreshButton.onClick = [this] { license.syncLicense(); };
 
     license.onLicenseReceived = [this] { update(); };
 
-    demo.onClick = [this]
+    m_demo.onClick = [this]
     {
         if (license.isActivated() || license.isDemo())
         {
@@ -126,16 +126,15 @@ void LicensePanel::setStyle (int styleFlags)
 {
     m_style = styleFlags;
 
-    copyright.setVisible (m_style & ShowCopyright);
-    title.setVisible (m_style & ShowTitle);
+    m_copyright.setVisible (m_style & ShowCopyright);
+    m_title.setVisible (m_style & ShowTitle);
 }
 
 void LicensePanel::update()
 {
     setStyle (m_style);
 
-    auto licenseState = license.syncState();
-    switch (licenseState)
+    switch (license.getState())
     {
         case foleys::License::Unknown: DBG ("License state: Unknown."); break;
         case foleys::License::Error: DBG ("License state: Error."); break;
@@ -149,8 +148,8 @@ void LicensePanel::update()
         default: break;
     }
 
-    closeButton.setVisible (license.isAllowed());
-    demo.setEnabled (license.canDemo() || license.isAllowed());
+    m_closeButton.setVisible (license.isAllowed());
+    m_demo.setEnabled (license.canDemo() || license.isAllowed());
 
     const auto isActivated = license.isActivated();
     m_deactivateButton.setVisible (isActivated);
@@ -159,44 +158,44 @@ void LicensePanel::update()
     m_codeLabel.setVisible (!isActivated);
 
     if (auto checked = license.lastChecked())
-        timestamp.setText (TRANS ("Checked: ") + juce::String (Helpers::formatDateTime (*checked, "%d. %m. %Y %H:%M")) + " UTC", juce::sendNotification);
+        m_timestamp.setText (TRANS ("Checked: ") + juce::String (Helpers::formatDateTime (*checked, "%d. %m. %Y %H:%M")) + " UTC", juce::sendNotification);
     else
-        timestamp.setText (TRANS ("Never checked"), juce::sendNotification);
+        m_timestamp.setText (TRANS ("Never checked"), juce::sendNotification);
 
     if (isActivated)
     {
         if (license.expires())
         {
             const auto date = *license.expires();
-            demo.setButtonText (LicenseData::productName + TRANS (" expires ") + juce::String (Helpers::formatDateTime (date, "%d. %m %Y")));
+            m_demo.setButtonText (LicenseData::productName + TRANS (" expires ") + juce::String (Helpers::formatDateTime (date, "%d. %m %Y")));
         }
         else
-            demo.setButtonText (LicenseData::productName + TRANS (" activated"));
+            m_demo.setButtonText (LicenseData::productName + TRANS (" activated"));
     }
     else if (license.isDemo())
     {
-        demo.setButtonText (TRANS ("Days to evaluate: ") + juce::String (license.demoDaysLeft()));
+        m_demo.setButtonText (TRANS ("Days to evaluate: ") + juce::String (license.demoDaysLeft()));
     }
     else if (!license.canDemo())
     {
-        demo.setButtonText (TRANS ("Demo expired, please buy a license"));
+        m_demo.setButtonText (TRANS ("Demo expired, please buy a license"));
     }
 
     juce::String lastError (license.getLastErrorString());
     if (lastError.isNotEmpty())
-        status.setText (lastError, juce::dontSendNotification);
+        m_status.setText (lastError, juce::dontSendNotification);
     else if (license.isExpired())
     {
-        status.setText ("Your license expired on " + juce::String (Helpers::formatDateTime (*license.expires(), "%d. %b %Y")), juce::dontSendNotification);
+        m_status.setText ("Your license expired on " + juce::String (Helpers::formatDateTime (*license.expires(), "%d. %b %Y")), juce::dontSendNotification);
     }
     else if (isActivated)
-        status.setText ("", juce::sendNotification);
+        m_status.setText ("", juce::sendNotification);
     else if (license.isDemo())
-        status.setText ({}, juce::dontSendNotification);
+        m_status.setText ({}, juce::dontSendNotification);
     else if (license.canDemo())
-        status.setText ("Hit the Demo button to start your free " + juce::String (license.demoDaysLeft()) + " days trial", juce::dontSendNotification);
+        m_status.setText ("Hit the Demo button to start your free " + juce::String (license.demoDaysLeft()) + " days trial", juce::dontSendNotification);
     else
-        status.setText ("If you bought a license enter your email and hit Activate", juce::dontSendNotification);
+        m_status.setText ("If you bought a license enter your email and hit Activate", juce::dontSendNotification);
 
     // Show a panel to deactivate a machine
     const auto activations = license.getActivations();
@@ -204,15 +203,15 @@ void LicensePanel::update()
     {
         auto panel          = std::make_unique<LicenseDeactivate>();
         panel->onDeactivate = [this] (size_t idToDeactivate) { activate (m_codeEditor.getText(), idToDeactivate); };
-        panel->setCloseFunction ([this] { deactivationPanel.reset(); });
+        panel->setCloseFunction ([this] { m_deactivationPanel.reset(); });
 
         addAndMakeVisible (panel.get());
-        deactivationPanel = std::move (panel);
+        m_deactivationPanel = std::move (panel);
         resized();
     }
     else
     {
-        deactivationPanel.reset();
+        m_deactivationPanel.reset();
     }
 
     if (onLicenseChanged)
@@ -243,12 +242,12 @@ void LicensePanel::setButtonIcon (Button buttonType, juce::Colour buttonColour, 
 
     switch (buttonType)
     {
-        case Close: setupButton (closeButton); break;
-        case Refresh: setupButton (refreshButton); break;
-        case Manual: setupButton (manualButton); break;
-        case UserPage: setupButton (homeButton); break;
-        case ProductPage: setupButton (websiteButton); break;
-        case OfflineAuth: setupButton (offlineButton); break;
+        case Close: setupButton (m_closeButton); break;
+        case Refresh: setupButton (m_refreshButton); break;
+        case Manual: setupButton (m_manualButton); break;
+        case UserPage: setupButton (m_homeButton); break;
+        case ProductPage: setupButton (m_websiteButton); break;
+        case OfflineAuth: setupButton (m_offlineButton); break;
         case Unknown: [[fallthrough]];
         default: break;
     }
@@ -297,18 +296,18 @@ void LicensePanel::resized()
     const auto numRows   = 8 + (hasTitle ? 1 : 0);
     const auto rowHeight = std::max (kMaxRowHeight, (area.getHeight() / numRows) - kGrid);
 
-    if (deactivationPanel)
+    if (m_deactivationPanel)
     {
-        deactivationPanel->setBounds (area);
-        deactivationPanel->toFront (false);
+        m_deactivationPanel->setBounds (area);
+        m_deactivationPanel->toFront (false);
     }
 
     area.removeFromTop (kGrid);
 
     auto topRow = area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth(), kMaxRowHeight);
-    closeButton.setBounds (topRow.removeFromRight (kMaxRowHeight));
+    m_closeButton.setBounds (topRow.removeFromRight (kMaxRowHeight));
     topRow.removeFromLeft (rowHeight);
-    title.setBounds (topRow);
+    m_title.setBounds (topRow);
 
     area.removeFromTop (kGrid);
 
@@ -327,29 +326,29 @@ void LicensePanel::resized()
     area.removeFromTop (kGrid);
 
     auto demoRow = area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth() - (12 * kGrid), kMaxRowHeight);
-    refreshButton.setBounds (demoRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
-    demo.setBounds (demoRow.reduced (2 * kGrid, 0));
+    m_refreshButton.setBounds (demoRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
+    m_demo.setBounds (demoRow.reduced (2 * kGrid, 0));
 
     area.removeFromTop (kGrid);
 
     auto statusRow = area.removeFromTop (rowHeight).withSizeKeepingCentre (area.getWidth() - (12 * kGrid), kMaxRowHeight);
     m_deactivateButton.setBounds (statusRow.removeFromRight (codeButtonWidth).reduced (2 * kGrid, 0));
-    status.setBounds (statusRow.reduced (2 * kGrid, 0));
+    m_status.setBounds (statusRow.reduced (2 * kGrid, 0));
 
     area.removeFromTop (kGrid);
 
     const auto footerBounds = area.removeFromBottom (rowHeight).withSizeKeepingCentre (getWidth(), kMaxRowHeight);
-    timestamp.setBounds (footerBounds.withTrimmedTop (2 * kGrid));
-    copyright.setBounds (footerBounds.withTrimmedTop (2 * kGrid));
+    m_timestamp.setBounds (footerBounds.withTrimmedTop (2 * kGrid));
+    m_copyright.setBounds (footerBounds.withTrimmedTop (2 * kGrid));
 
     area.removeFromBottom (kGrid);
 
     auto       buttonRow = area.removeFromBottom ((2 * rowHeight) + kGrid).withSizeKeepingCentre (area.getWidth(), (2 * kMaxRowHeight) + kGrid);
     const auto w         = buttonRow.getWidth() / 4;
-    homeButton.setBounds (buttonRow.removeFromLeft (w).withTrimmedRight (10));
-    websiteButton.setBounds (buttonRow.removeFromLeft (w).withTrimmedRight (10));
-    offlineButton.setBounds (buttonRow.removeFromLeft (w).withTrimmedRight (10));
-    manualButton.setBounds (buttonRow.reduced (10, 0));
+    m_homeButton.setBounds (buttonRow.removeFromLeft (w).withTrimmedRight (10));
+    m_websiteButton.setBounds (buttonRow.removeFromLeft (w).withTrimmedRight (10));
+    m_offlineButton.setBounds (buttonRow.removeFromLeft (w).withTrimmedRight (10));
+    m_manualButton.setBounds (buttonRow.reduced (10, 0));
 }
 
 }  // namespace foleys

@@ -14,12 +14,12 @@ namespace
 void showLicensePanel (foleys::PopupHolder& popupHolder)
 {
     auto licensePanel = std::make_unique<foleys::LicensePanel>();
-    licensePanel->setButtonIcon (foleys::LicensePanel::Manual, BinaryData::pdficon_svg, BinaryData::pdficon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::UserPage, BinaryData::keyicon_svg, BinaryData::keyicon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::ProductPage, BinaryData::wwwicon_svg, BinaryData::wwwicon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::Close, BinaryData::closeicon_svg, BinaryData::closeicon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::Refresh, BinaryData::refreshicon_svg, BinaryData::refreshicon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::OfflineAuth, BinaryData::saveicon_svg, BinaryData::saveicon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::Manual, juce::Colours::silver, BinaryData::pdficon_svg, BinaryData::pdficon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::UserPage, juce::Colours::silver, BinaryData::keyicon_svg, BinaryData::keyicon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::ProductPage, juce::Colours::silver, BinaryData::wwwicon_svg, BinaryData::wwwicon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::Close, juce::Colours::silver, BinaryData::closeicon_svg, BinaryData::closeicon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::Refresh, juce::Colours::silver, BinaryData::refreshicon_svg, BinaryData::refreshicon_svgSize);
+    licensePanel->setButtonIcon (foleys::LicensePanel::OfflineAuth, juce::Colours::silver, BinaryData::saveicon_svg, BinaryData::saveicon_svgSize);
 
     popupHolder.showPopup (std::move (licensePanel));
 }

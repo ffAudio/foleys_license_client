@@ -109,9 +109,9 @@ public:
     [[nodiscard]] std::string getLicenseeEmail() const;
 
     /**
-     * Send a login request. The server will send a login link to the supplied email.
+     * Send a login request. The server will send an email link to the supplied email.
      */
-    void login (const std::string& email);
+    void sendLoginEmail (const std::string& email);
 
     /**
      * Request the server to activate this computer
@@ -129,7 +129,7 @@ public:
      * In case of a failed activation, this contains existing activations for deactivation
      * @return a list of activated machines
      */
-    std::vector<Activation> getActivations();
+    std::vector<Activation> getActivations() const;
 
     /**
      * Check if the user is allowed to start a demo
@@ -195,17 +195,19 @@ public:
      */
     std::string getRawLicenseData() const;
 
-    [[nodiscard]] State syncState();
-    [[nodiscard]] State getState() const { return m_state.load(); }
+
+    /**
+     * @return a state describing the current license state
+     */
+    [[nodiscard]] State getState() const;
 
 private:
     void syncPimpl();
 
-    std::atomic<State> m_state       = State::Unknown;
-    std::atomic<bool>  activatedFlag = false;
-    std::atomic<bool>  demoAvailable = false;
-    std::atomic<bool>  allowedFlag   = false;
-    std::atomic<int>   demoDays      = 0;
+    std::atomic<bool> activatedFlag = false;
+    std::atomic<bool> demoAvailable = false;
+    std::atomic<bool> allowedFlag   = false;
+    std::atomic<int>  demoDays      = 0;
 
 
     struct Pimpl;

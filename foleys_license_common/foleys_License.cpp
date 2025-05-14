@@ -90,9 +90,9 @@ std::string License::getLicenseeEmail() const
     return pimpl->getLicenseeEmail();
 }
 
-void License::login (const std::string& login_email)
+void License::sendLoginEmail (const std::string& email)
 {
-    pimpl->fetchLicenseData (LicenseID::login, { { "login_email", login_email } });
+    pimpl->fetchLicenseData (LicenseID::login, { { "login_email", email } });
 }
 
 void License::activate (const std::vector<std::pair<std::string, std::string>>& data)
@@ -105,7 +105,7 @@ void License::deactivate (const std::vector<std::pair<std::string, std::string>>
     pimpl->fetchLicenseData (LicenseID::deactivate, data);
 }
 
-std::vector<Activation> License::getActivations()
+std::vector<Activation> License::getActivations() const
 {
     return pimpl->getActivations();
 }
@@ -156,7 +156,7 @@ std::string License::getRawLicenseData() const
 }
 
 
-License::State License::syncState()
+License::State License::getState() const
 {
     if (activatedFlag.load())
         return State::Activated;

@@ -97,23 +97,23 @@ private:
     foleys::License license;
 
     int                    m_style = (ShowTitle | ShowCopyright);
-    juce::Label            title;
+    juce::Label            m_title;
     juce::Label            m_codeLabel { {}, TRANS ("ENTER SERIAL") };
     juce::TextEditor       m_codeEditor;
-    juce::Label            status;
+    juce::Label            m_status;
     juce::TextButton       m_submitCodeButton { TRANS ("ENTER"), TRANS ("Submit code") };
-    juce::TextButton       demo { TRANS ("Start Demo"), TRANS ("Start your 14 days free trial period") };
+    juce::TextButton       m_demo { TRANS ("Start Demo"), TRANS ("Start your 14 days free trial period") };
     juce::TextButton       m_deactivateButton { TRANS ("Deactivate"), TRANS ("Deactivate this machine") };
-    juce::DrawableButton   closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
-    juce::DrawableButton   refreshButton { "Refresh license", juce::DrawableButton::ButtonStyle::ImageFitted };
-    juce::DrawableButton   manualButton { "Manual Guide", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    juce::DrawableButton   homeButton { "My Licenses", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    juce::DrawableButton   websiteButton { "Buy License", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    foleys::FileDragButton offlineButton { "Offline Activation", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    juce::Label            copyright;
-    juce::Label            timestamp;
+    juce::DrawableButton   m_closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
+    juce::DrawableButton   m_refreshButton { "Refresh license", juce::DrawableButton::ButtonStyle::ImageFitted };
+    juce::DrawableButton   m_manualButton { "Manual Guide", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
+    juce::DrawableButton   m_homeButton { "My Licenses", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
+    juce::DrawableButton   m_websiteButton { "Buy License", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
+    foleys::FileDragButton m_offlineButton { "Offline Activation", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
+    juce::Label            m_copyright;
+    juce::Label            m_timestamp;
 
-    std::unique_ptr<juce::Component> deactivationPanel;
+    std::unique_ptr<juce::Component> m_deactivationPanel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LicensePanel)
 };
