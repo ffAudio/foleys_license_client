@@ -98,8 +98,8 @@ private:
 
     int                    m_style = (ShowTitle | ShowCopyright);
     juce::Label            title;
-    juce::Label            enterSerial { {}, TRANS ("ENTER SERIAL") };
-    juce::TextEditor       code;
+    juce::Label            m_codeLabel { {}, TRANS ("ENTER SERIAL") };
+    juce::TextEditor       m_codeEditor;
     juce::Label            status;
     juce::TextButton       m_submitCodeButton { TRANS ("ENTER"), TRANS ("Submit code") };
     juce::TextButton       demo { TRANS ("Start Demo"), TRANS ("Start your 14 days free trial period") };
