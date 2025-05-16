@@ -90,9 +90,9 @@ std::string License::getLicenseeEmail() const
     return pimpl->getLicenseeEmail();
 }
 
-void License::login (const std::string& login_email)
+void License::sendLoginEmail (const std::string& email)
 {
-    pimpl->fetchLicenseData (LicenseID::login, { { "login_email", login_email } });
+    pimpl->fetchLicenseData (LicenseID::login, { { "login_email", email } });
 }
 
 void License::activate (const std::vector<std::pair<std::string, std::string>>& data)
@@ -105,7 +105,7 @@ void License::deactivate (const std::vector<std::pair<std::string, std::string>>
     pimpl->fetchLicenseData (LicenseID::deactivate, data);
 }
 
-std::vector<Activation> License::getActivations()
+std::vector<Activation> License::getActivations() const
 {
     return pimpl->getActivations();
 }
@@ -153,6 +153,33 @@ bool License::setOfflineLicenseData (std::string_view content)
 std::string License::getRawLicenseData() const
 {
     return pimpl->getRawLicenseData();
+}
+
+
+License::State License::getState() const
+{
+    if (activatedFlag.load())
+        return State::Activated;
+
+    const auto activationsAvailable = getActivations();
+    if (!activationsAvailable.empty())
+        return State::ActivationsAvailable;
+
+    if (demoDays.load() > 0)
+    {
+        if (!demoAvailable.load())
+            return State::DemoRunning;
+
+        return State::DemoAvailable;
+    }
+
+    if (isExpired())
+        return State::Expired;
+
+    if (demoDays.load() <= 0)
+        return State::DemoExpired;
+
+    return State::Error;
 }
 
 void License::syncPimpl()

@@ -24,9 +24,16 @@ static inline time_t decodeDateTime (const std::string& timeString, const char* 
 
 static inline std::string formatDateTime (std::time_t date, std::string_view format)
 {
-    char buff[20];
-    strftime (buff, 20, format.data(), localtime (&date));
-    return { buff };
+    std::tm tm {};
+#ifdef _WIN32
+    localtime_s (&tm, &date);
+#else
+    localtime_r (&date, &tm);
+#endif
+
+    std::array<char, 20> buff {0};
+    strftime (buff.data(), sizeof(buff), format.data(), &tm);
+    return { buff.data() };
 }
 
 }  // namespace foleys::Helpers

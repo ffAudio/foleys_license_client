@@ -32,6 +32,19 @@ public:
     License();
     ~License();
 
+    enum State
+    {
+        Unknown = 0,
+        Error,
+        DemoExpired,
+        Expired,
+        DemoAvailable,
+        DemoRunning,
+        ActivationsUsed,
+        ActivationsAvailable,
+        Activated
+    };
+
     /**
      * Check if a popup should be shown.
      * Usually when there is no local license and in demo only once per day.
@@ -96,9 +109,9 @@ public:
     [[nodiscard]] std::string getLicenseeEmail() const;
 
     /**
-     * Send a login request. The server will send a login link to the supplied email.
+     * Send a login request. The server will send an email link to the supplied email.
      */
-    void login (const std::string& email);
+    void sendLoginEmail (const std::string& email);
 
     /**
      * Request the server to activate this computer
@@ -116,7 +129,7 @@ public:
      * In case of a failed activation, this contains existing activations for deactivation
      * @return a list of activated machines
      */
-    std::vector<Activation> getActivations();
+    std::vector<Activation> getActivations() const;
 
     /**
      * Check if the user is allowed to start a demo
@@ -182,6 +195,12 @@ public:
      */
     std::string getRawLicenseData() const;
 
+
+    /**
+     * @return a state describing the current license state
+     */
+    [[nodiscard]] State getState() const;
+
 private:
     void syncPimpl();
 
@@ -189,6 +208,7 @@ private:
     std::atomic<bool> demoAvailable = false;
     std::atomic<bool> allowedFlag   = false;
     std::atomic<int>  demoDays      = 0;
+
 
     struct Pimpl;
     std::unique_ptr<Pimpl> pimpl;

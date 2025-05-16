@@ -18,6 +18,7 @@
 #include <atomic>
 #include <optional>
 #include <vector>
+#include <array>
 #include <functional>
 #include <memory>
 #include <ctime>

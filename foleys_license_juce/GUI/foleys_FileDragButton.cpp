@@ -19,10 +19,10 @@ void FileDragButton::mouseDrag (const juce::MouseEvent& event)
       juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile (juce::String (LicenseData::productName) + "-" + juce::SystemStats::getComputerName() + ".request");
     if (auto stream = file.createOutputStream())
     {
-        auto text = license.getOfflineRequest();
+        auto offlineRequest = license.getOfflineRequest();
         stream->setPosition (0);
         stream->truncate();
-        stream->write (text.data(), text.size());
+        stream->write (offlineRequest.data(), offlineRequest.size());
     }
     else
     {

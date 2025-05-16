@@ -58,7 +58,7 @@ struct License::Pimpl : public juce::ChangeListener
     [[nodiscard]] std::string getLastErrorString() const { return updater->getLastErrorString(); }
 
 
-    [[nodiscard]] std::vector<Activation> getActivations()
+    [[nodiscard]] std::vector<Activation> getActivations() const
     {
         auto text = updater->getLicenseText();
 
