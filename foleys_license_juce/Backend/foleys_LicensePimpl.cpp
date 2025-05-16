@@ -121,6 +121,11 @@ struct License::Pimpl : public juce::ChangeListener
                     auto ends          = Helpers::decodeDateTime (object->getProperty (LicenseID::demo_ends).toString().toStdString(), "%Y-%m-%d");
                     auto localDemoDays = static_cast<int> (1 + difftime (ends, std::time (nullptr)) / (24 * 3600));
                     demoDays           = std::min (demoDays.load(), localDemoDays);
+                    demoEndDate        = Helpers::formatDateTime (ends, "%d. %m %Y");
+                }
+                else
+                {
+                    demoEndDate = {};
                 }
             }
             else
@@ -149,6 +154,7 @@ struct License::Pimpl : public juce::ChangeListener
     juce::CriticalSection                                   processLock;
     std::string                                             licenseHardware;
     std::string                                             email;
+    std::string                                             demoEndDate;
     std::optional<std::time_t>                              expiryDate;
     std::optional<std::time_t>                              checked;
     std::atomic<bool>                                       activatedFlag = false;

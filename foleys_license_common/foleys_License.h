@@ -148,6 +148,11 @@ public:
     [[nodiscard]] int demoDaysLeft() const;
 
     /**
+     * @return the end date of the demo for display. Empty string if demo was never started.
+     */
+    [[nodiscard]] std::string getDemoEndDate() const;
+
+    /**
      * Send a demo request to the server
      */
     void startDemo();
