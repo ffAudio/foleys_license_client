@@ -122,6 +122,7 @@ struct License::Pimpl : public LicenseUpdater::Observer
     std::mutex                   processLock;
     std::string                  licenseHardware;
     std::string                  email;
+    std::string                  demoEndDate;
     std::atomic<bool>            activatedFlag = false;
     std::atomic<bool>            demoAvailable = false;
     std::atomic<bool>            allowedFlag   = false;

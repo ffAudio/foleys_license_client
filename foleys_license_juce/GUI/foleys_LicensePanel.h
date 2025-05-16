@@ -47,28 +47,22 @@ public:
         OfflineAuth
     };
 
-    enum Style
-    {
-        ShowTitle     = 1,
-        ShowCopyright = 2
-    };
+    explicit LicensePanel (bool embed = true);
 
-    LicensePanel();
+    void addLinkButton (std::unique_ptr<juce::Button>&& newButton);
+
+    void initialize();
 
     void paint (juce::Graphics& g) override;
     void resized() override;
 
     void update();
 
-    void activate (const juce::String& serial, size_t deactivate);
-
-    void setButtonIcon (Button buttonType, juce::Colour buttonColour, const char* imageData, size_t imageDataSize);
-
     bool isInterestedInFileDrag (const juce::StringArray& files) override;
 
     void filesDropped (const juce::StringArray& files, int x, int y) override;
 
-    void setStyle (int styleFlags);
+    void requestClose();
 
     /**
      * A lambda you can customize for your own layout
@@ -92,30 +86,24 @@ public:
         inactiveTextColourId = 0x5a3c502
     };
 
-
 private:
-    foleys::License license;
+    bool                  m_embedded = false;
+    foleys::License       m_license;
+    juce::TabbedComponent m_actionTabs { juce::TabbedButtonBar::TabsAtTop };
+    juce::Label           m_title;
+    juce::Label           m_status;
+    juce::DrawableButton  m_closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
+    juce::Label           m_copyright;
+    juce::Label           m_timestamp;
 
-    int                    m_style = (ShowTitle | ShowCopyright);
-    juce::Label            m_title;
-    juce::Label            m_codeLabel { {}, TRANS ("ENTER SERIAL") };
-    juce::TextEditor       m_codeEditor;
-    juce::Label            m_status;
-    juce::TextButton       m_submitCodeButton { TRANS ("ENTER"), TRANS ("Submit code") };
-    juce::TextButton       m_demo { TRANS ("Start Demo"), TRANS ("Start your 14 days free trial period") };
-    juce::TextButton       m_deactivateButton { TRANS ("Deactivate"), TRANS ("Deactivate this machine") };
-    juce::DrawableButton   m_closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
-    juce::DrawableButton   m_refreshButton { "Refresh license", juce::DrawableButton::ButtonStyle::ImageFitted };
-    juce::DrawableButton   m_manualButton { "Manual Guide", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    juce::DrawableButton   m_homeButton { "My Licenses", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    juce::DrawableButton   m_websiteButton { "Buy License", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    foleys::FileDragButton m_offlineButton { "Offline Activation", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    juce::Label            m_copyright;
-    juce::Label            m_timestamp;
-
-    std::unique_ptr<juce::Component> m_deactivationPanel;
+    std::unique_ptr<juce::Component>           m_deactivationPanel;
+    std::vector<std::unique_ptr<juce::Button>> m_linkButtons;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LicensePanel)
+
+public:
+    std::unique_ptr<juce::Drawable> m_offlineIcon;
+    juce::DrawableButton            m_refreshButton { "Refresh license", juce::DrawableButton::ButtonStyle::ImageFitted };
 };
 
 }  // namespace foleys

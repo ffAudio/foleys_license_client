@@ -130,6 +130,11 @@ void License::startDemo()
     pimpl->fetchLicenseData (LicenseID::demo);
 }
 
+std::string License::getDemoEndDate() const
+{
+    return pimpl->demoEndDate;
+}
+
 bool License::shouldShowPopup()
 {
     return pimpl->shouldShowPopup();
