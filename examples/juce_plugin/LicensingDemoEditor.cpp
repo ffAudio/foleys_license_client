@@ -13,30 +13,21 @@ namespace
 
 void showLicensePanel (foleys::PopupHolder& popupHolder)
 {
-    auto       licensePanel = std::make_unique<foleys::LicensePanel>();
-    const auto createButton = [] (const juce::String& name, const char* svg, size_t svgSize, std::function<void()> func)
-    {
-        auto image = juce::DrawableComposite::createFromImageData (svg, svgSize);
-        image->replaceColour (juce::Colours::black, juce::Colours::silver);  // button colour
-        auto button = std::make_unique<juce::DrawableButton> (name, juce::DrawableButton::ImageAboveTextLabel);
-        button->setImages (image.get());
-        button->onClick = std::move (func);
+    auto licensePanel = std::make_unique<foleys::LicensePanel>();
+    auto colour       = juce::Colours::silver;
 
-        return button;
-    };
-
-    licensePanel->addLinkButton (
-      createButton ("Product Page", BinaryData::wwwicon_svg, BinaryData::wwwicon_svgSize, [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); }));
-    licensePanel->addLinkButton (createButton ("Manage Licenses", BinaryData::keyicon_svg, BinaryData::keyicon_svgSize,
-                                               [] { juce::URL (LicenseData::authServerUrl).launchInDefaultBrowser(); }));
-    licensePanel->addLinkButton (
-      createButton ("Open Manual", BinaryData::pdficon_svg, BinaryData::pdficon_svgSize, [] { juce::URL (LicenseData::manualUrl).launchInDefaultBrowser(); }));
+    licensePanel->addLinkButton (foleys::LicensePanel::createButton ("Product Page", colour, BinaryData::wwwicon_svg, BinaryData::wwwicon_svgSize,
+                                                                     [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); }));
+    licensePanel->addLinkButton (foleys::LicensePanel::createButton ("Manage Licenses", colour, BinaryData::keyicon_svg, BinaryData::keyicon_svgSize,
+                                                                     [] { juce::URL (LicenseData::authServerUrl).launchInDefaultBrowser(); }));
+    licensePanel->addLinkButton (foleys::LicensePanel::createButton ("Open Manual", colour, BinaryData::pdficon_svg, BinaryData::pdficon_svgSize,
+                                                                     [] { juce::URL (LicenseData::manualUrl).launchInDefaultBrowser(); }));
 
     auto refresh = juce::DrawableComposite::createFromImageData (BinaryData::refreshicon_svg, BinaryData::refreshicon_svgSize);
     refresh->replaceColour (juce::Colours::black, juce::Colours::silver);  // button colour
     licensePanel->m_refreshButton.setImages (refresh.get());
 
-    licensePanel->m_offlineIcon = juce::DrawableComposite::createFromImageData(BinaryData::saveicon_svg, BinaryData::saveicon_svgSize);
+    licensePanel->m_offlineIcon = juce::DrawableComposite::createFromImageData (BinaryData::saveicon_svg, BinaryData::saveicon_svgSize);
     licensePanel->m_offlineIcon->replaceColour (juce::Colours::black, juce::Colours::silver);  // button colour
 
     popupHolder.showPopup (std::move (licensePanel));

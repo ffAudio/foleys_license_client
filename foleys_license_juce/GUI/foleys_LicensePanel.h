@@ -58,6 +58,8 @@ public:
     ~LicensePanel() override;
 
     void addLinkButton (std::unique_ptr<juce::Button>&& newButton);
+    static std::unique_ptr<juce::DrawableButton>
+      createButton (const juce::String& name, juce::Colour buttonColor, const char* svg, size_t svgSize, std::function<void()> func);
 
     void setTab (Tab currentTab);
 

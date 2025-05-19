@@ -226,7 +226,7 @@ struct OfflineTab : juce::Component
     void resized() override
     {
         auto bounds = getLocalBounds();
-        m_offlineButton.setBounds (bounds.removeFromBottom (getHeight() / 2).withSizeKeepingCentre (std::max(100, getHeight() / 2), getHeight() / 2));
+        m_offlineButton.setBounds (bounds.removeFromBottom (getHeight() / 2).withSizeKeepingCentre (std::max (100, getHeight() / 2), getHeight() / 2));
         m_status.setBounds (bounds.withSizeKeepingCentre (getWidth(), 50));
     }
 
@@ -255,6 +255,19 @@ void LicensePanel::TabButtonLookAndFeel::drawButtonBackground (juce::Graphics& g
         g.drawLine (lineWidth, y, button.getWidth() - lineWidth * 2.0f, y, 2.0f * lineWidth);
     }
 }
+
+std::unique_ptr<juce::DrawableButton>
+  LicensePanel::createButton (const juce::String& name, juce::Colour buttonColor, const char* svg, size_t svgSize, std::function<void()> func)
+{
+    auto image = juce::DrawableComposite::createFromImageData (svg, svgSize);
+    image->replaceColour (juce::Colours::black, buttonColor);
+    auto button = std::make_unique<juce::DrawableButton> (name, juce::DrawableButton::ImageAboveTextLabel);
+    button->setImages (image.get());
+    button->onClick = std::move (func);
+
+    return button;
+}
+
 
 // ================================================================================
 
@@ -296,8 +309,6 @@ LicensePanel::LicensePanel (bool embed) : m_embedded (embed)
     SET_JUCE_FONT (m_title, kTitleFontHeight)
     SET_JUCE_FONT (m_timestamp, kSmallFontHeight)
     SET_JUCE_FONT (m_copyright, kSmallFontHeight)
-
-    const auto inactiveTextColour = findColour (inactiveTextColourId);
 
     const auto footerColour = findColour (footerColourId);
     m_copyright.setJustificationType (juce::Justification::left);
