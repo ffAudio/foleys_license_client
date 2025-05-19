@@ -14,12 +14,21 @@ namespace
 void showLicensePanel (foleys::PopupHolder& popupHolder)
 {
     auto licensePanel = std::make_unique<foleys::LicensePanel>();
-    licensePanel->setButtonIcon (foleys::LicensePanel::Manual, juce::Colours::silver, BinaryData::pdficon_svg, BinaryData::pdficon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::UserPage, juce::Colours::silver, BinaryData::keyicon_svg, BinaryData::keyicon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::ProductPage, juce::Colours::silver, BinaryData::wwwicon_svg, BinaryData::wwwicon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::Close, juce::Colours::silver, BinaryData::closeicon_svg, BinaryData::closeicon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::Refresh, juce::Colours::silver, BinaryData::refreshicon_svg, BinaryData::refreshicon_svgSize);
-    licensePanel->setButtonIcon (foleys::LicensePanel::OfflineAuth, juce::Colours::silver, BinaryData::saveicon_svg, BinaryData::saveicon_svgSize);
+    auto colour       = juce::Colours::silver;
+
+    licensePanel->addLinkButton (foleys::LicensePanel::createButton ("Product Page", colour, BinaryData::wwwicon_svg, BinaryData::wwwicon_svgSize,
+                                                                     [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); }));
+    licensePanel->addLinkButton (foleys::LicensePanel::createButton ("Manage Licenses", colour, BinaryData::keyicon_svg, BinaryData::keyicon_svgSize,
+                                                                     [] { juce::URL (LicenseData::authServerUrl).launchInDefaultBrowser(); }));
+    licensePanel->addLinkButton (foleys::LicensePanel::createButton ("Open Manual", colour, BinaryData::pdficon_svg, BinaryData::pdficon_svgSize,
+                                                                     [] { juce::URL (LicenseData::manualUrl).launchInDefaultBrowser(); }));
+
+    auto refresh = juce::DrawableComposite::createFromImageData (BinaryData::refreshicon_svg, BinaryData::refreshicon_svgSize);
+    refresh->replaceColour (juce::Colours::black, juce::Colours::silver);  // button colour
+    licensePanel->m_refreshButton.setImages (refresh.get());
+
+    licensePanel->m_offlineIcon = juce::DrawableComposite::createFromImageData (BinaryData::saveicon_svg, BinaryData::saveicon_svgSize);
+    licensePanel->m_offlineIcon->replaceColour (juce::Colours::black, juce::Colours::silver);  // button colour
 
     popupHolder.showPopup (std::move (licensePanel));
 }

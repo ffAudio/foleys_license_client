@@ -35,40 +35,44 @@ public:
     static constexpr auto kFontHeight      = 16.0f;
     static constexpr auto kTitleFontHeight = 24.0f;
 
+    juce::Colour backgroundColour { 0x00000000 };
+    juce::Colour textColour { 0xffc0c0c0 };
+    juce::Colour accentColour { 0xff6a5acd };
+    juce::Colour buttonColour { 0xffc0c0c0 };
+    juce::Colour buttonBackgroundColour { 0xff6a5acd };
+    juce::Colour editorBackgroundColour { 0xff708090 };
 
-    enum Button
+    enum class Tab
     {
-        Unknown = 0,
-        Close,
-        Refresh,
-        Manual,
-        UserPage,
-        ProductPage,
-        OfflineAuth
+        Demo = 0,
+        Activation,
+        Offline
     };
 
-    enum Style
+    struct TabButtonLookAndFeel : juce::LookAndFeel_V4
     {
-        ShowTitle     = 1,
-        ShowCopyright = 2
+        void drawButtonBackground (juce::Graphics&, juce::Button&, const juce::Colour& backgroundColour, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
     };
 
-    LicensePanel();
+    explicit LicensePanel (bool embed = true);
+    ~LicensePanel() override;
+
+    void addLinkButton (std::unique_ptr<juce::Button>&& newButton);
+    static std::unique_ptr<juce::DrawableButton>
+      createButton (const juce::String& name, juce::Colour buttonColor, const char* svg, size_t svgSize, std::function<void()> func);
+
+    void setTab (Tab currentTab);
 
     void paint (juce::Graphics& g) override;
     void resized() override;
 
     void update();
 
-    void activate (const juce::String& serial, size_t deactivate);
-
-    void setButtonIcon (Button buttonType, juce::Colour buttonColour, const char* imageData, size_t imageDataSize);
-
     bool isInterestedInFileDrag (const juce::StringArray& files) override;
 
     void filesDropped (const juce::StringArray& files, int x, int y) override;
 
-    void setStyle (int styleFlags);
+    void requestClose();
 
     /**
      * A lambda you can customize for your own layout
@@ -92,30 +96,28 @@ public:
         inactiveTextColourId = 0x5a3c502
     };
 
-
 private:
-    foleys::License license;
+    bool                             m_embedded = false;
+    foleys::License                  m_license;
+    std::unique_ptr<juce::Component> m_currentTab;
+    TabButtonLookAndFeel             m_tabButtonLookAndFeel;
+    juce::TextButton                 m_demoTabButton { TRANS ("Demo") };
+    juce::TextButton                 m_activationTabButton { TRANS ("Activation") };
+    juce::TextButton                 m_offlineTabButton { TRANS ("Offline") };
+    juce::Label                      m_title;
+    juce::Label                      m_status;
+    juce::DrawableButton             m_closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
+    juce::Label                      m_copyright;
+    juce::Label                      m_timestamp;
 
-    int                    m_style = (ShowTitle | ShowCopyright);
-    juce::Label            m_title;
-    juce::Label            m_codeLabel { {}, TRANS ("ENTER SERIAL") };
-    juce::TextEditor       m_codeEditor;
-    juce::Label            m_status;
-    juce::TextButton       m_submitCodeButton { TRANS ("ENTER"), TRANS ("Submit code") };
-    juce::TextButton       m_demo { TRANS ("Start Demo"), TRANS ("Start your 14 days free trial period") };
-    juce::TextButton       m_deactivateButton { TRANS ("Deactivate"), TRANS ("Deactivate this machine") };
-    juce::DrawableButton   m_closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
-    juce::DrawableButton   m_refreshButton { "Refresh license", juce::DrawableButton::ButtonStyle::ImageFitted };
-    juce::DrawableButton   m_manualButton { "Manual Guide", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    juce::DrawableButton   m_homeButton { "My Licenses", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    juce::DrawableButton   m_websiteButton { "Buy License", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    foleys::FileDragButton m_offlineButton { "Offline Activation", juce::DrawableButton::ButtonStyle::ImageAboveTextLabel };
-    juce::Label            m_copyright;
-    juce::Label            m_timestamp;
-
-    std::unique_ptr<juce::Component> m_deactivationPanel;
+    std::unique_ptr<juce::Component>           m_deactivationPanel;
+    std::vector<std::unique_ptr<juce::Button>> m_linkButtons;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LicensePanel)
+
+public:
+    std::unique_ptr<juce::Drawable> m_offlineIcon;
+    juce::DrawableButton            m_refreshButton { "Refresh license", juce::DrawableButton::ButtonStyle::ImageFitted };
 };
 
 }  // namespace foleys
