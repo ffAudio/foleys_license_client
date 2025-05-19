@@ -22,12 +22,21 @@ namespace foleys
 
 // ================================================================================
 
+#if JUCE_VERSION >= 0x080000
+    #define SET_JUCE_FONT(Component, Size) Component.setFont (juce::FontOptions { Size });
+#else
+    #define SET_JUCE_FONT(Component, Size) Component.setFont (juce::Font (Size));
+#endif
+
+// ================================================================================
+
 struct DemoTab : juce::Component
 {
     explicit DemoTab (LicensePanel& owner) : m_owner (owner)
     {
         addAndMakeVisible (m_demoStatus);
         m_demoStatus.setJustificationType (juce::Justification::centred);
+        SET_JUCE_FONT (m_demoStatus, LicensePanel::kFontHeight)
 
         m_license.onLicenseReceived = [this]
         {
@@ -40,7 +49,12 @@ struct DemoTab : juce::Component
             };
 
             m_buttons.clear();
-            if (m_license.isDemo())
+            if (m_license.isActivated() && !m_license.isExpired())
+            {
+                m_demoStatus.setText (TRANS ("Your machine is activated, you are good to go."), juce::sendNotification);
+                addButton (TRANS ("Continue"), [this] { m_owner.requestClose(); });
+            }
+            else if (m_license.isDemo())
             {
                 m_demoStatus.setText (TRANS ("Your demo will expire on " + juce::String (m_license.getDemoEndDate())), juce::sendNotification);
                 addButton (TRANS ("Continue"), [this] { m_owner.requestClose(); });
@@ -94,6 +108,7 @@ struct ActivationTab : juce::Component
     {
         addAndMakeVisible (m_status);
         m_status.setJustificationType (juce::Justification::centred);
+        SET_JUCE_FONT (m_status, LicensePanel::kFontHeight)
 
         m_serialEditor.setTextToShowWhenEmpty ("XXXX-YYYY-ZZZZ-WWWW", juce::Colours::grey);
         m_serialEditor.setJustification (juce::Justification::centred);
@@ -129,12 +144,14 @@ struct ActivationTab : juce::Component
             {
                 if (m_license.isExpired())
                 {
-                    m_status.setText ("Your license expired on ", juce::sendNotification);
+                    auto date = juce::String (Helpers::formatDateTime (*m_license.expires(), "%d. %m. %Y %H:%M")) + " UTC";
+                    m_status.setText ("Your license expired on " + date, juce::sendNotification);
                     addButton (TRANS ("Renew license"), [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); });
                 }
                 else if (m_license.expires())
                 {
-                    m_status.setText ("Your license will expire on ", juce::sendNotification);
+                    auto date = juce::String (Helpers::formatDateTime (*m_license.expires(), "%d. %m. %Y %H:%M")) + " UTC";
+                    m_status.setText ("Your license will expire on " + date, juce::sendNotification);
                     addButton (TRANS ("Renew license"), [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); });
                     addButton (TRANS ("Close"), [this] { m_owner.requestClose(); });
                 }
@@ -196,10 +213,12 @@ struct OfflineTab : juce::Component
         addAndMakeVisible (m_offlineButton);
         addAndMakeVisible (m_status);
         m_status.setJustificationType (juce::Justification::centred);
+        m_offlineButton.setImages (m_owner.m_offlineIcon.get());
+        SET_JUCE_FONT (m_status, LicensePanel::kFontHeight)
 
         m_license.onLicenseReceived = [this]
         {
-            m_status.setText ("Drag the file icon to a removable drive and upload it to your license page. Then drop the license file from there back here.",
+            m_status.setText ("Drag the file icon to a removable drive and upload it to your license page.\nThen drop the license file from there back here.",
                               juce::sendNotification);
 
             resized();
@@ -223,6 +242,26 @@ struct OfflineTab : juce::Component
 
 // ================================================================================
 
+void LicensePanel::TabButtonLookAndFeel::drawButtonBackground (juce::Graphics& g, juce::Button& button, const juce::Colour&, bool shouldDrawButtonAsHighlighted, bool)
+{
+    const auto colour    = juce::Colours::green;  // findColour (juce::TextButton::buttonOnColourId);
+    const auto y         = float (button.getHeight()) - 3.0f;
+    const auto lineWidth = 2.0f;
+
+    if (button.getToggleState())
+    {
+        g.setColour (shouldDrawButtonAsHighlighted ? colour.brighter() : colour);
+        g.drawLine (lineWidth, y, button.getWidth() - lineWidth * 2.0f, y, 2.0f * lineWidth);
+    }
+    else if (shouldDrawButtonAsHighlighted)
+    {
+        g.setColour (colour.darker());
+        g.drawLine (lineWidth, y, button.getWidth() - lineWidth * 2.0f, y, 2.0f * lineWidth);
+    }
+}
+
+// ================================================================================
+
 LicensePanel::LicensePanel (bool embed) : m_embedded (embed)
 {
     if (!isColourSpecified (buttonColourId))
@@ -232,7 +271,21 @@ LicensePanel::LicensePanel (bool embed) : m_embedded (embed)
     if (!isColourSpecified (footerColourId))
         setColour (footerColourId, juce::Colours::silver);
 
-    addAndMakeVisible (m_actionTabs);
+    addAndMakeVisible (m_demoTabButton);
+    addAndMakeVisible (m_activationTabButton);
+    addAndMakeVisible (m_offlineTabButton);
+    m_demoTabButton.setClickingTogglesState (true);
+    m_activationTabButton.setClickingTogglesState (true);
+    m_offlineTabButton.setClickingTogglesState (true);
+    m_demoTabButton.setRadioGroupId (100);
+    m_activationTabButton.setRadioGroupId (100);
+    m_offlineTabButton.setRadioGroupId (100);
+    m_demoTabButton.onClick       = [this] { setTab (Tab::Demo); };
+    m_activationTabButton.onClick = [this] { setTab (Tab::Activation); };
+    m_offlineTabButton.onClick    = [this] { setTab (Tab::Offline); };
+    m_demoTabButton.setLookAndFeel (&m_tabButtonLookAndFeel);
+    m_activationTabButton.setLookAndFeel (&m_tabButtonLookAndFeel);
+    m_offlineTabButton.setLookAndFeel (&m_tabButtonLookAndFeel);
 
     addChildComponent (m_title);
     addChildComponent (m_copyright);
@@ -244,16 +297,9 @@ LicensePanel::LicensePanel (bool embed) : m_embedded (embed)
     m_title.setJustificationType (juce::Justification::centred);
     m_title.setText (LicenseData::productName, juce::dontSendNotification);
 
-#if JUCE_VERSION >= 0x080000
-    m_title.setFont (juce::FontOptions { kTitleFontHeight });
-    m_codeLabel.setFont (juce::FontOptions { kFontHeight });
-    m_timestamp.setFont (juce::FontOptions { kSmallFontHeight });
-    m_copyright.setFont (juce::FontOptions { kSmallFontHeight });
-#else
-    m_title.setFont (juce::Font (kTitleFontHeight));
-    m_timestamp.setFont (juce::Font (kSmallFontHeight));
-    m_copyright.setFont (juce::Font (kSmallFontHeight));
-#endif
+    SET_JUCE_FONT (m_title, kTitleFontHeight)
+    SET_JUCE_FONT (m_timestamp, kSmallFontHeight)
+    SET_JUCE_FONT (m_copyright, kSmallFontHeight)
 
     const auto inactiveTextColour = findColour (inactiveTextColourId);
 
@@ -271,24 +317,32 @@ LicensePanel::LicensePanel (bool embed) : m_embedded (embed)
             onCloseRequest();
     };
 
-    m_refreshButton.onClick = [this] { m_license.syncLicense(); };
-
+    m_refreshButton.onClick     = [this] { m_license.syncLicense(); };
     m_license.onLicenseReceived = [this] { update(); };
+
+    m_demoTabButton.triggerClick();
 
     update();
 }
 
-void LicensePanel::initialize()
+LicensePanel::~LicensePanel()
 {
-    m_actionTabs.clearTabs();
+    setLookAndFeel (nullptr);
+}
 
-    m_actionTabs.addTab (TRANS ("Demo"), juce::Colours::transparentBlack, new DemoTab (*this), true);
-    m_actionTabs.addTab (TRANS ("Activate"), juce::Colours::transparentBlack, new ActivationTab (*this), true);
+void LicensePanel::setTab (Tab currentTab)
+{
 
-    auto* offlineTab = new OfflineTab (*this);
-    offlineTab->m_offlineButton.setImages (m_offlineIcon.get());
+    switch (currentTab)
+    {
+        case Tab::Demo: m_currentTab = std::make_unique<DemoTab> (*this); break;
+        case Tab::Activation: m_currentTab = std::make_unique<ActivationTab> (*this); break;
+        case Tab::Offline: m_currentTab = std::make_unique<OfflineTab> (*this); break;
+        default: m_currentTab = std::make_unique<ActivationTab> (*this); break;
+    }
 
-    m_actionTabs.addTab (TRANS ("Offline"), juce::Colours::transparentBlack, offlineTab, true);
+    addAndMakeVisible (m_currentTab.get());
+    resized();
 }
 
 void LicensePanel::addLinkButton (std::unique_ptr<juce::Button>&& newButton)
@@ -347,7 +401,7 @@ void LicensePanel::paint (juce::Graphics& g)
 
 void LicensePanel::resized()
 {
-    auto bounds = getLocalBounds().reduced (kGrid);
+    auto bounds = getLocalBounds().reduced (30);
     if (!m_embedded)
     {
         m_title.setBounds (bounds.removeFromTop (kMaxRowHeight));
@@ -357,14 +411,21 @@ void LicensePanel::resized()
     m_title.setVisible (!m_embedded);
     m_copyright.setVisible (!m_embedded);
 
-    m_actionTabs.setBounds (bounds.removeFromTop (bounds.getHeight() / 2));
+    auto tabRow = bounds.removeFromTop (40);
+    auto button = tabRow.withWidth (tabRow.getWidth() / 3).reduced (30, 0);
+    m_demoTabButton.setBounds (button.withX (tabRow.getX() + 30));
+    m_activationTabButton.setBounds (button.withX (tabRow.getX() + 90 + button.getWidth()));
+    m_offlineTabButton.setBounds (button.withX (tabRow.getX() + 120 + 2 * button.getWidth()));
 
-    m_timestamp.setBounds (bounds.removeFromBottom (50).reduced (60, 10));
+    if (m_currentTab)
+        m_currentTab->setBounds (bounds.removeFromTop (bounds.getHeight() / 2));
+
+    m_timestamp.setBounds (bounds.removeFromBottom (40).reduced (60, 10));
     m_refreshButton.setBounds (m_timestamp.getRight() + 5, m_timestamp.getY(), m_timestamp.getHeight(), m_timestamp.getHeight());
 
     if (!m_linkButtons.empty())
     {
-        auto       linksArea = bounds.reduced (50);
+        auto       linksArea = bounds.reduced (50, 10);
         const auto w         = bounds.getWidth() / int (m_linkButtons.size());
         for (const auto& button: m_linkButtons)
             button->setBounds (linksArea.removeFromLeft (w).reduced (10));

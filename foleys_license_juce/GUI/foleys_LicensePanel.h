@@ -35,23 +35,31 @@ public:
     static constexpr auto kFontHeight      = 16.0f;
     static constexpr auto kTitleFontHeight = 24.0f;
 
+    juce::Colour backgroundColour { 0x00000000 };
+    juce::Colour textColour { 0xffc0c0c0 };
+    juce::Colour accentColour { 0xff6a5acd };
+    juce::Colour buttonColour { 0xffc0c0c0 };
+    juce::Colour buttonBackgroundColour { 0xff6a5acd };
+    juce::Colour editorBackgroundColour { 0xff708090 };
 
-    enum Button
+    enum class Tab
     {
-        Unknown = 0,
-        Close,
-        Refresh,
-        Manual,
-        UserPage,
-        ProductPage,
-        OfflineAuth
+        Demo = 0,
+        Activation,
+        Offline
+    };
+
+    struct TabButtonLookAndFeel : juce::LookAndFeel_V4
+    {
+        void drawButtonBackground (juce::Graphics&, juce::Button&, const juce::Colour& backgroundColour, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
     };
 
     explicit LicensePanel (bool embed = true);
+    ~LicensePanel() override;
 
     void addLinkButton (std::unique_ptr<juce::Button>&& newButton);
 
-    void initialize();
+    void setTab (Tab currentTab);
 
     void paint (juce::Graphics& g) override;
     void resized() override;
@@ -87,14 +95,18 @@ public:
     };
 
 private:
-    bool                  m_embedded = false;
-    foleys::License       m_license;
-    juce::TabbedComponent m_actionTabs { juce::TabbedButtonBar::TabsAtTop };
-    juce::Label           m_title;
-    juce::Label           m_status;
-    juce::DrawableButton  m_closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
-    juce::Label           m_copyright;
-    juce::Label           m_timestamp;
+    bool                             m_embedded = false;
+    foleys::License                  m_license;
+    std::unique_ptr<juce::Component> m_currentTab;
+    TabButtonLookAndFeel             m_tabButtonLookAndFeel;
+    juce::TextButton                 m_demoTabButton { TRANS ("Demo") };
+    juce::TextButton                 m_activationTabButton { TRANS ("Activation") };
+    juce::TextButton                 m_offlineTabButton { TRANS ("Offline") };
+    juce::Label                      m_title;
+    juce::Label                      m_status;
+    juce::DrawableButton             m_closeButton { "Close Panel", juce::DrawableButton::ButtonStyle::ImageFitted };
+    juce::Label                      m_copyright;
+    juce::Label                      m_timestamp;
 
     std::unique_ptr<juce::Component>           m_deactivationPanel;
     std::vector<std::unique_ptr<juce::Button>> m_linkButtons;

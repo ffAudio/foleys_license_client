@@ -39,8 +39,6 @@ void showLicensePanel (foleys::PopupHolder& popupHolder)
     licensePanel->m_offlineIcon = juce::DrawableComposite::createFromImageData(BinaryData::saveicon_svg, BinaryData::saveicon_svgSize);
     licensePanel->m_offlineIcon->replaceColour (juce::Colours::black, juce::Colours::silver);  // button colour
 
-    licensePanel->initialize();
-
     popupHolder.showPopup (std::move (licensePanel));
 }
 
