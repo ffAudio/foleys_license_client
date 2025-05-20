@@ -64,11 +64,13 @@ struct DemoTab : juce::Component
             {
                 m_demoStatus.setText (TRANS ("Start your free demo now for " + juce::String (m_license.demoDaysLeft()) + " days"), juce::sendNotification);
                 addButton (TRANS ("Start Demo"), [this] { m_license.startDemo(); });
+                addButton (TRANS ("Activate"), [this] { m_owner.setTab (LicensePanel::Tab::Activation); });
             }
             else  // demo expired
             {
                 m_demoStatus.setText (TRANS ("Your demo expired on " + juce::String (m_license.getDemoEndDate())), juce::sendNotification);
                 addButton (TRANS ("Buy a license"), [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); });
+                addButton (TRANS ("Activate"), [this] { m_owner.setTab (LicensePanel::Tab::Activation); });
             }
 
             resized();
@@ -180,7 +182,7 @@ struct ActivationTab : juce::Component
         auto line1  = bounds.removeFromTop (50).reduced (0, 10);
         m_serialEditor.setBounds (line1.removeFromLeft (bounds.getWidth() - 200));
         m_submit.setBounds (line1.withTrimmedLeft (10));
-        auto line2 = bounds.removeFromTop (50).reduced (0, 10);
+        auto line2 = bounds.removeFromTop (40).reduced (0, 5);
         m_status.setBounds (line2);
 
         juce::FlexBox fb;
@@ -188,7 +190,7 @@ struct ActivationTab : juce::Component
         fb.justifyContent = juce::FlexBox::JustifyContent::center;
         fb.alignContent   = juce::FlexBox::AlignContent::center;
         for (const auto& button: m_buttons)
-            fb.items.add (juce::FlexItem (*button).withMinWidth (100.0f).withMinHeight (26.0f).withMargin (10.0f));
+            fb.items.add (juce::FlexItem (*button).withMinWidth (130.0f).withMinHeight (26.0f).withMargin (std::min (10.0f, (bounds.getHeight() - 26.0f) / 2.0f)));
         fb.performLayout (bounds);
     }
 
@@ -226,8 +228,8 @@ struct OfflineTab : juce::Component
     void resized() override
     {
         auto bounds = getLocalBounds();
-        m_offlineButton.setBounds (bounds.removeFromBottom (getHeight() / 2).withSizeKeepingCentre (std::max (100, getHeight() / 2), getHeight() / 2));
-        m_status.setBounds (bounds.withSizeKeepingCentre (getWidth(), 50));
+        m_status.setBounds (bounds.removeFromTop (50).reduced (5));
+        m_offlineButton.setBounds (bounds.withSizeKeepingCentre (std::max (100, getHeight() / 2), getHeight() / 2));
     }
 
     LicensePanel&          m_owner;
@@ -400,17 +402,18 @@ void LicensePanel::filesDropped (const juce::StringArray& files, [[maybe_unused]
 
 void LicensePanel::paint (juce::Graphics& g)
 {
-    // if (onPaint)
-    //     onPaint (g);
-    // else
-    g.fillAll (juce::Colours::black.withAlpha (0.8f));
+    if (onPaint)
+        onPaint (g);
+    else
+        g.fillAll (juce::Colours::black.withAlpha (0.8f));
 }
 
 void LicensePanel::resized()
 {
-    auto bounds = getLocalBounds().reduced (30);
+    auto bounds = getLocalBounds().withTrimmedTop (25).reduced (30, 0);
     if (!m_embedded)
     {
+        bounds = getLocalBounds().reduced (30);
         m_title.setBounds (bounds.removeFromTop (kMaxRowHeight));
         m_copyright.setBounds (bounds.removeFromBottom (kMaxRowHeight).reduced (0, 5));
     }
@@ -420,32 +423,40 @@ void LicensePanel::resized()
 
     auto          tabRow = bounds.removeFromTop (40);
     juce::FlexBox tabFlex;
-    tabFlex.flexWrap       = juce::FlexBox::Wrap::wrap;
+    tabFlex.flexWrap       = juce::FlexBox::Wrap::noWrap;
     tabFlex.justifyContent = juce::FlexBox::JustifyContent::center;
     tabFlex.alignContent   = juce::FlexBox::AlignContent::center;
     for (const auto& tabButton: { &m_demoTabButton, &m_activationTabButton, &m_offlineTabButton })
         tabFlex.items.add (juce::FlexItem (*tabButton).withMinWidth (100.0f).withMinHeight (26.0f).withMargin (10.0f));
-    tabFlex.performLayout (bounds.reduced (50, 10));
-
-
-    auto button = tabRow.withWidth (tabRow.getWidth() / 3).reduced (30, 0);
-    m_demoTabButton.setBounds (button.withX (tabRow.getX() + 30));
-    m_activationTabButton.setBounds (button.withX (tabRow.getX() + 90 + button.getWidth()));
-    m_offlineTabButton.setBounds (button.withX (tabRow.getX() + 120 + 2 * button.getWidth()));
+    tabFlex.performLayout (tabRow);
 
     if (m_currentTab)
-        m_currentTab->setBounds (bounds.removeFromTop (bounds.getHeight() / 2));
+        m_currentTab->setBounds (bounds.removeFromTop (std::max (bounds.getHeight() / 2, 120)));
 
-    m_timestamp.setBounds (bounds.removeFromBottom (40).reduced (60, 10));
-    m_refreshButton.setBounds (m_timestamp.getRight() + 5, m_timestamp.getY(), m_timestamp.getHeight(), m_timestamp.getHeight());
+    m_timestamp.setBounds (bounds.removeFromBottom (30).reduced (60, 0).withTrimmedTop (5));
+    m_refreshButton.setBounds (m_timestamp.getBounds().withWidth (m_timestamp.getHeight()).withX (m_timestamp.getRight() + 5));
 
-    juce::FlexBox fb;
-    fb.flexWrap       = juce::FlexBox::Wrap::wrap;
-    fb.justifyContent = juce::FlexBox::JustifyContent::center;
-    fb.alignContent   = juce::FlexBox::AlignContent::center;
-    for (const auto& linkButton: m_linkButtons)
-        fb.items.add (juce::FlexItem (*linkButton).withMinWidth (100.0f).withMinHeight (100.0f).withMargin (10.0f));
-    fb.performLayout (bounds.reduced (50, 10));
+    const auto linkButtonHeight =
+      static_cast<float> (m_currentTab ? (m_timestamp.getY() - m_currentTab->getBottom()) - 5 : (m_timestamp.getY() - tabRow.getBottom()) - 5);
+
+    if (linkButtonHeight > 60)
+    {
+        juce::FlexBox fb;
+        fb.flexWrap       = juce::FlexBox::Wrap::noWrap;
+        fb.justifyContent = juce::FlexBox::JustifyContent::center;
+        fb.alignContent   = juce::FlexBox::AlignContent::center;
+        for (const auto& linkButton: m_linkButtons)
+        {
+            linkButton->setVisible (true);
+            fb.items.add (juce::FlexItem (*linkButton).withMinWidth (100.0f).withMinHeight (bounds.getHeight()).withMargin (10.0f));
+        }
+        fb.performLayout (bounds);
+    }
+    else
+    {
+        for (const auto& linkButton: m_linkButtons)
+            linkButton->setVisible (false);
+    }
 }
 
 }  // namespace foleys
