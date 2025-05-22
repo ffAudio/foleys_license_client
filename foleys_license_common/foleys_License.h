@@ -32,18 +32,18 @@ public:
     License();
     ~License();
 
-    enum State
-    {
-        Unknown = 0,
-        Error,
-        DemoExpired,
-        Expired,
-        DemoAvailable,
-        DemoRunning,
-        ActivationsUsed,
-        ActivationsAvailable,
-        Activated
-    };
+    //enum State
+    //{
+    //    Unknown = 0,
+    //    Error,
+    //    DemoExpired,
+    //    Expired,
+    //    DemoAvailable,
+    //    DemoRunning,
+    //    ActivationsUsed,
+    //    ActivationsAvailable,
+    //    Activated
+    //};
 
     /**
      * Check if a popup should be shown.
@@ -199,12 +199,6 @@ public:
      * @return the raw data received from the server
      */
     std::string getRawLicenseData() const;
-
-
-    /**
-     * @return a state describing the current license state
-     */
-    [[nodiscard]] State getState() const;
 
 private:
     void syncPimpl();

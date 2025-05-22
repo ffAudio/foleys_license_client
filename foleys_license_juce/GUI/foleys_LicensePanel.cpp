@@ -450,7 +450,7 @@ void LicensePanel::resized()
         for (const auto& linkButton: m_linkButtons)
         {
             linkButton->setVisible (true);
-            fb.items.add (juce::FlexItem (*linkButton).withMinWidth (100.0f).withMinHeight (bounds.getHeight()).withMargin (10.0f));
+            fb.items.add (juce::FlexItem (*linkButton).withMinWidth (100.0f).withMinHeight (static_cast<float>(bounds.getHeight())).withMargin (10.0f));
         }
         fb.performLayout (bounds);
     }
