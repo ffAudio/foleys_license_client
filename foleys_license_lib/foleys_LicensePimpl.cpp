@@ -94,8 +94,8 @@ struct License::Pimpl : public LicenseUpdater::Observer
             demoDays      = json[LicenseID::demo_days];
             if (json.contains (LicenseID::demo_ends))
             {
-                auto ends          = Helpers::decodeDateTime (json[LicenseID::demo_ends], "%Y-%m-%d");
-                auto localDemoDays = static_cast<int> (1 + difftime (ends, std::time (nullptr)) / (24 * 3600));
+                demoEndDate        = Helpers::decodeDateTime (json[LicenseID::demo_ends], "%Y-%m-%d");
+                auto localDemoDays = static_cast<int> (1 + difftime (*demoEndDate, std::time (nullptr)) / (24 * 3600));
                 demoDays           = std::min (demoDays.load(), localDemoDays);
             }
         }
@@ -122,7 +122,7 @@ struct License::Pimpl : public LicenseUpdater::Observer
     std::mutex                   processLock;
     std::string                  licenseHardware;
     std::string                  email;
-    std::string                  demoEndDate;
+    std::optional<std::time_t>   demoEndDate;
     std::atomic<bool>            activatedFlag = false;
     std::atomic<bool>            demoAvailable = false;
     std::atomic<bool>            allowedFlag   = false;
