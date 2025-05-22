@@ -150,7 +150,7 @@ public:
     /**
      * @return the end date of the demo for display. Empty string if demo was never started.
      */
-    [[nodiscard]] std::string getDemoEndDate() const;
+    [[nodiscard]] std::optional<std::time_t> getDemoEndDate() const;
 
     /**
      * Send a demo request to the server

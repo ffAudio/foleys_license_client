@@ -130,7 +130,7 @@ void License::startDemo()
     pimpl->fetchLicenseData (LicenseID::demo);
 }
 
-std::string License::getDemoEndDate() const
+std::optional<std::time_t> License::getDemoEndDate() const
 {
     return pimpl->demoEndDate;
 }
