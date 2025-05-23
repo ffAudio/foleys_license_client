@@ -160,33 +160,6 @@ std::string License::getRawLicenseData() const
     return pimpl->getRawLicenseData();
 }
 
-
-License::State License::getState() const
-{
-    if (activatedFlag.load())
-        return State::Activated;
-
-    const auto activationsAvailable = getActivations();
-    if (!activationsAvailable.empty())
-        return State::ActivationsAvailable;
-
-    if (demoDays.load() > 0)
-    {
-        if (!demoAvailable.load())
-            return State::DemoRunning;
-
-        return State::DemoAvailable;
-    }
-
-    if (isExpired())
-        return State::Expired;
-
-    if (demoDays.load() <= 0)
-        return State::DemoExpired;
-
-    return State::Error;
-}
-
 void License::syncPimpl()
 {
     activatedFlag = pimpl->activatedFlag.load();
