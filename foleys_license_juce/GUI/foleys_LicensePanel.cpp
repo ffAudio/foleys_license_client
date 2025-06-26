@@ -56,8 +56,16 @@ struct DemoTab : juce::Component
             }
             else if (m_license.isDemo())
             {
-                auto date = juce::String (Helpers::formatDateTime (*m_license.getDemoEndDate(), "%d. %m. %Y %H:%M")) + " UTC";
-                m_demoStatus.setText (TRANS ("Your demo will expire on ") + date, juce::sendNotification);
+                if (m_license.getDemoEndDate())
+                {
+                    auto date = juce::String (Helpers::formatDateTime (*m_license.getDemoEndDate(), "%d. %m. %Y %H:%M")) + " UTC";
+                    m_demoStatus.setText (TRANS ("Your demo will expire on ") + date, juce::sendNotification);
+                }
+                else
+                {
+                    jassertfalse;
+                    m_demoStatus.setText (TRANS ("Your demo will never expire"), juce::sendNotification);
+                }
                 addButton (TRANS ("Continue"), [this] { m_owner.requestClose(); });
                 addButton (TRANS ("Buy a license"), [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); });
             }
@@ -69,8 +77,15 @@ struct DemoTab : juce::Component
             }
             else  // demo expired
             {
-                auto date = juce::String (Helpers::formatDateTime (*m_license.getDemoEndDate(), "%d. %m. %Y %H:%M")) + " UTC";
-                m_demoStatus.setText (TRANS ("Your demo expired on " + date), juce::sendNotification);
+                if (m_license.getDemoEndDate())
+                {
+                    auto date = juce::String (Helpers::formatDateTime (*m_license.getDemoEndDate(), "%d. %m. %Y %H:%M")) + " UTC";
+                    m_demoStatus.setText (TRANS ("Your demo expired on " + date), juce::sendNotification);
+                }
+                else
+                {
+                    m_demoStatus.setText (TRANS ("This product has no demo"), juce::sendNotification);
+                }
                 addButton (TRANS ("Buy a license"), [] { juce::URL (LicenseData::buyUrl).launchInDefaultBrowser(); });
                 addButton (TRANS ("Activate"), [this] { m_owner.setTab (LicensePanel::Tab::Activation); });
             }
