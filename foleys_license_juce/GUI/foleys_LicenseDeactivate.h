@@ -19,8 +19,10 @@ class LicenseDeactivate
   , private juce::ListBoxModel
 {
 public:
-    LicenseDeactivate();
+    explicit LicenseDeactivate (std::string_view serialToUse);
     ~LicenseDeactivate() override;
+
+    void deactivate (size_t activationIdToDelete);
 
     void resized() override;
     void paint (juce::Graphics& g) override;
@@ -36,12 +38,12 @@ public:
 
     foleys::License license;
 
-    std::function<void (size_t deactivate)> onDeactivate;
-
 private:
-    std::vector<foleys::Activation> activations;
-    juce::ListBox                   deactivations;
-    juce::TextButton                closeButton { "Close" };
+    std::string                             serial;
+    std::vector<foleys::Activation>         activations;
+    juce::ListBox                           deactivations;
+    std::function<void (size_t deactivate)> onDeactivate;
+    juce::TextButton                        closeButton { "Close" };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LicenseDeactivate)
 };

@@ -187,6 +187,9 @@ struct ActivationTab : juce::Component
             if (!m_license.getLastErrorString().empty())
                 m_status.setText (m_license.getLastErrorString(), juce::sendNotification);
 
+            if (!m_license.isActivated() && m_license.lastActionWasActivate() && !m_license.getActivations().empty())
+                m_owner.showDeactivatePanel (m_serialEditor.getText());
+
             resized();
         };
 
@@ -396,6 +399,15 @@ void LicensePanel::requestClose()
         onCloseRequest();
 }
 
+void LicensePanel::showDeactivatePanel (const juce::String& serial)
+{
+    auto panel = std::make_unique<LicenseDeactivate> (serial.toStdString());
+    panel->setCloseFunction ([this] { m_deactivationPanel.reset(); });
+    addAndMakeVisible (panel.get());
+    m_deactivationPanel = std::move (panel);
+    resized();
+}
+
 bool LicensePanel::isInterestedInFileDrag (const juce::StringArray& files)
 {
     if (files.size() != 1)
@@ -473,6 +485,12 @@ void LicensePanel::resized()
     {
         for (const auto& linkButton: m_linkButtons)
             linkButton->setVisible (false);
+    }
+
+    if (m_deactivationPanel)
+    {
+        m_deactivationPanel->setBounds (getLocalBounds());
+        m_deactivationPanel->toFront (true);
     }
 }
 

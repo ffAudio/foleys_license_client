@@ -57,7 +57,6 @@ struct License::Pimpl : public juce::ChangeListener
 
     [[nodiscard]] std::string getLastErrorString() const { return updater->getLastErrorString(); }
 
-
     [[nodiscard]] std::vector<Activation> getActivations() const
     {
         auto text = updater->getLicenseText();
@@ -107,10 +106,18 @@ struct License::Pimpl : public juce::ChangeListener
 
             licenseHardware = object->getProperty (LicenseID::hardware).toString().toStdString();
 
+
+            if (object->hasProperty (LicenseID::action))
+                lastActionWasActivate = object->getProperty(LicenseID::action).toString().equalsIgnoreCase(LicenseID::activate);
+            else
+                lastActionWasActivate = false;
+
+
             if (object->hasProperty (LicenseID::license_expires))
                 expiryDate = Helpers::decodeDateTime (object->getProperty (LicenseID::license_expires).toString().toStdString(), "%Y-%m-%d");
             else
                 expiryDate = std::nullopt;
+
 
             if (object->hasProperty (LicenseID::demo_available))
             {
@@ -156,9 +163,10 @@ struct License::Pimpl : public juce::ChangeListener
     std::optional<std::time_t>                              demoEndDate;
     std::optional<std::time_t>                              expiryDate;
     std::optional<std::time_t>                              checked;
-    std::atomic<bool>                                       activatedFlag = false;
-    std::atomic<bool>                                       demoAvailable = false;
-    std::atomic<int>                                        demoDays      = 0;
+    std::atomic<bool>                                       activatedFlag         = false;
+    std::atomic<bool>                                       demoAvailable         = false;
+    std::atomic<int>                                        demoDays              = 0;
+    std::atomic<bool>                                       lastActionWasActivate = false;
 
     Pimpl (const Pimpl&)            = delete;
     Pimpl (const Pimpl&&)           = delete;

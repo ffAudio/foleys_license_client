@@ -65,11 +65,12 @@ enum class Status
 {
     // Make sure to keep synchronised with the server!
     Unchecked        = 0,  //< Initial state
-    Activated        = 1,  //< Activated and can be run
-    NotActivated     = 2,  //< But can be activated
-    Expired          = 3,  //< License expired
-    Deactivated      = 4,  //< License was manually deactivated
-    NoActivationLeft = 5,  //< tried to activate but no activations left
+    DoesNotExist     = 1,
+    Activated        = 2,  //< Activated and can be run
+    NotActivated     = 3,  //< But can be activated
+    Expired          = 4,  //< License expired
+    Deactivated      = 5,  //< License was manually deactivated
+    NoActivationLeft = 6,  //< tried to activate but no activations left
 };
 
 }  // namespace foleys::LicenseDefines
