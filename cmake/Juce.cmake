@@ -15,7 +15,7 @@ option(JUCE_BUILD_EXAMPLES "Build JUCE Examples" OFF)
 
 FetchContent_Declare(juce
         GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
-        GIT_TAG 7.0.12
+#        GIT_TAG 7.0.12
         GIT_SHALLOW ON)
 
 FetchContent_MakeAvailable(juce)

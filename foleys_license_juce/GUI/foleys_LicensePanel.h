@@ -73,6 +73,8 @@ public:
 
     void filesDropped (const juce::StringArray& files, int x, int y) override;
 
+    void showDeactivatePanel (const juce::String& serial);
+
     void requestClose();
 
     /**

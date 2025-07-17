@@ -83,6 +83,11 @@ struct License::Pimpl : public LicenseUpdater::Observer
 
         licenseHardware = json[LicenseID::hardware];
 
+        if (json.contains (LicenseID::action))
+            lastActionWasActivate = json[LicenseID::activate] == LicenseID::activate;
+        else
+            lastActionWasActivate = false;
+
         if (json.contains (LicenseID::license_expires))
             expiryDate = Helpers::decodeDateTime (json[LicenseID::license_expires], "%Y-%m-%d");
         else
@@ -123,10 +128,11 @@ struct License::Pimpl : public LicenseUpdater::Observer
     std::string                  licenseHardware;
     std::string                  email;
     std::optional<std::time_t>   demoEndDate;
-    std::atomic<bool>            activatedFlag = false;
-    std::atomic<bool>            demoAvailable = false;
-    std::atomic<bool>            allowedFlag   = false;
-    std::atomic<int>             demoDays      = 0;
+    std::atomic<bool>            activatedFlag         = false;
+    std::atomic<bool>            demoAvailable         = false;
+    std::atomic<bool>            allowedFlag           = false;
+    std::atomic<int>             demoDays              = 0;
+    std::atomic<bool>            lastActionWasActivate = false;
     std::optional<std::time_t>   expiryDate;
     std::optional<std::time_t>   checked;
 

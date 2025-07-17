@@ -7,7 +7,7 @@
 namespace foleys
 {
 
-LicenseDeactivate::LicenseDeactivate()
+LicenseDeactivate::LicenseDeactivate (std::string_view serialToUse) : serial (serialToUse)
 {
     activations = license.getActivations();
     deactivations.setRowHeight (48);
@@ -15,11 +15,23 @@ LicenseDeactivate::LicenseDeactivate()
     deactivations.setColour (juce::ListBox::backgroundColourId, juce::Colours::black);
     addAndMakeVisible (deactivations);
     addAndMakeVisible (closeButton);
+
+    license.onLicenseReceived = [this]
+    {
+        activations = license.getActivations();
+        deactivations.updateContent();
+        deactivations.repaint();
+    };
 }
 
 LicenseDeactivate::~LicenseDeactivate()
 {
     deactivations.setModel (nullptr);
+}
+
+void LicenseDeactivate::deactivate (size_t activationIdToDelete)
+{
+    license.deactivate (activationIdToDelete, { { LicenseID::serial, serial } });
 }
 
 void LicenseDeactivate::resized()
@@ -51,11 +63,7 @@ public:
     void setActivation (const foleys::Activation& activationToUse)
     {
         activation         = activationToUse;
-        deactivate.onClick = [this]
-        {
-            if (owner.onDeactivate)
-                owner.onDeactivate (activation.index);
-        };
+        deactivate.onClick = [this] { owner.deactivate (activation.index); };
     }
 
     void paint (juce::Graphics& g) override
@@ -80,7 +88,11 @@ juce::Component* LicenseDeactivate::refreshComponentForRow (int rowNumber, [[may
 {
     if (auto* comp = dynamic_cast<DeactivateItem*> (existingComponentToUpdate))
     {
-        comp->setActivation (activations[size_t (rowNumber)]);
+        if (juce::isPositiveAndBelow (rowNumber, activations.size()))
+            comp->setActivation (activations[size_t (rowNumber)]);
+        else
+            comp->setActivation ({});
+
         return comp;
     }
 
@@ -88,7 +100,11 @@ juce::Component* LicenseDeactivate::refreshComponentForRow (int rowNumber, [[may
         delete (existingComponentToUpdate);
 
     auto* comp = new DeactivateItem (*this);
-    comp->setActivation (activations[size_t (rowNumber)]);
+    if (juce::isPositiveAndBelow (rowNumber, activations.size()))
+        comp->setActivation (activations[size_t (rowNumber)]);
+    else
+        comp->setActivation ({});
+
     return comp;
 }
 

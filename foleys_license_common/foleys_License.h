@@ -103,6 +103,11 @@ public:
     std::optional<std::time_t> lastChecked() const;
 
     /**
+     * @return true if the last request was activate
+     */
+    bool lastActionWasActivate() const;
+
+    /**
      * When activated this can be used to display the licensee
      * @return the email the license is licensed to
      */
@@ -120,10 +125,10 @@ public:
     void activate (const std::vector<std::pair<std::string, std::string>>& data);
 
     /**
-     * Deactivate this machine using the hardware UID
+     * Deactivate another machine using the activation ID
      * @param data is a name/value set to add to the request payload.
      */
-    void deactivate (const std::vector<std::pair<std::string, std::string>>& data = {});
+    void deactivate (size_t otherID, const std::vector<std::pair<std::string, std::string>>& data = {});
 
     /**
      * In case of a failed activation, this contains existing activations for deactivation

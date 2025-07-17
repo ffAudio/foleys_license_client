@@ -78,6 +78,12 @@ std::optional<std::time_t> License::lastChecked() const
     return pimpl->checked;
 }
 
+bool License::lastActionWasActivate() const
+{
+    return pimpl->lastActionWasActivate;
+}
+
+
 void License::licenseChanged()
 {
     syncPimpl();
@@ -100,9 +106,11 @@ void License::activate (const std::vector<std::pair<std::string, std::string>>& 
     pimpl->fetchLicenseData (LicenseID::activate, data);
 }
 
-void License::deactivate (const std::vector<std::pair<std::string, std::string>>& data)
+void License::deactivate (size_t otherID, const std::vector<std::pair<std::string, std::string>>& data)
 {
-    pimpl->fetchLicenseData (LicenseID::deactivate, data);
+    auto additionalData = data;
+    additionalData.emplace_back (LicenseID::deactivate, std::to_string (otherID));
+    pimpl->fetchLicenseData (LicenseID::activate, additionalData);
 }
 
 std::vector<Activation> License::getActivations() const
