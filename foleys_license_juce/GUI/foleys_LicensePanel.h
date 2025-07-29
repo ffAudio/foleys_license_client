@@ -75,6 +75,8 @@ public:
 
     void showDeactivatePanel (const juce::String& serial);
 
+    void closeDeactivationPanel();
+
     void requestClose();
 
     /**

@@ -172,7 +172,7 @@ struct ActivationTab : juce::Component
                 }
                 else
                 {
-                    m_status.setText ("Licensed to ", juce::sendNotification);
+                    m_status.setText ("Licensed", juce::sendNotification);
                     addButton (TRANS ("Close"), [this] { m_owner.requestClose(); });
                 }
             }
@@ -189,6 +189,8 @@ struct ActivationTab : juce::Component
 
             if (!m_license.isActivated() && m_license.lastActionWasActivate() && !m_license.getActivations().empty())
                 m_owner.showDeactivatePanel (m_serialEditor.getText());
+            else
+                m_owner.closeDeactivationPanel();
 
             resized();
         };
@@ -407,6 +409,12 @@ void LicensePanel::showDeactivatePanel (const juce::String& serial)
     m_deactivationPanel = std::move (panel);
     resized();
 }
+
+void LicensePanel::closeDeactivationPanel()
+{
+    m_deactivationPanel.reset();
+}
+
 
 bool LicensePanel::isInterestedInFileDrag (const juce::StringArray& files)
 {
