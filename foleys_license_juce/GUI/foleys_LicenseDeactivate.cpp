@@ -31,7 +31,9 @@ LicenseDeactivate::~LicenseDeactivate()
 
 void LicenseDeactivate::deactivate (size_t activationIdToDelete)
 {
-    license.deactivate (activationIdToDelete, { { LicenseID::serial, serial } });
+    license.deactivate (activationIdToDelete, { { LicenseID::computer, juce::SystemStats::getComputerName().toRawUTF8() },
+                                                { LicenseID::user, juce::SystemStats::getFullUserName().toRawUTF8() },
+                                                { LicenseID::serial, serial } });
 }
 
 void LicenseDeactivate::resized()
