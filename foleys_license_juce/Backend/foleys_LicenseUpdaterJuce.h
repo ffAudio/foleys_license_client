@@ -28,7 +28,7 @@ public:
      * @param hwUID a unique hardware uid of the machine trying to authenticate
      * @param data an associative array of data you want to include in all requests
      */
-    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
+    void setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
 
     /**
      * Process the license data for the updater

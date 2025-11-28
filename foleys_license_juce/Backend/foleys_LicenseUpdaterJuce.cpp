@@ -32,9 +32,9 @@ LicenseUpdaterJuce::~LicenseUpdaterJuce()
     masterReference.clear();
 }
 
-void LicenseUpdaterJuce::setupLicenseData (const std::string& licenseFileName, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> dataToUse)
+void LicenseUpdaterJuce::setupLicenseData (const FF_PATH& file, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> dataToUse)
 {
-    licenseFile = juce::File (licenseFileName.data());
+    licenseFile = file;
     hardwareUid = hwUID.data();
     data        = dataToUse;
 }
@@ -140,7 +140,10 @@ void LicenseUpdaterJuce::finished (juce::URL::DownloadTask* task, bool success)
             if (setServerResponse (plain))
             {
                 const juce::ScopedLock lock (licenseFileLock);
-                task->getTargetLocation().moveFileTo (licenseFile);
+                if (task->getTargetLocation().moveFileTo (licenseFile))
+                    juce::Logger::writeToLog ("License saved to: " + licenseFile.getFullPathName());
+                else
+                    juce::Logger::writeToLog ("License saving failed: " + licenseFile.getFullPathName());
             }
         }
         else

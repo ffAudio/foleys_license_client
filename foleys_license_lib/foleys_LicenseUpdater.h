@@ -89,7 +89,7 @@ public:
      */
     void removeObserver (Observer* observer);
 
-    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
+    void setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
 
     [[nodiscard]] std::string getLicenseText();
 
@@ -113,9 +113,9 @@ public:
 private:
     void sendUpdateSignal();
 
-    std::mutex  storageMutex;
-    std::string hardwareUid;
-    std::string localStorage;
+    std::mutex            storageMutex;
+    std::string           hardwareUid;
+    std::filesystem::path localStorage;
 
     std::vector<std::pair<std::string, std::string>> defaultData;
     LicenseDefines::Error                            lastError = LicenseDefines::Error::NoError;

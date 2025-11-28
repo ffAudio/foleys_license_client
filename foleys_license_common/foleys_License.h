@@ -179,7 +179,7 @@ public:
      * @param hwUID the hardware UID of the running system
      * @param data a string pair vector of data to send with every payload
      */
-    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data = {});
+    void setupLicenseData (const FF_PATH & licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data = {});
 
     /**
      * Try to set the content of a license file and store it on success

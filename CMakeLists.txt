@@ -21,7 +21,11 @@ if (NOT DEFINED CMAKE_OSX_ARCHITECTURES)
 endif ()
 
 if (NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
+    if (FOLEYS_LICENSING_HAS_JUCE)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
+    else ()
+        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.15)
+    endif ()
 endif ()
 
 # various examples
@@ -59,7 +63,7 @@ if (FOLEYS_LICENSING_HAS_JUCE)
         target_link_directories(foleys_license_juce INTERFACE "${CMAKE_CURRENT_LIST_DIR}/foleys_license_common/libsodium/msvc-143")
     endif ()
 
-else()
+else ()
     # Don't use JUCE functions
     add_subdirectory(foleys_license_lib)
 

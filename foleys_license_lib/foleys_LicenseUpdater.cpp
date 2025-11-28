@@ -34,7 +34,7 @@ LicenseUpdater::LicenseUpdater()
     fetchIfNecessary();
 }
 
-void LicenseUpdater::setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+void LicenseUpdater::setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
 {
     localStorage = licenseFile;
     hardwareUid  = hwUID;

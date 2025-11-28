@@ -47,6 +47,14 @@ private:                                             \
 
 #include <string>
 
+#if FOLEYS_LICENSING_HAS_JUCE
+#include <juce_core/juce_core.h>
+using FF_PATH=juce::File;
+#else
+#include <filesystem>
+using FF_PATH=std::filesystem::path;
+#endif
+
 namespace foleys::LicenseDefines
 {
 

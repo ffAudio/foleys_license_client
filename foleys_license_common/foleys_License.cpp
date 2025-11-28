@@ -31,7 +31,7 @@ License::License()
 
 License::~License() = default;
 
-void License::setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+void License::setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
 {
     pimpl->setupLicenseData (licenseFile, hwUID, data);
     syncPimpl();

@@ -22,7 +22,7 @@ struct License::Pimpl : public juce::ChangeListener
 
     ~Pimpl() override { updater->removeChangeListener (this); }
 
-    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+    void setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
     {
         updater->setupLicenseData (licenseFile, hwUID, data);
     }
