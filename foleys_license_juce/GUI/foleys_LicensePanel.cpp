@@ -403,7 +403,7 @@ void LicensePanel::requestClose()
 
 void LicensePanel::showDeactivatePanel (const juce::String& serial)
 {
-    auto panel = std::make_unique<LicenseDeactivate> (serial.toStdString());
+    auto panel = std::make_unique<LicenseDeactivate> (serial.toRawUTF8());
     panel->setCloseFunction ([this] { m_deactivationPanel.reset(); });
     addAndMakeVisible (panel.get());
     m_deactivationPanel = std::move (panel);
@@ -430,7 +430,7 @@ void LicensePanel::filesDropped (const juce::StringArray& files, [[maybe_unused]
 {
     auto file = juce::File (files.getReference (0));
 
-    if (m_license.setOfflineLicenseData (file.loadFileAsString().toStdString()))
+    if (m_license.setOfflineLicenseData (file.loadFileAsString().toRawUTF8()))
     {
         if (onLicenseChanged)
             onLicenseChanged (m_license);
