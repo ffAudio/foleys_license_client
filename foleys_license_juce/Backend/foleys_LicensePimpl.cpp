@@ -22,7 +22,7 @@ struct License::Pimpl : public juce::ChangeListener
 
     ~Pimpl() override { updater->removeChangeListener (this); }
 
-    void setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+    void setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> data)
     {
         updater->setupLicenseData (licenseFile, hwUID, data);
     }
@@ -36,7 +36,7 @@ struct License::Pimpl : public juce::ChangeListener
 
     [[nodiscard]] std::string getLicenseeEmail() const { return email; }
 
-    void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, std::string>>& data = {})
+    void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, FF_STRING>>& data = {})
     {
         updater->fetchLicenseData (action, data);
     }
@@ -72,8 +72,8 @@ struct License::Pimpl : public juce::ChangeListener
                     for (const auto& item: *array)
                     {
                         Activation activation { static_cast<size_t> (int (item.getProperty (LicenseID::id, 0))),
-                                                item.getProperty (LicenseID::computer, "").toString().toRawUTF8(),
-                                                item.getProperty (LicenseID::user, "").toString().toRawUTF8() };
+                                                item.getProperty (LicenseID::computer, "").toString(),
+                                                item.getProperty (LicenseID::user, "").toString() };
                         acts.push_back (activation);
                     }
                     return acts;

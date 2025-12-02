@@ -31,7 +31,7 @@ License::License()
 
 License::~License() = default;
 
-void License::setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+void License::setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> data)
 {
     pimpl->setupLicenseData (licenseFile, hwUID, data);
     syncPimpl();
@@ -101,12 +101,12 @@ void License::sendLoginEmail (const std::string& email)
     pimpl->fetchLicenseData (LicenseID::login, { { "login_email", email } });
 }
 
-void License::activate (const std::vector<std::pair<std::string, std::string>>& data)
+void License::activate (const std::vector<std::pair<std::string, FF_STRING>>& data)
 {
     pimpl->fetchLicenseData (LicenseID::activate, data);
 }
 
-void License::deactivate (size_t otherID, const std::vector<std::pair<std::string, std::string>>& data)
+void License::deactivate (size_t otherID, const std::vector<std::pair<std::string, FF_STRING>>& data)
 {
     auto additionalData = data;
     additionalData.emplace_back (LicenseID::deactivate, std::to_string (otherID));

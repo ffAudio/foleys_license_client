@@ -133,9 +133,9 @@ struct ActivationTab : juce::Component
             if (m_serialEditor.isEmpty())
                 return;
 
-            std::vector<std::pair<std::string, std::string>> data = { { LicenseID::computer, juce::SystemStats::getComputerName().toRawUTF8() },
-                                                                      { LicenseID::user, juce::SystemStats::getFullUserName().toRawUTF8() },
-                                                                      { LicenseID::serial, m_serialEditor.getText().toRawUTF8() } };
+            std::vector<std::pair<std::string, FF_STRING>> data = { { LicenseID::computer, juce::SystemStats::getComputerName() },
+                                                                      { LicenseID::user, juce::SystemStats::getFullUserName() },
+                                                                      { LicenseID::serial, m_serialEditor.getText() } };
 
             m_license.activate (data);
         };

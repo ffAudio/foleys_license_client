@@ -32,7 +32,7 @@ LicenseUpdaterJuce::~LicenseUpdaterJuce()
     masterReference.clear();
 }
 
-void LicenseUpdaterJuce::setupLicenseData (const FF_PATH& file, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> dataToUse)
+void LicenseUpdaterJuce::setupLicenseData (const FF_PATH& file, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> dataToUse)
 {
     licenseFile = file;
     hardwareUid = hwUID.data();
@@ -97,13 +97,13 @@ void LicenseUpdaterJuce::fetchIfNecessary (int hours)
         object->setProperty (LicenseID::user, juce::SystemStats::getFullUserName());
 
         for (const auto& item: data)
-            object->setProperty (item.first.data(), item.second.data());
+            object->setProperty (item.first.data(), item.second);
     }
 
     return juce::JSON::toString (json).toRawUTF8();
 }
 
-void LicenseUpdaterJuce::fetchLicenseData (std::string_view action, const std::vector<std::pair<std::string, std::string>>& additionalData)
+void LicenseUpdaterJuce::fetchLicenseData (std::string_view action, const std::vector<std::pair<std::string, FF_STRING>>& additionalData)
 {
     juce::var json (new juce::DynamicObject);
     if (auto* object = json.getDynamicObject())
@@ -112,10 +112,10 @@ void LicenseUpdaterJuce::fetchLicenseData (std::string_view action, const std::v
         object->setProperty (LicenseID::product, LicenseData::productUid);
 
         for (const auto& item: data)
-            object->setProperty (item.first.data(), item.second.data());
+            object->setProperty (item.first.data(), item.second);
 
         for (const auto& item: additionalData)
-            object->setProperty (item.first.data(), item.second.data());
+            object->setProperty (item.first.data(), item.second);
     }
 
     auto      payload = juce::JSON::toString (json);
