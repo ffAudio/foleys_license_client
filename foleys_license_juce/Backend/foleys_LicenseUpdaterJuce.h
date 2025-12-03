@@ -28,7 +28,7 @@ public:
      * @param hwUID a unique hardware uid of the machine trying to authenticate
      * @param data an associative array of data you want to include in all requests
      */
-    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
+    void setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> data);
 
     /**
      * Process the license data for the updater
@@ -67,7 +67,7 @@ public:
      * Tries to get new license data from the server.
      * @param action an optional action. Allowed values: 'demo' or 'activate'. Anything else just gets the status
      */
-    void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, std::string>>& data = {});
+    void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, FF_STRING>>& data = {});
 
     /**
      * Callback from the license download
@@ -105,12 +105,12 @@ private:
     using Ptr = juce::SharedResourcePointer<LicenseUpdaterJuce>;
     JUCE_DECLARE_WEAK_REFERENCEABLE (LicenseUpdaterJuce)
 
-    std::unique_ptr<juce::URL::DownloadTask>         downloadTask;
-    juce::File                                       licenseFile;
-    juce::CriticalSection                            licenseFileLock;
-    juce::TemporaryFile                              tempFile;
-    juce::String                                     hardwareUid;
-    std::vector<std::pair<std::string, std::string>> data;
+    std::unique_ptr<juce::URL::DownloadTask>       downloadTask;
+    juce::File                                     licenseFile;
+    juce::CriticalSection                          licenseFileLock;
+    juce::TemporaryFile                            tempFile;
+    juce::String                                   hardwareUid;
+    std::vector<std::pair<std::string, FF_STRING>> data;
 
     LicenseDefines::Error lastError = LicenseDefines::Error::NoError;
     std::string           lastErrorString;

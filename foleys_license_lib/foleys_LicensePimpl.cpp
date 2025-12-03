@@ -25,7 +25,7 @@ struct License::Pimpl : public LicenseUpdater::Observer
 
     ~Pimpl() override { updater->removeObserver (this); }
 
-    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+    void setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> data)
     {
         updater->setupLicenseData (licenseFile, hwUID, data);
     }

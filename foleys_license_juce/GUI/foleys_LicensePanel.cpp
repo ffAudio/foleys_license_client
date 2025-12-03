@@ -133,9 +133,9 @@ struct ActivationTab : juce::Component
             if (m_serialEditor.isEmpty())
                 return;
 
-            std::vector<std::pair<std::string, std::string>> data = { { LicenseID::computer, juce::SystemStats::getComputerName().toRawUTF8() },
-                                                                      { LicenseID::user, juce::SystemStats::getFullUserName().toRawUTF8() },
-                                                                      { LicenseID::serial, m_serialEditor.getText().toRawUTF8() } };
+            std::vector<std::pair<std::string, FF_STRING>> data = { { LicenseID::computer, juce::SystemStats::getComputerName() },
+                                                                      { LicenseID::user, juce::SystemStats::getFullUserName() },
+                                                                      { LicenseID::serial, m_serialEditor.getText() } };
 
             m_license.activate (data);
         };
@@ -403,7 +403,7 @@ void LicensePanel::requestClose()
 
 void LicensePanel::showDeactivatePanel (const juce::String& serial)
 {
-    auto panel = std::make_unique<LicenseDeactivate> (serial.toStdString());
+    auto panel = std::make_unique<LicenseDeactivate> (serial.toRawUTF8());
     panel->setCloseFunction ([this] { m_deactivationPanel.reset(); });
     addAndMakeVisible (panel.get());
     m_deactivationPanel = std::move (panel);
@@ -430,7 +430,7 @@ void LicensePanel::filesDropped (const juce::StringArray& files, [[maybe_unused]
 {
     auto file = juce::File (files.getReference (0));
 
-    if (m_license.setOfflineLicenseData (file.loadFileAsString().toStdString()))
+    if (m_license.setOfflineLicenseData (file.loadFileAsString().toRawUTF8()))
     {
         if (onLicenseChanged)
             onLicenseChanged (m_license);

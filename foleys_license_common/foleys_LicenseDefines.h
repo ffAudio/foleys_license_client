@@ -47,6 +47,17 @@ private:                                             \
 
 #include <string>
 
+#if FOLEYS_LICENSING_HAS_JUCE
+#include <juce_core/juce_core.h>
+using FF_PATH=juce::File;
+using FF_STRING=juce::String;
+#else
+#include <filesystem>
+#include <string>
+using FF_PATH=std::filesystem::path;
+using FF_STRING=std::string;
+#endif
+
 namespace foleys::LicenseDefines
 {
 
@@ -80,8 +91,8 @@ namespace foleys
 struct Activation
 {
     size_t      index = 0;
-    std::string computer;
-    std::string user;
+    FF_STRING computer;
+    FF_STRING user;
 };
 
 }  // namespace foleys

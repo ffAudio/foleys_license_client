@@ -122,13 +122,13 @@ public:
      * Request the server to activate this computer
      * @param data is a name/value set to add to the request payload.
      */
-    void activate (const std::vector<std::pair<std::string, std::string>>& data);
+    void activate (const std::vector<std::pair<std::string, FF_STRING>>& data);
 
     /**
      * Deactivate another machine using the activation ID
      * @param data is a name/value set to add to the request payload.
      */
-    void deactivate (size_t otherID, const std::vector<std::pair<std::string, std::string>>& data = {});
+    void deactivate (size_t otherID, const std::vector<std::pair<std::string, FF_STRING>>& data = {});
 
     /**
      * In case of a failed activation, this contains existing activations for deactivation
@@ -179,7 +179,7 @@ public:
      * @param hwUID the hardware UID of the running system
      * @param data a string pair vector of data to send with every payload
      */
-    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data = {});
+    void setupLicenseData (const FF_PATH & licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> data = {});
 
     /**
      * Try to set the content of a license file and store it on success

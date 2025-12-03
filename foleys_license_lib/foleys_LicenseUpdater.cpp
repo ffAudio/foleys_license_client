@@ -34,7 +34,7 @@ LicenseUpdater::LicenseUpdater()
     fetchIfNecessary();
 }
 
-void LicenseUpdater::setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+void LicenseUpdater::setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> data)
 {
     localStorage = licenseFile;
     hardwareUid  = hwUID;
@@ -71,7 +71,7 @@ void LicenseUpdater::fetchIfNecessary (int hours)
         sendUpdateSignal();
 }
 
-void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vector<std::pair<std::string, std::string>>& data)
+void LicenseUpdater::fetchLicenseData (std::string_view action, const std::vector<std::pair<std::string, FF_STRING>>& data)
 {
     if (hardwareUid.empty())
         return;

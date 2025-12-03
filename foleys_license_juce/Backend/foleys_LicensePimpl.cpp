@@ -22,7 +22,7 @@ struct License::Pimpl : public juce::ChangeListener
 
     ~Pimpl() override { updater->removeChangeListener (this); }
 
-    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data)
+    void setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> data)
     {
         updater->setupLicenseData (licenseFile, hwUID, data);
     }
@@ -36,7 +36,7 @@ struct License::Pimpl : public juce::ChangeListener
 
     [[nodiscard]] std::string getLicenseeEmail() const { return email; }
 
-    void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, std::string>>& data = {})
+    void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, FF_STRING>>& data = {})
     {
         updater->fetchLicenseData (action, data);
     }
@@ -72,8 +72,8 @@ struct License::Pimpl : public juce::ChangeListener
                     for (const auto& item: *array)
                     {
                         Activation activation { static_cast<size_t> (int (item.getProperty (LicenseID::id, 0))),
-                                                item.getProperty (LicenseID::computer, "").toString().toStdString(),
-                                                item.getProperty (LicenseID::user, "").toString().toStdString() };
+                                                item.getProperty (LicenseID::computer, "").toString(),
+                                                item.getProperty (LicenseID::user, "").toString() };
                         acts.push_back (activation);
                     }
                     return acts;
@@ -100,11 +100,11 @@ struct License::Pimpl : public juce::ChangeListener
 
         if (auto* object = data.getDynamicObject())
         {
-            checked       = Helpers::decodeDateTime (object->getProperty (LicenseID::checked).toString().toStdString(), "%Y-%m-%d %H:%M:%S");
+            checked       = Helpers::decodeDateTime (object->getProperty (LicenseID::checked).toString().toRawUTF8(), "%Y-%m-%d %H:%M:%S");
             activatedFlag = object->getProperty (LicenseID::activated);
-            email         = object->getProperty (LicenseID::licensee_email).toString().toStdString();
+            email         = object->getProperty (LicenseID::licensee_email).toString().toRawUTF8();
 
-            licenseHardware = object->getProperty (LicenseID::hardware).toString().toStdString();
+            licenseHardware = object->getProperty (LicenseID::hardware).toString().toRawUTF8();
 
 
             if (object->hasProperty (LicenseID::action))
@@ -114,7 +114,7 @@ struct License::Pimpl : public juce::ChangeListener
 
 
             if (object->hasProperty (LicenseID::license_expires))
-                expiryDate = Helpers::decodeDateTime (object->getProperty (LicenseID::license_expires).toString().toStdString(), "%Y-%m-%d");
+                expiryDate = Helpers::decodeDateTime (object->getProperty (LicenseID::license_expires).toString().toRawUTF8(), "%Y-%m-%d");
             else
                 expiryDate = std::nullopt;
 
@@ -125,7 +125,7 @@ struct License::Pimpl : public juce::ChangeListener
                 demoDays      = object->getProperty (LicenseID::demo_days);
                 if (object->hasProperty (LicenseID::demo_ends))
                 {
-                    demoEndDate        = Helpers::decodeDateTime (object->getProperty (LicenseID::demo_ends).toString().toStdString(), "%Y-%m-%d");
+                    demoEndDate        = Helpers::decodeDateTime (object->getProperty (LicenseID::demo_ends).toString().toRawUTF8(), "%Y-%m-%d");
                     auto localDemoDays = static_cast<int> (1 + difftime (*demoEndDate, std::time (nullptr)) / (24 * 3600));
                     demoDays           = std::min (demoDays.load(), localDemoDays);
                 }
@@ -142,7 +142,7 @@ struct License::Pimpl : public juce::ChangeListener
 
             if (object->hasProperty (LicenseID::error))
             {
-                return { LicenseDefines::Error::ServerError, object->getProperty (LicenseID::error).toString().toStdString() };
+                return { LicenseDefines::Error::ServerError, object->getProperty (LicenseID::error).toString().toRawUTF8() };
             }
 
             return { LicenseDefines::Error::NoError, {} };
@@ -153,7 +153,7 @@ struct License::Pimpl : public juce::ChangeListener
         return { LicenseDefines::Error::ServerAnswerInvalid, "Got invalid license data (bad json)" };
     }
 
-    std::string getRawLicenseData() const { return updater->getLicenseText().toStdString(); }
+    std::string getRawLicenseData() const { return updater->getLicenseText().toRawUTF8(); }
 
     juce::SharedResourcePointer<foleys::LicenseUpdaterJuce> updater;
     License&                                                owner;

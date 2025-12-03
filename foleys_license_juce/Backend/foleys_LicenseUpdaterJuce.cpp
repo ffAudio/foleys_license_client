@@ -32,9 +32,9 @@ LicenseUpdaterJuce::~LicenseUpdaterJuce()
     masterReference.clear();
 }
 
-void LicenseUpdaterJuce::setupLicenseData (const std::string& licenseFileName, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> dataToUse)
+void LicenseUpdaterJuce::setupLicenseData (const FF_PATH& file, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> dataToUse)
 {
-    licenseFile = juce::File (licenseFileName.data());
+    licenseFile = file;
     hardwareUid = hwUID.data();
     data        = dataToUse;
 }
@@ -43,9 +43,9 @@ bool LicenseUpdaterJuce::setServerResponse (juce::String plain)
 {
     auto json = juce::JSON::parse (plain);
 
-    lastErrorString = json.getProperty (LicenseID::error, "").toString().toStdString();
+    lastErrorString = json.getProperty (LicenseID::error, "").toString().toRawUTF8();
     if (json.hasProperty (LicenseID::checked))
-        lastCheck = Helpers::decodeDateTime (json.getProperty (LicenseID::checked, "1970-01-01 00:00:00").toString().toStdString(), "%Y-%m-%d %H:%M:%S");
+        lastCheck = Helpers::decodeDateTime (json.getProperty (LicenseID::checked, "1970-01-01 00:00:00").toString().toRawUTF8(), "%Y-%m-%d %H:%M:%S");
 
     if (json.getProperty (LicenseID::hardware, "").toString() != hardwareUid)
     {
@@ -62,7 +62,7 @@ juce::String LicenseUpdaterJuce::getLicenseText() const
     if (auto stream = licenseFile.createInputStream())
     {
         auto cipher = stream->readEntireStreamAsString();
-        auto text   = Crypto::decrypt (cipher.toStdString());
+        auto text   = Crypto::decrypt (cipher.toRawUTF8());
 
         return text;
     }
@@ -97,13 +97,13 @@ void LicenseUpdaterJuce::fetchIfNecessary (int hours)
         object->setProperty (LicenseID::user, juce::SystemStats::getFullUserName());
 
         for (const auto& item: data)
-            object->setProperty (item.first.data(), item.second.data());
+            object->setProperty (item.first.data(), item.second);
     }
 
-    return juce::JSON::toString (json).toStdString();
+    return juce::JSON::toString (json).toRawUTF8();
 }
 
-void LicenseUpdaterJuce::fetchLicenseData (std::string_view action, const std::vector<std::pair<std::string, std::string>>& additionalData)
+void LicenseUpdaterJuce::fetchLicenseData (std::string_view action, const std::vector<std::pair<std::string, FF_STRING>>& additionalData)
 {
     juce::var json (new juce::DynamicObject);
     if (auto* object = json.getDynamicObject())
@@ -112,10 +112,10 @@ void LicenseUpdaterJuce::fetchLicenseData (std::string_view action, const std::v
         object->setProperty (LicenseID::product, LicenseData::productUid);
 
         for (const auto& item: data)
-            object->setProperty (item.first.data(), item.second.data());
+            object->setProperty (item.first.data(), item.second);
 
         for (const auto& item: additionalData)
-            object->setProperty (item.first.data(), item.second.data());
+            object->setProperty (item.first.data(), item.second);
     }
 
     auto      payload = juce::JSON::toString (json);
@@ -135,12 +135,15 @@ void LicenseUpdaterJuce::finished (juce::URL::DownloadTask* task, bool success)
 
         if (result.isNotEmpty())
         {
-            auto plain = Crypto::decrypt (result.toStdString());
+            auto plain = Crypto::decrypt (result.toRawUTF8());
 
             if (setServerResponse (plain))
             {
                 const juce::ScopedLock lock (licenseFileLock);
-                task->getTargetLocation().moveFileTo (licenseFile);
+                if (task->getTargetLocation().moveFileTo (licenseFile))
+                    juce::Logger::writeToLog ("License saved to: " + licenseFile.getFullPathName());
+                else
+                    juce::Logger::writeToLog ("License saving failed: " + licenseFile.getFullPathName());
             }
         }
         else

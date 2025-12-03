@@ -57,7 +57,7 @@ public:
      * Tries to get new license data from the server.
      * @param action an optional action. Allowed values: 'demo' or 'activate'. Anything else just gets the status
      */
-    void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, std::string>>& data = {});
+    void fetchLicenseData (std::string_view action = {}, const std::vector<std::pair<std::string, FF_STRING>>& data = {});
 
     /**
      * Create a request payload to get an offline license
@@ -89,7 +89,7 @@ public:
      */
     void removeObserver (Observer* observer);
 
-    void setupLicenseData (const std::string& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, std::string>> data);
+    void setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> data);
 
     [[nodiscard]] std::string getLicenseText();
 
@@ -115,13 +115,13 @@ private:
 
     std::mutex  storageMutex;
     std::string hardwareUid;
-    std::string localStorage;
+    FF_PATH     localStorage;
 
-    std::vector<std::pair<std::string, std::string>> defaultData;
-    LicenseDefines::Error                            lastError = LicenseDefines::Error::NoError;
-    std::string                                      lastErrorString;
-    ObserverList<Observer>                           observerList;
-    bool                                             popupShown = false;
+    std::vector<std::pair<std::string, FF_STRING>> defaultData;
+    LicenseDefines::Error                          lastError = LicenseDefines::Error::NoError;
+    std::string                                    lastErrorString;
+    ObserverList<Observer>                         observerList;
+    bool                                           popupShown = false;
 
     std::unique_ptr<NetworkRequest> request;
 };

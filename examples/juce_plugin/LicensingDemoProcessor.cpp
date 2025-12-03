@@ -9,6 +9,12 @@
 
 LicensingDemoProcessor::LicensingDemoProcessor()
 {
+#if FOLEYS_ENABLE_LOGGING
+    // Setup logging
+    juce::Logger::setCurrentLogger (new juce::FileLogger (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("LicenseExample.log"),
+                                                          "Foleys LicenseExample (JUCE)"));
+#endif
+
     auto licenseFile = juce::File::getSpecialLocation (juce::File::userApplicationDataDirectory)
 #if JUCE_MAC
                          .getChildFile ("Application Support")
@@ -17,7 +23,7 @@ LicensingDemoProcessor::LicensingDemoProcessor()
                          .getChildFile (LicenseData::productName)
                          .withFileExtension (".lic");
 
-    license.setupLicenseData (licenseFile.getFullPathName().toStdString(), juce::SystemStats::getUniqueDeviceID().toRawUTF8(),
+    license.setupLicenseData (licenseFile, juce::SystemStats::getUniqueDeviceID().toRawUTF8(),
                               { { LicenseID::version, LicenseData::version },
                                 { LicenseID::hardware, juce::SystemStats::getUniqueDeviceID().toRawUTF8() },
                                 { LicenseID::os, juce::SystemStats::getOperatingSystemName().toRawUTF8() },
