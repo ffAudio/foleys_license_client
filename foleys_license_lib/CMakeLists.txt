@@ -13,10 +13,10 @@ include(GHC-filesystem)
 include(PlatformFolders)
 
 add_library(licensing
-        INTERFACE)
+        STATIC)
 
 target_sources(licensing
-        INTERFACE
+        PRIVATE
         ../foleys_license_common/foleys_License.cpp
         ../foleys_license_common/foleys_License.h
         ../foleys_license_common/foleys_LicenseDefines.h
@@ -43,26 +43,26 @@ endif ()
 
 if (APPLE)
     target_sources(licensing
-            INTERFACE
+            PRIVATE
             foleys_NetworkRequest.mm
             foleys_SystemInfo.mm)
 
-    target_link_libraries(licensing INTERFACE
+    target_link_libraries(licensing PRIVATE
             "-framework Foundation")
 else ()
     target_sources(licensing
-            INTERFACE
+            PRIVATE
             foleys_NetworkRequest.cpp
             foleys_SystemInfo.cpp)
 endif ()
 
 target_link_libraries(licensing
-        INTERFACE
+        PRIVATE
         ${SODIUM_LIB}
         sago::platform_folders)
 
 target_include_directories(licensing
-        INTERFACE
+        PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/..
         ${nlohmann_SOURCE_DIR}/include
         ${filesystem_SOURCE_DIR}/include)
