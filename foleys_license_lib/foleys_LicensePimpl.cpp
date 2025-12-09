@@ -79,7 +79,9 @@ struct License::Pimpl : public LicenseUpdater::Observer
         }
         checked       = Helpers::decodeDateTime (json[LicenseID::checked], "%Y-%m-%d %H:%M:%S");
         activatedFlag = json[LicenseID::activated];
-        email         = json[LicenseID::licensee_email];
+
+        if (json.contains (LicenseID::licensee_email))
+            email = json[LicenseID::licensee_email];
 
         licenseHardware = json[LicenseID::hardware];
 
