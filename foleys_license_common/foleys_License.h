@@ -205,20 +205,7 @@ public:
      */
     std::string getRawLicenseData() const;
 
-
-    /**
-     * @return a state describing the current license state
-     */
-    [[nodiscard]] State getState() const;
-
 private:
-    void syncPimpl();
-
-    std::atomic<bool> activatedFlag = false;
-    std::atomic<bool> demoAvailable = false;
-    std::atomic<bool> allowedFlag   = false;
-    std::atomic<int>  demoDays      = 0;
-
 
     struct Pimpl;
     std::unique_ptr<Pimpl> pimpl;

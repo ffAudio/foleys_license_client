@@ -26,7 +26,6 @@ namespace foleys
 License::License()
 {
     pimpl = std::make_unique<Pimpl> (*this);
-    syncPimpl();
 }
 
 License::~License() = default;
@@ -34,18 +33,16 @@ License::~License() = default;
 void License::setupLicenseData (const FF_PATH& licenseFile, std::string_view hwUID, std::initializer_list<std::pair<std::string, FF_STRING>> data)
 {
     pimpl->setupLicenseData (licenseFile, hwUID, data);
-    syncPimpl();
 }
 
 void License::syncLicense()
 {
     pimpl->fetchLicenseData();
-    syncPimpl();
 }
 
 bool License::isActivated() const
 {
-    return activatedFlag;
+    return pimpl->activatedFlag;
 }
 
 bool License::isExpired() const
@@ -55,7 +52,7 @@ bool License::isExpired() const
 
 bool License::isAllowed() const
 {
-    return allowedFlag;
+    return (pimpl->activatedFlag && !pimpl->isExpired()) || (pimpl->demoDays >= 0 && !pimpl->demoAvailable);
 }
 
 LicenseDefines::Error License::getLastError() const
@@ -86,7 +83,6 @@ bool License::lastActionWasActivate() const
 
 void License::licenseChanged()
 {
-    syncPimpl();
     if (onLicenseReceived)
         onLicenseReceived();
 }
@@ -120,17 +116,17 @@ std::vector<Activation> License::getActivations() const
 
 bool License::canDemo() const
 {
-    return demoAvailable;
+    return pimpl->demoAvailable;
 }
 
 bool License::isDemo() const
 {
-    return !activatedFlag && demoDays > 0 && !demoAvailable;
+    return !pimpl->activatedFlag && pimpl->demoDays > 0 && !pimpl->demoAvailable;
 }
 
 int License::demoDaysLeft() const
 {
-    return demoDays;
+    return pimpl->demoDays;
 }
 
 void License::startDemo()
@@ -168,40 +164,6 @@ std::string License::getRawLicenseData() const
     return pimpl->getRawLicenseData();
 }
 
-
-License::State License::getState() const
-{
-    if (activatedFlag.load())
-        return State::Activated;
-
-    const auto activationsAvailable = getActivations();
-    if (!activationsAvailable.empty())
-        return State::ActivationsAvailable;
-
-    if (demoDays.load() > 0)
-    {
-        if (!demoAvailable.load())
-            return State::DemoRunning;
-
-        return State::DemoAvailable;
-    }
-
-    if (isExpired())
-        return State::Expired;
-
-    if (demoDays.load() <= 0)
-        return State::DemoExpired;
-
-    return State::Error;
-}
-
-void License::syncPimpl()
-{
-    activatedFlag = pimpl->activatedFlag.load();
-    demoAvailable = pimpl->demoAvailable.load();
-    demoDays      = pimpl->demoDays.load();
-    allowedFlag   = (activatedFlag && !pimpl->isExpired()) || (!activatedFlag && demoDays >= 0 && !demoAvailable);
-}
 
 // ================================================================================
 

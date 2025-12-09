@@ -38,7 +38,7 @@ struct License::Pimpl : public LicenseUpdater::Observer
         updater->fetchLicenseData (action, data);
     }
 
-    bool shouldShowPopup() { return !allowedFlag || (!updater->popupWasShown() && !activatedFlag); }
+    bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !activatedFlag); }
 
     void setPopupWasShown (bool wasShown) { updater->setPopupWasShown (wasShown); }
 
@@ -79,7 +79,9 @@ struct License::Pimpl : public LicenseUpdater::Observer
         }
         checked       = Helpers::decodeDateTime (json[LicenseID::checked], "%Y-%m-%d %H:%M:%S");
         activatedFlag = json[LicenseID::activated];
-        email         = json[LicenseID::licensee_email];
+
+        if (json.contains (LicenseID::licensee_email))
+            email = json[LicenseID::licensee_email];
 
         licenseHardware = json[LicenseID::hardware];
 
@@ -130,7 +132,6 @@ struct License::Pimpl : public LicenseUpdater::Observer
     std::optional<std::time_t>   demoEndDate;
     std::atomic<bool>            activatedFlag         = false;
     std::atomic<bool>            demoAvailable         = false;
-    std::atomic<bool>            allowedFlag           = false;
     std::atomic<int>             demoDays              = 0;
     std::atomic<bool>            lastActionWasActivate = false;
     std::optional<std::time_t>   expiryDate;
