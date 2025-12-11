@@ -72,8 +72,7 @@ struct License::Pimpl : public juce::ChangeListener
                     for (const auto& item: *array)
                     {
                         Activation activation { static_cast<size_t> (int (item.getProperty (LicenseID::id, 0))),
-                                                item.getProperty (LicenseID::computer, "").toString(),
-                                                item.getProperty (LicenseID::user, "").toString() };
+                                                item.getProperty (LicenseID::computer, "").toString(), item.getProperty (LicenseID::user, "").toString() };
                         acts.push_back (activation);
                     }
                     return acts;
@@ -108,7 +107,7 @@ struct License::Pimpl : public juce::ChangeListener
 
 
             if (object->hasProperty (LicenseID::action))
-                lastActionWasActivate = object->getProperty(LicenseID::action).toString().equalsIgnoreCase(LicenseID::activate);
+                lastActionWasActivate = object->getProperty (LicenseID::action).toString().equalsIgnoreCase (LicenseID::activate);
             else
                 lastActionWasActivate = false;
 

@@ -38,7 +38,7 @@ struct License::Pimpl : public LicenseUpdater::Observer
         updater->fetchLicenseData (action, data);
     }
 
-    bool shouldShowPopup() { return !allowedFlag || (!updater->popupWasShown() && !activatedFlag); }
+    bool shouldShowPopup() { return !owner.isAllowed() || (!updater->popupWasShown() && !activatedFlag); }
 
     void setPopupWasShown (bool wasShown) { updater->setPopupWasShown (wasShown); }
 
@@ -132,7 +132,6 @@ struct License::Pimpl : public LicenseUpdater::Observer
     std::optional<std::time_t>   demoEndDate;
     std::atomic<bool>            activatedFlag         = false;
     std::atomic<bool>            demoAvailable         = false;
-    std::atomic<bool>            allowedFlag           = false;
     std::atomic<int>             demoDays              = 0;
     std::atomic<bool>            lastActionWasActivate = false;
     std::optional<std::time_t>   expiryDate;

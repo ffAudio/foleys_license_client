@@ -48,14 +48,14 @@ private:                                             \
 #include <string>
 
 #if FOLEYS_LICENSING_HAS_JUCE
-#include <juce_core/juce_core.h>
-using FF_PATH=juce::File;
-using FF_STRING=juce::String;
+    #include <juce_core/juce_core.h>
+using FF_PATH   = juce::File;
+using FF_STRING = juce::String;
 #else
-#include <filesystem>
-#include <string>
-using FF_PATH=std::filesystem::path;
-using FF_STRING=std::string;
+    #include <filesystem>
+    #include <string>
+using FF_PATH   = std::filesystem::path;
+using FF_STRING = std::string;
 #endif
 
 namespace foleys::LicenseDefines
@@ -72,25 +72,13 @@ enum class Error
     HardwareMismatch,
 };
 
-enum class Status
-{
-    // Make sure to keep synchronised with the server!
-    Unchecked        = 0,  //< Initial state
-    DoesNotExist     = 1,
-    Activated        = 2,  //< Activated and can be run
-    NotActivated     = 3,  //< But can be activated
-    Expired          = 4,  //< License expired
-    Deactivated      = 5,  //< License was manually deactivated
-    NoActivationLeft = 6,  //< tried to activate but no activations left
-};
-
 }  // namespace foleys::LicenseDefines
 
 namespace foleys
 {
 struct Activation
 {
-    size_t      index = 0;
+    size_t    index = 0;
     FF_STRING computer;
     FF_STRING user;
 };
